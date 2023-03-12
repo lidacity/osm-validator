@@ -1,3 +1,5 @@
+#!.venv/bin/python
+
 #https://behai-nguyen.github.io/2022/06/25/synology-dsm-python.html
 
 import git
