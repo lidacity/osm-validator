@@ -4,17 +4,17 @@ import git
 
 
 def Push(Message):
- PATH = "~/osm-validator"
- try:
+  PATH = "~/osm-validator"
+# try:
   repo = git.Repo(PATH)
   print(repo.git.add(update=True))
   print(repo.index.commit(Message))
   print(origin = repo.remote(name='origin'))
   print(origin.push())
   return True
- except:
-  print('Some error occured while pushing the code')
-  return False
+# except:
+#  print('Some error occured while pushing the code')
+#  return False
 
 
 Push(f"test commit")
