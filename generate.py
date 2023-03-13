@@ -9,15 +9,10 @@ import git
 def Push(Message):
  PATH = "~/osm-validator"
  try:
-  print(1)
   repo = git.Repo(PATH)
-  print(2)
   repo.git.add(update=True)
-  print(3)
   repo.index.commit(Message)
-  print(4)
   origin = repo.remote(name='origin')
-  Print(5)
   origin.push()
   return True
  except:
