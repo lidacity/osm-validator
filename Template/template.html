@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="be">
+<head>
+ <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+ <title>Валідатар мясцовых аўтамабільных дарог Рэспублікі Беларусь</title>
+</head>
+<body>
+
+<img id='ID' width='1' height='1' border='0' style='display:none'>
+<script><!--
+function josm(x) { document.getElementById('ID').src='http://localhost:8111/load_object?objects=r'+x+'&relation_members=true&referrers=true'; return false; }
+--></script>
+
+<h1>Республіка Беларусь</h1>
+<font size='-1'>старонка створаная {{DateTime}}</font>
+<h2>Законы</h2>
+{% block Law%}{% endblock %}
+
+<h2>Дапамога</h2>
+<details>
+ <summary>Даведка</summary>
+ <p>появляющаяся информация</p>
+</details>
+
+<h2>Аўтамабільныя дарогі</h2>
+
+<h3>Мясцовыя аўтамабільныя дарогі</h3>
+{% block H%}{% endblock %}
+
+</body>
+</html>
