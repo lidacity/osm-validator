@@ -1,4 +1,7 @@
+#!.venv/bin/python
+
 #https://behai-nguyen.github.io/2022/06/25/synology-dsm-python.html
+#https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
 import git
 

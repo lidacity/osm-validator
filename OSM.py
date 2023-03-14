@@ -7,79 +7,6 @@ from loguru import logger
 import osmapi
 
 
-
-#  File.write(f"<font size='-1'>старонка створаная {datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}</font>\n")
-
-def HtmlWrite(Key, Value, Relation):
- with open("index.html", mode="a", encoding="utf-8") as File:
-  ID = Relation.get('id', None)
-  Tag = Relation.get('tag', {})
-  Color = "#bbffbb" if Tag else "#D6E090"
-  ColorError = "#bbffbb" if Tag else "#D6E090"
-  Be = Tag.get('name', "")
-  Ru = Tag.get('name:ru', f"{Value}")
-  #
-  E, Error = GetError(Key, Value, Relation)
-  if E and Error:
-   ColorError = "#FFC0C0"
-  #
-  File.write(f"<tr bgcolor='{Color}' valign='top'>\n")
-  File.write(f" <td><a>{Key}</a></td>\n")
-  if ID:
-   File.write(f" <td><a target='_blank' href='https://openstreetmap.org/relation/{ID}'>osm</a><br /><a target='_josm' href='.#' onclick='return josm({ID});'>josm</a></td>\n")
-  else:
-   File.write(f" <td><br /></td>\n")
-  if Tag:
-   File.write(f" <td>{Be}<br /><font color='gray'>{Ru}</font></td>\n")
-  else:
-   File.write(f" <td><font color='gray'><i>{Ru}<i></font></td>\n")
-  File.write(f" <td bgcolor='{ColorError}'><nobr>{Error}</nobr></td>\n")
-  File.write(f"</tr>\n")
-
-
-def HtmlWrite2(Key, Relation):
- with open("index.html", mode="a", encoding="utf-8") as File:
-  ID = Relation.get('id', None)
-  Tag = Relation.get('tag', {})
-  Color = "#FFC0C0"
-  Be = Tag.get('name', "")
-  Ru = Tag.get('name:ru', "")
-  Error = "адсутнічае&nbsp;ў&nbsp;Законе"
-  #
-  File.write(f"<tr bgcolor='{Color}' valign='top'>\n")
-  File.write(f" <td><a>{Key}</a></td>\n")
-  if ID:
-   File.write(f" <td><a target='_blank' href='https://openstreetmap.org/relation/{ID}'>osm</a><br /><a target='_josm' href='.#' onclick='return josm({ID});'>josm</a></td>\n")
-  else:
-   File.write(f" <td><br /></td>\n")
-  if Tag:
-   File.write(f" <td>{Be}<br /><font color='gray'>{Ru}</font></td>\n")
-  else:
-   File.write(f" <td><font color='gray'><i>{Ru}<i></font></td>\n")
-  File.write(f" <td><nobr>{Error}</nobr></td>\n")
-  File.write(f"</tr>\n")
-
-
-
-
-
-def GetError(Key, Value, Relation):
- Result = []
- Tag = Relation.get('tag', {})
- if Tag:
-  Result += CheckRef(Key)
-  Result += CheckTag(Tag, {'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:regional', 'name': None, 'name:be': None, 'name:ru': None})
-  Result += CheckH(Tag)
-  Result += CheckBe(Tag)
-  Result += CheckRu(Tag, Value)
-  E = True
- else:
-  Result = ["relation адсутнічае"]
-  E = False
- return E, "<br/>".join(Result) if Result else ""
-
-
-
 def Load(FileName):
  Result = {}
  for Line in open(FileName, mode="r", encoding="utf-8"):
@@ -89,14 +16,32 @@ def Load(FileName):
  return Result
 
 
+def GetError(Class, Key, Value, Tag):
+ Result = []
+ Result += CheckRef(Key)
+ Result += CheckRelation(Tag)
+ Result += CheckTag(Tag, {'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:regional', 'name': None, 'name:be': None, 'name:ru': None})
+ Result += CheckClass(Tag, Class)
+ Result += CheckBe(Tag)
+ Result += CheckRu(Tag, Value)
+ return Result
+
+
 def GetRef(Tag):
- return Tag.get('official_ref', f"error-{random.randint(0, 999999)}")
+ return Tag.get('official_ref', f"error-{random.randint(0, 9999)}")
 
 
 def CheckRef(Key):
  Result = []
  if Key[:6] == "error-":
-  Result.append(f"'{Key}' несапраўдны!")
+  Result.append(f"'official_ref' несапраўдны!")
+ return Result
+
+
+def CheckRelation(Tag):
+ Result = []
+ if Tag['type'] != "relation":
+  Result.append(f"не 'relation'")
  return Result
 
 
@@ -111,16 +56,16 @@ def CheckTag(Tag, Names):
  return Result
    
 
-def CheckH(Tag):
+def CheckClass(Tag, Class):
  Result = []
- Ref = Tag['ref']
- OfficialRef = Tag['official_ref']
- if Ref[0] != "Н":
-  Result.append(f"'ref' не пачынаецца з 'Н'")
- if OfficialRef[:2] != "Н-":
-  Result.append(f"'official_ref' не пачынаецца з 'Н-'")
- if Ref[1:] != OfficialRef[2:]:
-  Result.append(f"'official_ref' не суадносны 'ref'")
+ Ref, OfficialRef = Tag.get('ref', ""), Tag.get('official_ref', "")
+ if Ref and OfficialRef:
+  if Ref[0] != Class:
+   Result.append(f"'ref' не пачынаецца з '{Class}'")
+  if OfficialRef[:2] != "Н-":
+   Result.append(f"'official_ref' не пачынаецца з '{Class}-'")
+  if Ref[1:] != OfficialRef[2:]:
+   Result.append(f"'official_ref' не адпавядае 'ref'")
  return Result
 
 
@@ -138,15 +83,52 @@ def CheckRu(Tag, Name):
  Ru = Tag.get('name:ru', "")
  if Name[:254] != Ru[:254]:
   Result.append(f"'name:ru' не супадае з назвай у Законе")
- #
  return Result
 
 
-def GetNot(All, CSV):
+
+def GetNot(Relation, CSV):
  Result = {}
- for Key, Relation in All.items():
+ for Key, Value in Relation.items():
   if Key not in CSV:
-   Result[Key] = Relation
+   Result[Key] = Value
+ return Result
+
+
+def GetErrorLine(Key, Relation):
+ Result = {}
+ Result['Key'] = Key
+ Result['Color'] = "#ff9090"
+ Tag = Relation['tag']
+ Result['ID'] = Relation.get('id', None)
+ Be = Tag.get('name', "")
+ if Be:
+  Result['Be'] = Be
+ Ru = Tag.get('name:ru', "")
+ if Ru:
+  Result['Ru'] = Ru
+ Result['Relation'] = ["'{ref}' адсутнічае ў Законе"]
+ return Result
+
+
+def GetLine(Class, Key, Value, Relation):
+ Result = {}
+ Result['Key'] = Key
+ Tag = Relation.get('tag', {})
+ if Tag:
+  Result['ID'] = Relation.get('id', None)
+  Be = Tag.get('name', "")
+  if Be:
+   Result['Be'] = Be
+  Ru = Tag.get('name:ru', "")
+  if Ru:
+   Result['Ru'] = Ru
+  Result['Error'] = GetError(Class, Key, Value, Tag)
+  Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
+ else:
+  Result['Color'] = "#d6e090"
+  Result['Ru'] = Value
+  Result['Relation'] = ["'relation' адсутнічае"]
  return Result
 
 
@@ -156,16 +138,30 @@ def ReadOSM(R):
  logger.info(f"Read Main Relation {R}")
  Result = {}
 
- i = 10
+ i = 1e10
 
  OSM = osmapi.OsmApi()
  Relation = OSM.RelationGet(R)
  for Member in Relation['member']:
-  logger.info(f"Relation {Member['ref']}")
-  Relation = OSM.RelationGet(Member['ref'])
-  Tag = Relation['tag']
-  Ref = GetRef(Tag)
-  Result[Ref] = Relation
+  if Member['type'] == "relation":
+   logger.info(f"Relation {Member['ref']}")
+   Relation = OSM.RelationGet(Member['ref'])
+   Relation['type'] = "relation"
+   Ref = GetRef(Relation['tag'])
+   Result[Ref] = Relation
+  elif Member['type'] == "node":
+   logger.error(f"Node {Member['ref']}")
+   Node = OSM.NodeGet(Member['ref'])
+   Node['type'] = "node"
+   Ref = GetRef(Node['tag'])
+   Result[Ref] = Node
+  elif Member['type'] == "way":
+   logger.error(f"Way {Member['ref']}")
+   Way = OSM.WayGet(Member['ref'])
+   Way['type'] = "way"
+   Ref = GetRef(Way['tag'])
+   Result[Ref] = Way
+
 
   if i == 0:
    break
@@ -175,12 +171,17 @@ def ReadOSM(R):
  OSM.close()
  return Result
 
-# FileName = os.path.join("Base", FileName)
-# CSV = Load(FileName)
 
-#HtmlStart()
-#for Key, Value in CSV.items():
-# HtmlWrite(Key, Value, All.get(Key, {}))
-#for Key, Relation in GetNot(All, CSV).items():
-# HtmlWrite2(Key, Relation)
-#HtmlFinish()
+def GetOSM(Class, Relations, FileName):
+ logger.info(f"Get Relation {Class}")
+ Result = []
+ FileName = os.path.join("Base", FileName)
+ CSV = Load(FileName)
+ for Key, Value in CSV.items():
+  Line = GetLine(Class, Key, Value, Relations.get(Key, {}))
+  Result.append(Line)
+ #
+ for Key, Relation in GetNot(Relations, CSV).items():
+  Line = GetErrorLine(Key, Relation)
+  Result.append(Line)
+ return Result

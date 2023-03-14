@@ -2,14 +2,152 @@
 
 
 {% block Law %}
-<p>
- This is about page
-</p>
+{%- if PravoError -%}
+  <details open>
+{%- else -%}
+  <details>
+{%- endif %}
+{%- for Item in Pravo %}
+   <summary>Законы</summary>
+   <p>
+    {% if Item['Error'] -%}
+<font color='red'><strike>
+{%- endif -%}
+<a href='{{Item['URL']}}'>{{Item['Desc']}}</a>
+{%- if Item['Error'] -%}
+</strike></font>
+{%- endif %}
+{%- if Item['Append'] %}
+    <br />
+    в том числе акты, изменяющие (дополняющие) документ:
+    <ul>
+{%- for Append in Item['Append'] %}
+     <li>
+{%- if Append['Error'] -%}
+<font color='red'><strike>
+{%- endif -%}
+{{Append['Desc']}}
+{%- if Append['Error'] -%}
+</strike></font>
+{%- endif -%}
+</li>
+{%- endfor %}
+    </ul>
+{%- endif %}
+   </p>
+   <hr width='50%' align='left'>
+{%- endfor %}
+  </details>
+{% endblock %}
+
+
+
+{% block M %}
+ <table>
+  <thead>
+   <tr valign='top'>
+    <th>ref</th>
+    <th>link</th>
+    <th>name</th>
+    <th>error</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Item in M %}
+   <tr bgcolor='{{Item['Color']}}' valign='top'>
+{%- if Item['Key'][:6] == "error-" %}
+    <td>&nbsp;</td>
+{%- else %}
+    <td>{{Item['Key']}}</td>
+{%- endif %}
+{%- if Item['ID'] %}
+    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='.#' onclick='return josm({{Item['ID']}});'>josm</a></td>
+{%- else %}
+    <td>&nbsp;</td>
+{%- endif %}
+{%- if Item['Relation'] is defined %}
+    <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
+    <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>
+{%- else %}
+    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
+    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
+{%- endif %}
+   </tr>
+{%- endfor %}
+  </tbody>
+ </table>
+{% endblock %}
+
+
+{% block P %}
+ <table>
+  <thead>
+   <tr valign='top'>
+    <th>ref</th>
+    <th>link</th>
+    <th>name</th>
+    <th>error</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Item in P %}
+   <tr bgcolor='{{Item['Color']}}' valign='top'>
+{%- if Item['Key'][:6] == "error-" %}
+    <td>&nbsp;</td>
+{%- else %}
+    <td>{{Item['Key']}}</td>
+{%- endif %}
+{%- if Item['ID'] %}
+    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='.#' onclick='return josm({{Item['ID']}});'>josm</a></td>
+{%- else %}
+    <td>&nbsp;</td>
+{%- endif %}
+{%- if Item['Relation'] is defined %}
+    <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
+    <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>
+{%- else %}
+    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
+    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
+{%- endif %}
+   </tr>
+{%- endfor %}
+  </tbody>
+ </table>
 {% endblock %}
 
 
 {% block H %}
-<p>
- This is about page
-</p>
+ <table>
+  <thead>
+   <tr valign='top'>
+    <th>ref</th>
+    <th>link</th>
+    <th>name</th>
+    <th>error</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Item in H %}
+   <tr bgcolor='{{Item['Color']}}' valign='top'>
+{%- if Item['Key'][:6] == "error-" %}
+    <td>&nbsp;</td>
+{%- else %}
+    <td>{{Item['Key']}}</td>
+{%- endif %}
+{%- if Item['ID'] %}
+    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='.#' onclick='return josm({{Item['ID']}});'>josm</a></td>
+{%- else %}
+    <td>&nbsp;</td>
+{%- endif %}
+{%- if Item['Relation'] is defined %}
+    <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
+    <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>
+{%- else %}
+    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
+    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
+{%- endif %}
+   </tr>
+{%- endfor %}
+  </tbody>
+ </table>
 {% endblock %}

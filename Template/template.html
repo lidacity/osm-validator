@@ -2,7 +2,7 @@
 <html lang="be">
 <head>
  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
- <title>Валідатар мясцовых аўтамабільных дарог Рэспублікі Беларусь</title>
+ <title>Валідатар аўтамабільных дарог Рэспублікі Беларусь</title>
 </head>
 <body>
 
@@ -12,20 +12,81 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
 --></script>
 
 <h1>Республіка Беларусь</h1>
-<font size='-1'>старонка створаная {{DateTime}}</font>
-<h2>Законы</h2>
-{% block Law%}{% endblock %}
 
-<h2>Дапамога</h2>
-<details>
- <summary>Даведка</summary>
- <p>появляющаяся информация</p>
-</details>
+<hr />
+<div id='Help'>
+ <h2>Даведка</h2>
+ <div id='Law'>
+  {% block Law%}{% endblock %}
+ </div>
 
+ <details>
+  <summary>Кароткае апісанне памылак</summary>
+  <ul>
+   <li><b>'relation' адсутнічае</b> - у osm не знойдзены relation з зададзеным official_ref</li>
+   <li><b>не 'relation'</b> - дададзеная аўтадарога не знаходзіцца ў relation</li>
+   <li><b>'{official_ref}' несапраўдны!</b> - у relation адсутнічае {official_ref} (які згодна заканадаўства)</li>
+   <li><b>'{Key}' не знойдзены</b> - у relation адсутнічае прадвызначаны ключ {Key}</li>
+   <li><b>у '{Key}' не зададзена '{Value}'</b> - у relation адсутнічае прадвызначаны ключ {Key} з зададзеным значэннем {Value}</li>
+   <li><b>'ref' не пачынаецца з '{Class}'</b> - у relation неправільны клас аўтадарогі, ref не пачынаеца з {Class}</li>
+   <li><b>'official_ref' не пачынаецца з '{Class}-'</b> - у relation неправільны клас аўтадарогі, official_ref не пачынаеца з {Class}-</li>
+   <li><b>'official_ref' не адпавядае 'ref'</b> - лічбавыя індэксы аўтадарогі ў official_ref і ref не супадаюць</li>
+   <li><b>'name:ru' не супадае з назвай у Законе</b> - у relation апісанне аўтадарогі name:ru не супадае з апісаннем аўтадарогі ў заканадаўстве</li>
+   <li><b>'name:be' не роўны 'name'</b> - у relation не супадаюць апісанні аўтадарог name:be і name</li>
+   <li><b>'ref' у ways не роўны 'ref' у relation</b> - </li>
+   <li><b>'official_name' у ways не роўны 'name' у relation</b> - </li>
+   <li><b>'official_name:be' у ways не роўны 'name:be' у relation</b> - </li>
+   <li><b>'official_name:ru' у ways не роўны 'name:ru' у relation</b> - </li>
+   <li><b>'{ref}' адсутнічае ў Законе</b> - у заканадаўстве адсутнічае аўтадарога {ref}</li>
+
+  </ul>
+ </details>
+
+ <details>
+  <summary>Спрошчаныя справаздачы</summary>
+  <ul>URL:
+   <li><a href='http://osm-validator.lidacity.by/index.html'>гэтая старонка</a></li>
+   <li><a href='index.relation.html'></a></li>
+   <li><a href='index.error.html'></a></li>
+  </ul>
+  <ul>CSV:
+   <li><a href='http://osm-validator.lidacity.by/Base/M.csv'>магістральные аўтамабільныя дарогі</a></li>
+   <li><a href='http://osm-validator.lidacity.by/Base/P.csv'>рэспубліканскія аўтамабільныя дарогі</a></li>
+   <li><a href='http://osm-validator.lidacity.by/Base/H.csv'>мясцовыя аўтамабільныя дарогі</a></li>
+   <li><a href='index.csv'></a></li>
+   <li><a href='relation.csv'></a></li>
+   <li><a href='error.csv'></a></li>
+  </ul>
+ </details>
+</div>
+
+<hr />
 <h2>Аўтамабільныя дарогі</h2>
 
-<h3>Мясцовыя аўтамабільныя дарогі</h3>
-{% block H%}{% endblock %}
+<div id='M'>
+ <h3>Магістральныя аўтамабільныя дарогі</h3>
+ {% block M%}{% endblock %}
+</div>
+
+<div id='P'>
+ <h3>Рэспубліканскія аўтамабільныя дарогі</h3>
+ {% block P%}{% endblock %}
+</div>
+
+<div id='H'>
+ <h3>Мясцовыя аўтамабільныя дарогі</h3>
+ {% block H%}{% endblock %}
+</div>
+
+<br /><hr />
+<p>
+ Калі ёсць заўвагі, дасылайце свае думкі ў <a href='https://openstreetmap.org/message/new/LidaCity'>асабістыя паведамленні</a>.
+ <!-- сакрэтная частка: валідатар знаходзіцца на https://github.com/lidacity/osm-validator, ну і даслаць ліст мне можна на mailto:dzmitry@lidacity.by -->
+ <br />
+ <font size='-1'>Cтаронка створаная {{DateTime}}</font>
+ <br />
+ <font size='-2'><i>Валідатар аўтаматычна стварае <a href='http://osm-validator.lidacity.by/'>старонку</a>, звычайна ў нядзелю ў 0:00</i></font>
+</p>
 
 </body>
 </html>

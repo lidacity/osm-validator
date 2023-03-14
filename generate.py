@@ -1,25 +1,36 @@
 #!.venv/bin/python
 
-#https://behai-nguyen.github.io/2022/06/25/synology-dsm-python.html
-#https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+import os
+import sys
+import datetime
 
-import git
+from loguru import logger
 
+from Pravo import GetPravo
+from OSM import ReadOSM, GetOSM
+from Jinja import Generate
+from Git import GitPush
 
-def Push(Message):
- PATH = "~/osm-validator"
- try:
-  repo = git.Repo(PATH)
-  repo.git.add(update=True)
-  repo.index.commit(Message)
-  origin = repo.remote(name='origin')
-  origin.push()
-  return True
- except:
-  print('Some error occured while pushing the code')
-  return False
+sys.stdin.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding='utf-8')
+
+logger.add(os.path.join(".log", "osm.log"))
+logger.info("Start")
 
 
-if Push(f"test commit"):
- print("Ok")
+M = ReadOSM(1246287)
+P = ReadOSM(1246288)
+H = ReadOSM(1246286)
 
+Context = {}
+Context['DateTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+Context['PravoError'], Context['Pravo'] = GetPravo()
+Context['M'] = GetOSM("М", M, "M.csv")
+Context['P'] = GetOSM("Р", P, "P.csv")
+Context['H'] = GetOSM("Н", H, "H.csv")
+Generate(Context)
+
+if GitPush(f"autogenerate 2023-03-14"):
+ logger.info("github push Ok")
+
+logger.info("Done")

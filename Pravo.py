@@ -21,7 +21,7 @@ URLs = {
 FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Base", "pravo.json")
 
 
-def GetPravoMain(Soup):
+def GetMain(Soup):
  Result = []
  Div = Soup.find('div', attrs={'class':'reestrmap'})
  if Div:
@@ -33,7 +33,7 @@ def GetPravoMain(Soup):
   return ["<font color='red' size='+2'>Памылка!</font>"]
 
 
-def GetPravoAppend(Soup):
+def GetAppend(Soup):
  Result = []
  Table = Soup.find('table', attrs={'class':'map'})
  if Table:
@@ -43,18 +43,18 @@ def GetPravoAppend(Soup):
  return Result[1:]
 
 
-def GetPravo():
+def DownloadPravo():
  Result = {}
  for District, URL in URLs.items():
   Response = requests.get(URL)
   Soup = BeautifulSoup(Response.text, "html.parser")
-  Result[District] = [URL] + GetPravoMain(Soup) + GetPravoAppend(Soup)
+  Result[District] = [URL] + GetMain(Soup) + GetAppend(Soup)
  return Result
 
 
 def CheckPravo():
  logger.info("Check Pravo")
- Pravo = GetPravo()
+ Pravo = DownloadPravo()
  with open(FileName, encoding="utf-8") as File:
   Json = json.load(File)
  #
@@ -78,10 +78,35 @@ def CheckPravo():
  return Result
 
 
+def GetPravo():
+ logger.info("Get Pravo")
+ Pravo = DownloadPravo()
+ with open(FileName, encoding="utf-8") as File:
+  Json = json.load(File)
+ #
+ Error, Result = False, []
+ for Key, Value in Pravo.items():
+  Item = {}
+  Item['URL'] = Value[0]
+  Item['Desc'] = Value[1]
+  Sub = []
+  for Index, Desc in enumerate(Value):
+   if Index >= 2:
+    E = not(len(Json[Key]) > Index and Value[Index] == Json[Key][Index])
+    Sub.append({'Desc': Desc, 'Error': E })
+    Error |= E
+  Item['Append'] = Sub
+  E = Value[0] != Json[Key][0] or Value[1] != Json[Key][1]
+  Item['Error'] = E
+  Error |= E
+  Result.append(Item)
+ return Error, Result
+
+
 def Main():
  logger.add(os.path.join(".log", "osm.log"))
  logger.info("Start Pravo")
- Pravo = GetPravo()
+ Pravo = DownloadPravo()
  with open(FileName, 'w', encoding="utf-8") as File:
   json.dump(Pravo, File, ensure_ascii=False, indent=4)
  logger.info("Done Pravo")
