@@ -4,7 +4,7 @@ from jinja2 import Environment, FileSystemLoader
 from loguru import logger
 
 
-FileName = "index2.html"
+FileName = "index.html"
 
 
 def Generate(Context):
