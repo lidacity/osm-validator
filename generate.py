@@ -32,7 +32,7 @@ Context['Highway'] = {
 }
 Generate(Context)
 
-if GitPush(f"autoupdate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
+if GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
  logger.info("Git Push complete")
 
 logger.info("Done")
