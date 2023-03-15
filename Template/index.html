@@ -41,8 +41,10 @@
 {% endblock %}
 
 
-
-{% block M %}
+{% block Highway %}
+{%- for Class, Item in Highway.items() %}
+<div id='{{Class}}'>
+ <h3>{{Item['Desc']}}</h3>
  <table>
   <thead>
    <tr valign='top'>
@@ -53,7 +55,7 @@
    </tr>
   </thead>
   <tbody>
-{%- for Item in M %}
+{%- for Item in Item['List'] %}
    <tr bgcolor='{{Item['Color']}}' valign='top'>
 {%- if Item['Key'][:6] == "error-" %}
     <td>&nbsp;</td>
@@ -76,78 +78,6 @@
 {%- endfor %}
   </tbody>
  </table>
-{% endblock %}
-
-
-{% block P %}
- <table>
-  <thead>
-   <tr valign='top'>
-    <th>ref</th>
-    <th>link</th>
-    <th>name</th>
-    <th>error</th>
-   </tr>
-  </thead>
-  <tbody>
-{%- for Item in P %}
-   <tr bgcolor='{{Item['Color']}}' valign='top'>
-{%- if Item['Key'][:6] == "error-" %}
-    <td>&nbsp;</td>
-{%- else %}
-    <td>{{Item['Key']}}</td>
-{%- endif %}
-{%- if Item['ID'] %}
-    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='.#' onclick='return josm({{Item['ID']}});'>josm</a></td>
-{%- else %}
-    <td>&nbsp;</td>
-{%- endif %}
-{%- if Item['Relation'] is defined %}
-    <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
-    <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>
-{%- else %}
-    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
-    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
-{%- endif %}
-   </tr>
-{%- endfor %}
-  </tbody>
- </table>
-{% endblock %}
-
-
-{% block H %}
- <table>
-  <thead>
-   <tr valign='top'>
-    <th>ref</th>
-    <th>link</th>
-    <th>name</th>
-    <th>error</th>
-   </tr>
-  </thead>
-  <tbody>
-{%- for Item in H %}
-   <tr bgcolor='{{Item['Color']}}' valign='top'>
-{%- if Item['Key'][:6] == "error-" %}
-    <td>&nbsp;</td>
-{%- else %}
-    <td>{{Item['Key']}}</td>
-{%- endif %}
-{%- if Item['ID'] %}
-    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='.#' onclick='return josm({{Item['ID']}});'>josm</a></td>
-{%- else %}
-    <td>&nbsp;</td>
-{%- endif %}
-{%- if Item['Relation'] is defined %}
-    <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
-    <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>
-{%- else %}
-    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
-    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
-{%- endif %}
-   </tr>
-{%- endfor %}
-  </tbody>
- </table>
+</div>
+{% endfor %}
 {% endblock %}

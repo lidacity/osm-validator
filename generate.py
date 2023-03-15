@@ -25,12 +25,14 @@ H = ReadOSM(1246286)
 Context = {}
 Context['DateTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 Context['PravoError'], Context['Pravo'] = GetPravo()
-Context['M'] = GetOSM("М", M, "M.csv")
-Context['P'] = GetOSM("Р", P, "P.csv")
-Context['H'] = GetOSM("Н", H, "H.csv")
+Context['Highway'] = {
+ 'M': { 'Desc': "Магістральныя аўтамабільныя дарогі", 'List': GetOSM("М", M, "M.csv"), },
+ 'P': { 'Desc': "Рэспубліканскія аўтамабільныя дарогі", 'List': GetOSM("Р", P, "P.csv"), },
+ 'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", H, "H.csv"), },
+}
 Generate(Context)
 
-if GitPush(f"autogenerate 2023-03-14"):
- logger.info("github push Ok")
+if GitPush(f"autoupdate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
+ logger.info("Git Push complete")
 
 logger.info("Done")

@@ -62,21 +62,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
 
 <hr />
 <h2>Аўтамабільныя дарогі</h2>
-
-<div id='M'>
- <h3>Магістральныя аўтамабільныя дарогі</h3>
- {% block M%}{% endblock %}
-</div>
-
-<div id='P'>
- <h3>Рэспубліканскія аўтамабільныя дарогі</h3>
- {% block P%}{% endblock %}
-</div>
-
-<div id='H'>
- <h3>Мясцовыя аўтамабільныя дарогі</h3>
- {% block H%}{% endblock %}
-</div>
+{% block Highway%}{% endblock %}
 
 <br /><hr />
 <p>

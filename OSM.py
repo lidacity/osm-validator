@@ -7,6 +7,13 @@ from loguru import logger
 import osmapi
 
 
+Classes = {
+ 'М': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
+ 'Р': {},
+ 'Н': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:regional', 'name': None, 'name:be': None, 'name:ru': None, },
+}
+
+
 def Load(FileName):
  Result = {}
  for Line in open(FileName, mode="r", encoding="utf-8"):
@@ -16,11 +23,11 @@ def Load(FileName):
  return Result
 
 
-def GetError(Class, Key, Value, Tag):
+def GetError(Class, Key, Value, Type, Tag):
  Result = []
  Result += CheckRef(Key)
- Result += CheckRelation(Tag)
- Result += CheckTag(Tag, {'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:regional', 'name': None, 'name:be': None, 'name:ru': None})
+ Result += CheckRelation(Type)
+ Result += CheckTag(Tag, Class)
  Result += CheckClass(Tag, Class)
  Result += CheckBe(Tag)
  Result += CheckRu(Tag, Value)
@@ -38,16 +45,16 @@ def CheckRef(Key):
  return Result
 
 
-def CheckRelation(Tag):
+def CheckRelation(Type):
  Result = []
- if Tag['type'] != "relation":
+ if Type != "relation":
   Result.append(f"не 'relation'")
  return Result
 
 
-def CheckTag(Tag, Names):
+def CheckTag(Tag, Class):
  Result = []
- for Key, Value in Names.items():
+ for Key, Value in Classes[Class].items():
   if Key not in Tag:
    Result.append(f"'{Key}' не знойдзены")
   elif Value is not None:
@@ -62,9 +69,9 @@ def CheckClass(Tag, Class):
  if Ref and OfficialRef:
   if Ref[0] != Class:
    Result.append(f"'ref' не пачынаецца з '{Class}'")
-  if OfficialRef[:2] != "Н-":
+  if OfficialRef[:2] != f"{Class}-":
    Result.append(f"'official_ref' не пачынаецца з '{Class}-'")
-  if Ref[1:] != OfficialRef[2:]:
+  if Ref[1:] != OfficialRef[2:2+len(Ref[1:])]:
    Result.append(f"'official_ref' не адпавядае 'ref'")
  return Result
 
@@ -116,6 +123,7 @@ def GetLine(Class, Key, Value, Relation):
  Result['Key'] = Key
  Tag = Relation.get('tag', {})
  if Tag:
+  Result['Type'] = Relation['type']
   Result['ID'] = Relation.get('id', None)
   Be = Tag.get('name', "")
   if Be:
@@ -123,7 +131,7 @@ def GetLine(Class, Key, Value, Relation):
   Ru = Tag.get('name:ru', "")
   if Ru:
    Result['Ru'] = Ru
-  Result['Error'] = GetError(Class, Key, Value, Tag)
+  Result['Error'] = GetError(Class, Key, Value, Relation['type'], Tag)
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
   Result['Color'] = "#d6e090"
@@ -161,7 +169,6 @@ def ReadOSM(R):
    Way['type'] = "way"
    Ref = GetRef(Way['tag'])
    Result[Ref] = Way
-
 
   if i == 0:
    break
