@@ -1,4 +1,4 @@
-﻿{% extends 'template.html' %}
+{% extends 'template.html' %}
 
 
 {% block Law %}
@@ -42,9 +42,9 @@
 
 
 {% block Highway %}
-{%- for Class, Item in Highway.items() %}
+{%- for Class, Road in Highway.items() %}
 <div id='{{Class}}'>
- <h3>{{Item['Desc']}}</h3>
+ <h3>{{Road['Desc']}}</h3>
  <table>
   <thead>
    <tr valign='top'>
@@ -55,7 +55,7 @@
    </tr>
   </thead>
   <tbody>
-{%- for Item in Item['List'] %}
+{%- for Item in Road['List'] %}
    <tr bgcolor='{{Item['Color']}}' valign='top'>
 {%- if Item['Key'][:6] == "error-" %}
     <td>&nbsp;</td>

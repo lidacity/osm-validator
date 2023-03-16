@@ -14,9 +14,9 @@ from Git import GitPush
 sys.stdin.reconfigure(encoding='utf-8')
 sys.stdout.reconfigure(encoding='utf-8')
 
+
 logger.add(os.path.join(".log", "osm.log"))
 logger.info("Start")
-
 
 Context = {}
 Context['DateTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -27,6 +27,11 @@ Context['Highway'] = {
  'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", 1246286, "H.csv"), },
 }
 Generate("index.html", Context)
+Generate("index.relation.html", Context)
+Generate("index.error.html", Context)
+Generate("index.csv", Context)
+Generate("index.relation.csv", Context)
+Generate("index.error.csv", Context)
 
 if GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
  logger.info("Git Push complete")

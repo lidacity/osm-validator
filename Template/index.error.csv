@@ -1,0 +1,9 @@
+{%- for Class, Item in Highway.items() -%}
+{%- for Item in Item['List'] -%}
+{%- if Item['Error'] -%}
+{%- if Item['Key'][:6] != "error-" -%}{{Item['Key']}}{%- endif -%};
+{%- if Item['ID'] -%}{{Item['Type'][0]}}{{Item['ID']}}{%- endif -%}
+;{{Item['Be']}};{{Item['Ru']}};{{"|".join(Item['Error'])}}
+{% endif -%}
+{%- endfor -%}
+{%- endfor %}

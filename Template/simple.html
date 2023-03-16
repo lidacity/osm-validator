@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="be">
+<head>
+ <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+ <title>Валідатар аўтамабільных дарог Рэспублікі Беларусь</title>
+</head>
+<body>
+
+<img id='ID' width='1' height='1' border='0' style='display:none'>
+<script><!--
+function josm(x) { document.getElementById('ID').src='http://localhost:8111/load_object?objects='+x+'&relation_members=true&referrers=true'; return false; }
+--></script>
+
+<h1>Республіка Беларусь</h1>
+
+<hr />
+<h2>Аўтамабільныя дарогі</h2>
+{% block Highway%}{% endblock %}
+
+<br /><hr />
+<p>
+ <font size='-1'>Cтаронка створаная {{DateTime}}</font>
+ <br />
+ <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
+</p>
+
+</body>
+</html>
