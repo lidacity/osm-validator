@@ -9,12 +9,10 @@ import git
 from loguru import logger
 
 
-PathName = os.path.dirname(os.path.abspath(__file__))
-
-
 def GitPush(Message):
  logger.info("Git Push")
  try:
+  PathName = os.path.dirname(os.path.abspath(__file__))
   repo = git.Repo(PathName)
   repo.git.add("docs")
   #repo.git.add(update=True)

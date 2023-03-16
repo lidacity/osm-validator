@@ -26,12 +26,9 @@ Context['Highway'] = {
  'P': { 'Desc': "Рэспубліканскія аўтамабільныя дарогі", 'List': GetOSM("Р", 1246288, "P.csv"), },
  'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", 1246286, "H.csv"), },
 }
-Generate("index.html", Context)
-Generate("index.relation.html", Context)
-Generate("index.error.html", Context)
-Generate("index.csv", Context)
-Generate("index.relation.csv", Context)
-Generate("index.error.csv", Context)
+FileNames = ["index.html", "index.relation.html", "index.error.html", "index.csv", "index.relation.csv", "index.error.csv", ]
+for FileName in FileNames:
+ Generate(FileName, Context)
 
 if GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
  logger.info("Git Push complete")

@@ -96,14 +96,6 @@ def CheckRu(Tag, Name):
 
 
 
-def GetNotFound(Relation, CSV):
- Result = {}
- for Key, Value in Relation.items():
-  if Key not in CSV:
-   Result[Key] = Value
- return Result
-
-
 def GetErrorLine(Key, Relation):
  Result = {}
  Result['Key'] = Key
@@ -121,20 +113,22 @@ def GetErrorLine(Key, Relation):
  return Result
 
 
-def GetLine(Class, Key, Value, Relation):
+def GetLine(Class, Key, Value, Relations):
  Result = {}
  Result['Key'] = Key
- Tag = Relation.get('tag', {})
- if Tag:
-  Result['Type'] = Relation['type']
-  Result['ID'] = Relation.get('id', None)
+ Relation = Relations.get(Key, {})
+ if Relation:
+  Type = Relation['type']
+  Result['Type'] = Type
+  Result['ID'] = Relation['id']
+  Tag = Relation['tag']
   Be = Tag.get('name', "")
   if Be:
    Result['Be'] = Be
   Ru = Tag.get('name:ru', "")
   if Ru:
    Result['Ru'] = Ru
-  Result['Error'] = GetError(Class, Key, Value, Relation['type'], Tag)
+  Result['Error'] = GetError(Class, Key, Value, Type, Tag)
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
   Result['Color'] = "#d6e090"
@@ -182,18 +176,18 @@ def ReadOSM(R):
  return Result
 
 
+def GetNotFound(Relation, CSV):
+ return { i: Relation[i] for i in Relation.keys() - CSV.keys() }
+
+
 def GetOSM(Class, ID, FileName):
  logger.info(f"Get Relation {Class}")
  Result = []
  Relations = ReadOSM(ID)
  #
- FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Base", FileName)
+ FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", FileName)
  CSV = Load(FileName)
- for Key, Value in CSV.items():
-  Line = GetLine(Class, Key, Value, Relations.get(Key, {}))
-  Result.append(Line)
  #
- for Key, Relation in GetNotFound(Relations, CSV).items():
-  Line = GetErrorLine(Key, Relation)
-  Result.append(Line)
+ Result += [ GetLine(Class, Key, Value, Relations) for Key, Value in CSV.items() ] 
+ Result += [ GetErrorLine(Key, Relation) for Key, Relation in GetNotFound(Relations, CSV).items()]
  return Result
