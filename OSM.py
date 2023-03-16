@@ -1,3 +1,5 @@
+#https://josm.openstreetmap.de/wiki/Ru%3AHelp/RemoteControlCommands
+
 import os
 import sys
 import random
@@ -94,7 +96,7 @@ def CheckRu(Tag, Name):
 
 
 
-def GetNot(Relation, CSV):
+def GetNotFound(Relation, CSV):
  Result = {}
  for Key, Value in Relation.items():
   if Key not in CSV:
@@ -107,6 +109,7 @@ def GetErrorLine(Key, Relation):
  Result['Key'] = Key
  Result['Color'] = "#ff9090"
  Tag = Relation['tag']
+ Result['Type'] = Relation['type']
  Result['ID'] = Relation.get('id', None)
  Be = Tag.get('name', "")
  if Be:
@@ -190,7 +193,7 @@ def GetOSM(Class, ID, FileName):
   Line = GetLine(Class, Key, Value, Relations.get(Key, {}))
   Result.append(Line)
  #
- for Key, Relation in GetNot(Relations, CSV).items():
+ for Key, Relation in GetNotFound(Relations, CSV).items():
   Line = GetErrorLine(Key, Relation)
   Result.append(Line)
  return Result
