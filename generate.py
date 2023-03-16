@@ -15,7 +15,7 @@ sys.stdin.reconfigure(encoding='utf-8')
 sys.stdout.reconfigure(encoding='utf-8')
 
 
-logger.add(os.path.join(".log", "osm.log"))
+logger.add(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".log", "osm.log"))
 logger.info("Start")
 
 Context = {}

@@ -104,7 +104,7 @@ def GetPravo():
 
 
 def Main():
- logger.add(os.path.join(".log", "osm.log"))
+ logger.add(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".log", "osm.log"))
  logger.info("Start Pravo")
  Pravo = DownloadPravo()
  with open(FileName, 'w', encoding="utf-8") as File:

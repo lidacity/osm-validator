@@ -187,7 +187,7 @@ def GetOSM(Class, ID, FileName):
  Result = []
  Relations = ReadOSM(ID)
  #
- FileName = os.path.join("Base", FileName)
+ FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Base", FileName)
  CSV = Load(FileName)
  for Key, Value in CSV.items():
   Line = GetLine(Class, Key, Value, Relations.get(Key, {}))

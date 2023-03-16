@@ -10,7 +10,7 @@ def Generate(FileName, Context):
  Loader = FileSystemLoader("Template")
  Env = Environment(loader=Loader)
  Template = Env.get_template(FileName)
- Result = os.path.join("docs", FileName)
+ Result = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", FileName)
  with open(Result, mode="w", encoding="utf-8") as File:
   Render = Template.render(Context)
   File.write(Render)
