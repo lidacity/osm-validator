@@ -9,7 +9,7 @@ import osmapi
 
 Classes = {
  'М': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
- 'Р': {},
+ 'Р': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
  'Н': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:regional', 'name': None, 'name:be': None, 'name:ru': None, },
 }
 
@@ -179,9 +179,11 @@ def ReadOSM(R):
  return Result
 
 
-def GetOSM(Class, Relations, FileName):
+def GetOSM(Class, ID, FileName):
  logger.info(f"Get Relation {Class}")
  Result = []
+ Relations = ReadOSM(ID)
+ #
  FileName = os.path.join("Base", FileName)
  CSV = Load(FileName)
  for Key, Value in CSV.items():

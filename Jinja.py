@@ -1,15 +1,16 @@
 #https://atufashireen.medium.com/creating-templates-with-jinja-in-python-3ff3b87d6740
 
+import os
 from jinja2 import Environment, FileSystemLoader
 from loguru import logger
 
 
-FileName = "index.html"
-
-
-def Generate(Context):
+def Generate(FileName, Context):
  logger.info(f"Generate {FileName}")
- Env = Environment(loader=FileSystemLoader("Template"))
- Template = Env.get_template("index.html")
- with open(FileName, mode="w", encoding="utf-8") as File:
-  File.write(Template.render(Context))
+ Loader = FileSystemLoader("Template")
+ Env = Environment(loader=Loader)
+ Template = Env.get_template(FileName)
+ Result = os.path.join("docs", FileName)
+ with open(Result, mode="w", encoding="utf-8") as File:
+  Render = Template.render(Context)
+  File.write(Render)
