@@ -1,0 +1,32 @@
+{% extends 'simple.html' %}
+
+
+{% block Highway %}
+{%- for Class, Road in Highway.items() %}
+<div id='{{Class}}'>
+ <h3>{{Road['Desc']}}</h3>
+ <table>
+  <thead>
+   <tr valign='top'>
+    <th>ref</th>
+    <th>link</th>
+    <th>name</th>
+    <th>error</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Item in Road['List'] %}
+{%- if Item['Relation'] is defined and Item['Key'][:6] != "error-" %}
+   <tr bgcolor='{{Item['Color']}}' valign='top'>
+    <td>{{Item['Key']}}</td>
+    <td>&nbsp;</td>
+    <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
+    <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>
+   </tr>
+{%- endif %}
+{%- endfor %}
+  </tbody>
+ </table>
+</div>
+{% endfor %}
+{% endblock %}
