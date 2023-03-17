@@ -34,9 +34,11 @@ def GetMain(Soup):
 
 
 def GetAppend(Soup):
+ Replace = { "\t": "", "\n": "", }
+ R = str.maketrans(Replace)
  Table = Soup.find('table', attrs={'class':'map'})
  if Table:
-  Result = [ Col.text.strip().replace("\t", "").replace("\n", "").replace("  ", " ") for Row in Table.find_all('tr') for Col in Row.find_all('td') ]
+  Result = [ Col.text.strip().replace("  ", " ").translate(R) for Row in Table.find_all('tr') for Col in Row.find_all('td') ]
  else:
   Result = []
  return Result[1:]

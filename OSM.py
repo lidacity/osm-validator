@@ -8,6 +8,8 @@ import datetime
 from loguru import logger
 import osmapi
 
+from OSMCacheIterator import CacheIterator
+
 
 Classes = {
  'М': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
@@ -142,37 +144,16 @@ def GetLine(Class, Key, Value, Relations):
 def ReadOSM(R):
  logger.info(f"Read Main Relation {R}")
  Result = {}
-
- i = 1e10
-
+ #
  OSM = osmapi.OsmApi()
  Relation = OSM.RelationGet(R)
- for Member in Relation['member']:
-  if Member['type'] == "relation":
-   logger.info(f"Relation {Member['ref']}")
-   Relation = OSM.RelationGet(Member['ref'])
-   Relation['type'] = "relation"
-   Ref = GetRef(Relation['tag'])
-   Result[Ref] = Relation
-  elif Member['type'] == "node":
-   logger.error(f"Node {Member['ref']}")
-   Node = OSM.NodeGet(Member['ref'])
-   Node['type'] = "node"
-   Ref = GetRef(Node['tag'])
-   Result[Ref] = Node
-  elif Member['type'] == "way":
-   logger.error(f"Way {Member['ref']}")
-   Way = OSM.WayGet(Member['ref'])
-   Way['type'] = "way"
-   Ref = GetRef(Way['tag'])
-   Result[Ref] = Way
-
-  if i == 0:
-   break
-  else:
-   i -= 1
-
+ for Type, Member in CacheIterator(OSM, 256, Relation['member']):
+  logger.info(f"{Type.title()} {Member['id']}")
+  Member['type'] = Type
+  Ref = GetRef(Member['tag'])
+  Result[Ref] = Member
  OSM.close()
+ #
  return Result
 
 
