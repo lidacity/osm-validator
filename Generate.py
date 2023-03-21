@@ -21,7 +21,7 @@ logger.info("Start")
 Context = {}
 Context['DateTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 Context['PravoError'], Context['Pravo'] = GetPravo()
-Relations = ReadOSM("М", 1246287) | ReadOSM("Р", 1246288) | ReadOSM("Н", 1246286)
+Relations = ReadOSM("М", 1246287) | ReadOSM("Р", 1246288) #| ReadOSM("Н", 1246286)
 Context['Highway'] = {
  'M': { 'Desc': "Магістральныя аўтамабільныя дарогі", 'List': GetOSM("М", Relations, "M.csv"), },
  'P': { 'Desc': "Рэспубліканскія аўтамабільныя дарогі", 'List': GetOSM("Р", Relations, "P.csv"), },

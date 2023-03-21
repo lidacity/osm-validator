@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 
 import osmapi
 
@@ -222,6 +223,23 @@ def GetCheckTagsInWay(Tag, Ways):
  return Result
 
 
+def GetCheckCross(Ways):
+ Result = []
+ Limit = GetLimits(Ways)
+ Array = [Item for Row in Limit for Item in Row]
+ c = Counter(Array)
+ if max(c.values()) > 2:
+  Result.append(f"аўтадарога замкнутая ў пятлю")
+ else:
+  Point = GetPoints(Ways)
+  Array1 = [Item for Row in Point for Item in Row]
+  Array2 = [Item for Row in Point for Item in Row[1:-1]]
+  c = Counter(Array1 + Array2)
+  if max(c.values()) > 2:
+   Result.append(f"аўтадарога замкнутая ў пятлю")
+ return Result
+
+
 #
 
 
@@ -251,6 +269,9 @@ def GetCheckOSM(OSM, Relation):
  Result += GetCheckWays(Relation)
  Result += GetCheckFixme(Ways)
  Result += GetCheckHighway(Ways)
+ #
+ Ways = GetWays(Relation, Exclude=["link"])
  Result += GetCheckTagsInWay(Relation['tag'], Ways)
+ Result += GetCheckCross(Ways)
 
  return Result
