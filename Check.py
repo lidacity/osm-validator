@@ -198,9 +198,27 @@ def GetCheckHighway(Ways):
    if Tag['highway'] not in Highways:
     Result.append(f"памылковы тып 'highway'={Tag['highway']} на way")
     break
-  else:
+ for _, Way in Ways.items():
+  if 'highway' not in Way['tag']:
    Result.append(f"пусты тып highway на way")
    break
+ return Result
+
+
+def GetCheckTagsInWay(Tag, Ways):
+ Result = []
+ Tags = {
+  'ref': 'ref',
+  'official_name': 'name',
+  'official_name:be': 'name:be',
+  'official_name:ru': 'name:ru',
+  }
+ for KeyWay, KeyRelation in Tags.items():
+  for _, Way in Ways.items():
+   TagWay = Way['tag']
+   if Tag[KeyRelation] != TagWay.get(KeyWay, None) is not None:
+    Result.append(f"не супадае '{KeyRelation}' у relation і '{KeyWay}' яе ways")
+    break
  return Result
 
 
@@ -233,5 +251,6 @@ def GetCheckOSM(OSM, Relation):
  Result += GetCheckWays(Relation)
  Result += GetCheckFixme(Ways)
  Result += GetCheckHighway(Ways)
+ Result += GetCheckTagsInWay(Relation['tag'], Ways)
 
  return Result
