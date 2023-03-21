@@ -31,7 +31,7 @@ FileNames = ["index.html", "relation.html", "error.html", "index.csv", "relation
 for FileName in FileNames:
  Generate(FileName, Context)
 
-if GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
- logger.info("Git Push complete")
+#if GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
+# logger.info("Git Push complete")
 
 logger.info("Done")

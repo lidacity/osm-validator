@@ -236,6 +236,43 @@ def GetCheckCross(Ways):
  return Result
 
 
+def Island(Ways, Real):
+ Limit = GetLimits(Ways)
+ Result = []
+ while len(Limit) > 1:
+  for Item in Limit[1:]:
+   if not Real:
+    if Limit[0][0] == Item[0]:
+     Limit[0][0] = Item[1]
+     Limit.remove(Item)
+     break
+    if Limit[0][0] == Item[1]:
+     Limit[0][0] = Item[0]
+     Limit.remove(Item)
+     break
+    if Limit[0][1] == Item[1]:
+     Limit[0][1] = Item[0]
+     Limit.remove(Item)
+     break
+   if Limit[0][1] == Item[0]:
+    Limit[0][1] = Item[1]
+    Limit.remove(Item)
+    break
+  else:
+   Result.append(Limit[0])
+   Limit.pop(0)
+ Result.append(Limit[0])
+ Limit.pop(0)
+ return Result
+
+
+def GetIsland(Ways):
+ Result = []
+ if Island(Ways, True) != Island(Ways, False):
+  Result.append(f"way не паслядоўныя")
+ return Result
+
+
 #
 
 
@@ -269,5 +306,6 @@ def GetCheckOSM(Relation):
  Ways = GetWays(Relation, Exclude=["link"])
  Result += GetCheckTagsInWay(Relation['tag'], Ways)
  Result += GetCheckCross(Ways)
+ Result += GetIsland(Ways)
 
  return Result

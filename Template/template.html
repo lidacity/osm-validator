@@ -25,35 +25,35 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
   <summary>Кароткае апісанне памылак</summary>
   <ul>
    <li><b>'relation' адсутнічае</b> - у osm не знойдзены relation з зададзеным official_ref</li>
-   <li><b>не 'relation'</b> - дададзеная аўтадарога не знаходзіцца ў relation</li>
+   <li><b>не 'relation'</b> - дададзеная аўтамабільна дарога не знаходзіцца ў relation</li>
    <li><b>'{official_ref}' несапраўдны!</b> - у relation адсутнічае {official_ref} (які згодна заканадаўства)</li>
    <li><b>'{Key}' не знойдзены</b> - у relation адсутнічае прадвызначаны ключ {Key}</li>
    <li><b>у '{Key}' не зададзена '{Value}'</b> - у relation адсутнічае прадвызначаны ключ {Key} з зададзеным значэннем {Value}</li>
-   <li><b>'ref' не пачынаецца з '{Class}'</b> - у relation неправільны клас аўтадарогі, ref не пачынаеца з {Class}</li>
-   <li><b>'official_ref' не пачынаецца з '{Class}-'</b> - у relation неправільны клас аўтадарогі, official_ref не пачынаеца з {Class}-</li>
-   <li><b>'official_ref' не адпавядае 'ref'</b> - лічбавыя індэксы аўтадарогі ў official_ref і ref не супадаюць</li>
-   <li><b>'name:ru' не супадае з назвай у Законе</b> - у relation апісанне аўтадарогі name:ru не супадае з апісаннем аўтадарогі ў заканадаўстве</li>
-   <li><b>'name:be' не роўны 'name'</b> - у relation не супадаюць апісанні аўтадарог name:be і name</li>
+   <li><b>'ref' не пачынаецца з '{Class}'</b> - у relation неправільны клас аўтамабільнай дарогі, ref не пачынаеца з {Class}</li>
+   <li><b>'official_ref' не пачынаецца з '{Class}-'</b> - у relation неправільны клас аўтамабільнай дарогі, official_ref не пачынаеца з {Class}-</li>
+   <li><b>'official_ref' не адпавядае 'ref'</b> - лічбавыя індэксы аўтамабільнай дарогі ў official_ref і ref не супадаюць</li>
+   <li><b>'name:ru' не супадае з назвай у Законе</b> - у relation апісанне аўтамабільнай дарогі name:ru не супадае з апісаннем аўтадарогі ў заканадаўстве</li>
+   <li><b>'name:be' не роўны 'name'</b> - у relation не супадаюць апісанні аўтамабільнай дарог name:be і name</li>
    <li><b>недапушчальны скарот у 'name:&lt;:lang&gt;'</b> - у name:&lt;:lang&gt; прысутнічае недапушчальнае словазлучэнне</li>
    <li><b>прысутнічае непатрэбны 'official_name&lt;:lang&gt;'</b> - прысутнічаюць непатрэбны official_name</li>
    <li><b>прысутнічае непатрэбны 'description&lt;:lang&gt;'</b> - прысутнічаюць непатрэбны description</li>
-   <li><b>апісанне {Ref} не адпавядае свайму апісанню ў 'name&lt;:lang&gt;'</b> - {Ref} у name&lt;:lang&gt; не адпавядае апісанню, якая прысутнічае ў аўтадароге з індэксам {Ref}</li>
-   <li><b>не вызначаны {Ref} у апісанні 'name:&lt;:lang&gt;'</b> - адсутнічае аўтадарога {Ref} з апісання name:&lt;:lang&gt;</li>
+   <li><b>апісанне {Ref} не адпавядае свайму апісанню ў 'name&lt;:lang&gt;'</b> - {Ref} у name&lt;:lang&gt; не адпавядае апісанню, якая прысутнічае ў аўтамабільнай дароге з індэксам {Ref}</li>
+   <li><b>не вызначаны {Ref} у апісанні 'name:&lt;:lang&gt;'</b> - адсутнічае аўтамабільная дарога {Ref} з апісання name:&lt;:lang&gt;</li>
    <li><b>прысутнічае 'fixme' у relation</b> - трэба ўдакладніць, бо прысутнічае 'fixme' у relation</li>
    <li><b>прысутнічае 'fixme' у way</b> - трэба ўдакладніць, бо прысутнічае 'fixme' у way</li>
    <li><b>У relation прысутнічае ня толькі way</b> - У relation магчыма прысутнічаюць непатрэбныя node ці relation</li>
-   <li><b>памылковы тып 'highway'={highway} на way</b> - на way азначаны тып {highway}, які не прапануецца для сеткі аўтадарог</li>
-   <li><b>пусты тып highway на way</b> - на way наогул не адзначана аниякага тыпу {highway}</li>
+   <li><b>памылковы тып 'highway'={highway} на way</b> - на way азначаны тып {highway}, які не прапануецца для сеткі аўтамабільных дарог</li>
+   <li><b>пусты тып highway на way</b> - на way наогул не адзначана аніякага тыпу {highway}</li>
    <li><b>не супадае '{Key}' у relation і '{Key}' яе ways</b> - не супадаюць значэнні '{Key}' у relation і ў '{Key}' яе ways</li>
-   <li><b>аўтадарога замкнутая ў пятлю</b> - аўтадарога сама сабе перасякае, альбо перакрыжаваная, магчыма не хапае role=link у relation</li>
+   <li><b>замкнутая ў пятлю</b> - аўтамабільная дарога сама сабе перасякае, альбо перакрыжаваная, магчыма не хапае role=link у relation</li>
+   <li><b>way не паслядоўныя</b> - way у relation аўтамабільнай дарогі размешчаныя не паслядоўна</li>
 
 
-<!--   <li><b>'ref' у ways не роўны 'ref' у relation</b> - </li>
-   <li><b>'official_name&lt;:lang&gt;' у ways не роўны 'name&lt;:lang&gt;' у relation</b> - </li>
+<!--
    <li><b></b> - </li>
    <li><b></b> - </li>
 -->
-   <li><b>'{ref}' адсутнічае ў Законе</b> - у заканадаўстве адсутнічае аўтадарога {ref}</li>
+   <li><b>'{ref}' адсутнічае ў Законе</b> - у заканадаўстве адсутнічае аўтамабільная дарога {ref}</li>
 
   </ul>
  </details>
