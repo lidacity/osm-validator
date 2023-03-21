@@ -5,6 +5,7 @@ Classes = {
  'Н': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:regional', 'name': None, 'name:be': None, 'name:ru': None, },
 }
 
+
 def Ref(Key):
  Result = []
  if Key[:6] == "error-":
@@ -62,12 +63,13 @@ def Ru(Tag, Name):
 
 def Abbr(Tag):
  Result = []
- Ru = Tag.get('name:ru', "")
- Abbreviations = ["’", "—", "а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", ]
- for A in Abbreviations:
-  if A in Ru:
-   Result.append(f"недапушчальны скарот у 'name:ru'")
-   break
+ for N in [ 'name', 'name:be', 'name:ru' ]:
+  Name = Tag.get(N, "")
+  Abbreviations = ["’", "—", "а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", ]
+  for A in Abbreviations:
+   if A in Name:
+    Result.append(f"недапушчальны скарот у '{N}'")
+    break
  return Result
 
 

@@ -51,7 +51,10 @@ def GetErrorLine(Key, Relation):
  Ru = Tag.get('name:ru', "")
  if Ru:
   Result['Ru'] = Ru
- Result['Relation'] = ["'{ref}' адсутнічае ў Законе"]
+ #
+ Result['Relation'] = []
+ Result['Relation'] += Check.Ref(Key)
+ Result['Relation'] += ["'{ref}' адсутнічае ў Законе"]
  return Result
 
 
@@ -88,7 +91,8 @@ def ReadOSM(R):
  OSM = osmapi.OsmApi()
  Relation = OSM.RelationGet(R)
  for Type, Member in CacheIterator(OSM, 256, Relation['member']):
-  logger.info(f"{Type.title()} {Member['id']}")
+  if Type != "relation":
+   logger.info(f"{Type.title()} {Member['id']}")
   Member['type'] = Type
   Ref = GetRef(Member['tag'])
   Result[Ref] = Member
