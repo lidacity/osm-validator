@@ -1,3 +1,4 @@
+import re
 
 Classes = {
  'М': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
@@ -90,5 +91,49 @@ def OfficialName(Tag):
  return Result
 
 
+#
 
- return f"{Result}\n"
+
+ReRefs2 = { 'ok': re.compile("[МР]-[0-9]+/[ЕП] [0-9]+|[МРН]-[0-9]+"), 'bad': re.compile("[МРН][0-9]+"), }
+
+
+def GetList(Name, Type):
+ return re.findall(ReRefs2[Type], Name)
+
+
+def GetIndex(S, Ref):
+ return [m.start() for m in re.finditer(Ref, S)]
+
+
+def ExcludeRef(Name, Index):
+ return Name[Index-1:].strip()[:1] in ["(", ")", ""]
+
+
+def BadRefInRelation(Relation, Relations):
+ Result = []
+ Tag = Relation['tag']
+ for Name in [ 'name', 'name:be', 'name:ru' ]:
+  if Name in Tag:
+   if GetList(Tag[Name], 'bad'):
+    Result.append(f"Не вызначаны 'ref' у апісанні {Name}")
+ return Result
+
+
+def RefInRelation(Relation, Relations):
+ Result = []
+ Tag = Relation['tag']
+ for Name in [ 'name', 'name:be', 'name:ru' ]:
+  if Name in Tag:
+   for Ref in GetList(Tag[Name], 'ok'):
+    if Ref in Relations:
+     for Index in GetIndex(Tag[Name], Ref):
+      Tag2 = Relations[Ref]['tag']
+      if Name in Tag2:
+       I = Index + len(Ref) + 1
+       S2 = Tag2[Name]
+       S = Tag[Name][I:I+len(S2)]
+       if S2 != S and not ExcludeRef(Tag[Name], I):
+        Result.append(f"Апісанне {Ref} не адпавядае свайму апісанню ў {Name}")
+    else:
+     Result.append(f"Не вызначаны {Ref} у апісанні {Name}")
+ return Result
