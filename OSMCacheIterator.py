@@ -4,11 +4,12 @@ import osmapi
 class CacheIterator:
 
  # захаваць прамежуткавыя значэнні
- def __init__(self, OSM, Count, Array, Exclude=[]):
-  self.OSM = OSM
+ def __init__(self, Count, Array, Type=["node", "way", "relation"], Role=[]):
+  self.OSM = osmapi.OsmApi()
   self.Count = Count
   self.Array = Array
-  self.Exclude = Exclude
+  self.IncludeType = Type
+  self.ExcludeRole = Role
   self.Type = ""
   self.Iters = self.GetIters()
   self.i = 0
@@ -31,11 +32,9 @@ class CacheIterator:
    self.j = 0
   #
   if IsCache:
-   #print(f"!! {self.Iters[i]}")
-   self.Cache = self.GetCache(self.Iters[i])
+   Cache = self.GetCache(self.Iters[i])
+   self.Cache = { Key: Cache[Key] for Key in self.Iters[i] }
   #
-  #print(f"{self.Type} {i} {j} {self.Iters[i][j]} {self.Iters}")
-  #print(f"{self.Iters[i][j]} {self.Cache[self.Iters[i][j]]}")
   Index = self.Iters[i][j]
   return self.Type, self.Cache[Index]
  
@@ -54,14 +53,24 @@ class CacheIterator:
  def GetIters(self):
   if self.Type == "":
    self.Type = "node"
-   self.Iters = self.GetItems("node")
+   if self.Type in self.IncludeType:
+    self.Iters = self.GetItems("node")
+   else:
+    return self.GetIters()
   elif self.Type == "node":
    self.Type = "way"
-   self.Iters = self.GetItems("way")
+   if self.Type in self.IncludeType:
+    self.Iters = self.GetItems("way")
+   else:
+    return self.GetIters()
   elif self.Type == "way":
    self.Type = "relation"
-   self.Iters = self.GetItems("relation")
+   if self.Type in self.IncludeType:
+    self.Iters = self.GetItems("relation")
+   else:
+    return self.GetIters()
   else:
+   self.OSM.close()
    raise StopIteration
   #
   if self.Iters:
@@ -74,7 +83,7 @@ class CacheIterator:
   Result = []
   Index, Items = 0, []
   for Item in self.Array:
-   if Item['type'] == Type and Item['role'] not in self.Exclude:
+   if Item['type'] == Type and Item['role'] not in self.ExcludeRole:
     Items.append(Item['ref'])
     if Index >= self.Count - 1:
      Result.append(Items)
@@ -88,11 +97,3 @@ class CacheIterator:
 
  def __iter__(self):
   return self
-
-
-
-#OSM = osmapi.OsmApi()
-#Relation = OSM.RelationGet(1246287)
-#for Member in CacheIterator(OSM, 3, Relation['member']):
-# print(Member)
-#OSM.close()

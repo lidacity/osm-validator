@@ -1,8 +1,6 @@
 import re
 from collections import Counter
 
-import osmapi
-
 from OSMCacheIterator import CacheIterator
 
 
@@ -104,11 +102,11 @@ def GetOfficialName(Tag):
 #
 
 
-ReRefs2 = { 'ok': re.compile("[МР]-[0-9]+/[ЕП] [0-9]+|[МРН]-[0-9]+"), 'bad': re.compile("[МРН][0-9]+"), }
+ReRefs = { 'ok': re.compile("[МР]-[0-9]+/[ЕП] [0-9]+|[МРН]-[0-9]+"), 'bad': re.compile("[МРН][0-9]+"), }
 
 
 def GetList(Name, Type):
- return re.findall(ReRefs2[Type], Name)
+ return re.findall(ReRefs[Type], Name)
 
 
 def GetIndex(S, Ref):
@@ -152,21 +150,19 @@ def GetRefInRelation(Relation, Relations):
 #
 
 
-def GetWays(OSM, Relation, Exclude=[]):
- List = [ Item['ref'] for Item in Relation['member'] if Item['type'] == "way" and Item['role'] not in Exclude ]
- Result = {}
- for Type, Member in CacheIterator(OSM, 256, Relation['member'], Exclude=Exclude):
-  if Type == "way":
-   Result[Member['id']] = Member
- return { Key: Result[Key] for Key in List}
+def GetWays(Relation, Exclude=[]):
+ Result = []
+ for Type, Member in CacheIterator(256, Relation['member'], Type=["way"], Role=Exclude):
+  Result.append(Member)
+ return Result
 
 
 def GetLimits(Ways):
- return [ [Value['nd'][0], Value['nd'][-1]] for Key, Value in Ways.items() ]
+ return [ [Way['nd'][0], Way['nd'][-1]] for Way in Ways ]
 
 
-def GetPoints(Ways):
- return [ [Item for Item in Value['nd']] for Key, Value in Ways.items() ]
+def GetNodes(Ways):
+ return [ [Node for Node in Way['nd']] for Way in Ways ]
 
 
 #
@@ -183,7 +179,7 @@ def GetCheckWays(Relation):
 
 def GetCheckFixme(Ways):
  Result = []
- for _, Way in Ways.items():
+ for Way in Ways:
   if "fixme" in Way['tag']:
    Result.append(f"прысутнічае 'fixme' у way")
    break
@@ -193,13 +189,13 @@ def GetCheckFixme(Ways):
 def GetCheckHighway(Ways):
  Result = []
  Highways = [ "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link" ]
- for _, Way in Ways.items():
+ for Way in Ways:
   Tag = Way['tag']
   if 'highway' in Tag:
    if Tag['highway'] not in Highways:
     Result.append(f"памылковы тып 'highway'={Tag['highway']} на way")
     break
- for _, Way in Ways.items():
+ for Way in Ways:
   if 'highway' not in Way['tag']:
    Result.append(f"пусты тып highway на way")
    break
@@ -215,7 +211,7 @@ def GetCheckTagsInWay(Tag, Ways):
   'official_name:ru': 'name:ru',
   }
  for KeyWay, KeyRelation in Tags.items():
-  for _, Way in Ways.items():
+  for Way in Ways:
    TagWay = Way['tag']
    if Tag[KeyRelation] != TagWay.get(KeyWay, None) is not None:
     Result.append(f"не супадае '{KeyRelation}' у relation і '{KeyWay}' яе ways")
@@ -226,15 +222,15 @@ def GetCheckTagsInWay(Tag, Ways):
 def GetCheckCross(Ways):
  Result = []
  Limit = GetLimits(Ways)
- Array = [Item for Row in Limit for Item in Row]
- c = Counter(Array)
+ Nodes = [Node for Row in Limit for Node in Row]
+ c = Counter(Nodes)
  if max(c.values()) > 2:
   Result.append(f"аўтадарога замкнутая ў пятлю")
  else:
-  Point = GetPoints(Ways)
-  Array1 = [Item for Row in Point for Item in Row]
-  Array2 = [Item for Row in Point for Item in Row[1:-1]]
-  c = Counter(Array1 + Array2)
+  Nodes = GetNodes(Ways)
+  Nodes1 = [Node for Row in Nodes for Node in Row]
+  Nodes2 = [Node for Row in Nodes for Node in Row[1:-1]]
+  c = Counter(Nodes1 + Nodes2)
   if max(c.values()) > 2:
    Result.append(f"аўтадарога замкнутая ў пятлю")
  return Result
@@ -263,9 +259,9 @@ def GetCheckRef(Relation, Relations):
  return Result
 
 
-def GetCheckOSM(OSM, Relation):
+def GetCheckOSM(Relation):
  Result = []
- Ways = GetWays(OSM, Relation)
+ Ways = GetWays(Relation)
  Result += GetCheckWays(Relation)
  Result += GetCheckFixme(Ways)
  Result += GetCheckHighway(Ways)

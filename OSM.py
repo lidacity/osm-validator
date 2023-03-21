@@ -45,7 +45,7 @@ def GetErrorLine(Key, Relation):
  return Result
 
 
-def GetLine(OSM, Class, Key, Value, Relations):
+def GetLine(Class, Key, Value, Relations):
  Result = {}
  Result['Key'] = Key
  Relation = Relations.get(Key, {})
@@ -63,7 +63,7 @@ def GetLine(OSM, Class, Key, Value, Relations):
   Result['Error'] = []
   Result['Error'] += Check.GetCheck(Class, Key, Value, Type, Tag)
   Result['Error'] += Check.GetCheckRef(Relation, Relations)
-  Result['Error'] += Check.GetCheckOSM(OSM, Relation)
+  Result['Error'] += Check.GetCheckOSM(Relation)
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
   Result['Color'] = "#d6e090"
@@ -80,7 +80,7 @@ def ReadOSM(Class, R):
  #
  OSM = osmapi.OsmApi()
  Relation = OSM.RelationGet(R)
- for Type, Member in CacheIterator(OSM, 256, Relation['member']):
+ for Type, Member in CacheIterator(256, Relation['member']):
   if Type != "relation":
    logger.info(f"{Type.title()} {Member['id']}")
   Member['type'] = Type
@@ -104,8 +104,6 @@ def GetOSM(Class, Relations, FileName):
  FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", FileName)
  CSV = Load(FileName)
  #
- OSM = osmapi.OsmApi()
- Result += [ GetLine(OSM, Class, Key, Value, Relations) for Key, Value in CSV.items() ] 
- OSM.close()
+ Result += [ GetLine(Class, Key, Value, Relations) for Key, Value in CSV.items() ] 
  Result += [ GetErrorLine(Key, Relation) for Key, Relation in GetNotFound(Class, Relations, CSV).items()]
  return Result
