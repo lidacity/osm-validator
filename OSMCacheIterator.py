@@ -4,10 +4,11 @@ import osmapi
 class CacheIterator:
 
  # захаваць прамежуткавыя значэнні
- def __init__(self, OSM, Count, Array):
+ def __init__(self, OSM, Count, Array, Exclude=[]):
   self.OSM = OSM
   self.Count = Count
   self.Array = Array
+  self.Exclude = Exclude
   self.Type = ""
   self.Iters = self.GetIters()
   self.i = 0
@@ -73,7 +74,7 @@ class CacheIterator:
   Result = []
   Index, Items = 0, []
   for Item in self.Array:
-   if Item['type'] == Type:
+   if Item['type'] == Type and Item['role'] not in self.Exclude:
     Items.append(Item['ref'])
     if Index >= self.Count - 1:
      Result.append(Items)

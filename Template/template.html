@@ -37,7 +37,14 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <li><b>недапушчальны скарот у 'name:&lt;:lang&gt;'</b> - у name:&lt;:lang&gt; прысутнічае недапушчальнае словазлучэнне</li>
    <li><b>прысутнічае непатрэбны 'official_name&lt;:lang&gt;'</b> - прысутнічаюць непатрэбны official_name</li>
    <li><b>прысутнічае непатрэбны 'description&lt;:lang&gt;'</b> - прысутнічаюць непатрэбны description</li>
-   <li><b>Апісанне {Ref} не адпавядае свайму апісанню ў name&lt;:lang&gt;</b> - {Ref} у name&lt;:lang&gt; не адпавядае апісанню, якая прысутнічае ў аўтадароге з індэксам {Ref}</li>
+   <li><b>апісанне {Ref} не адпавядае свайму апісанню ў 'name&lt;:lang&gt;'</b> - {Ref} у name&lt;:lang&gt; не адпавядае апісанню, якая прысутнічае ў аўтадароге з індэксам {Ref}</li>
+   <li><b>не вызначаны {Ref} у апісанні 'name:&lt;:lang&gt;'</b> - адсутнічае аўтадарога {Ref} з апісання name:&lt;:lang&gt;</li>
+   <li><b>прысутнічае 'fixme' у relation</b> - трэба ўдакладніць, бо прысутнічае 'fixme' у relation</li>
+   <li><b>прысутнічае 'fixme' у way</b> - трэба ўдакладніць, бо прысутнічае 'fixme' у way</li>
+   <li><b>У relation прысутнічае ня толькі way</b> - У relation магчыма прысутнічаюць непатрэбныя node ці relation</li>
+   <li><b>памылковы тып 'highway'={highway} на way</b> - на way азначаны тып {highway}, які не прапануецца для сеткі аўтадарог</li>
+   <li><b>пусты тып highway на way</b> - на way наогул не адзначана аниякага тыпу {highway}</li>
+
 
 <!--   <li><b>'ref' у ways не роўны 'ref' у relation</b> - </li>
    <li><b>'official_name&lt;:lang&gt;' у ways не роўны 'name&lt;:lang&gt;' у relation</b> - </li>

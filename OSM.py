@@ -21,19 +21,6 @@ def Load(FileName):
  return Result
 
 
-def GetError(Class, Key, Value, Type, Tag):
- Result = []
- Result += Check.Ref(Key)
- Result += Check.Relation(Type)
- Result += Check.Tag(Tag, Class)
- Result += Check.Class(Tag, Class)
- Result += Check.Be(Tag)
- Result += Check.Ru(Tag, Value)
- Result += Check.Abbr(Tag)
- Result += Check.OfficialName(Tag)
- return Result
-
-
 def GetRef(Tag):
  return Tag.get('official_ref', f"error-{random.randint(0, 9999)}")
 
@@ -53,12 +40,12 @@ def GetErrorLine(Key, Relation):
   Result['Ru'] = Ru
  #
  Result['Relation'] = []
- Result['Relation'] += Check.Ref(Key)
+ Result['Relation'] += Check.GetRef(Key)
  Result['Relation'] += ["'{ref}' адсутнічае ў Законе"]
  return Result
 
 
-def GetLine(Class, Key, Value, Relations):
+def GetLine(OSM, Class, Key, Value, Relations):
  Result = {}
  Result['Key'] = Key
  Relation = Relations.get(Key, {})
@@ -73,10 +60,10 @@ def GetLine(Class, Key, Value, Relations):
   Ru = Tag.get('name:ru', "")
   if Ru:
    Result['Ru'] = Ru
-  Result['Error'] = GetError(Class, Key, Value, Type, Tag)
-  Result['Error'] += Check.BadRefInRelation(Relation, Relations)
-  Result['Error'] += Check.RefInRelation(Relation, Relations)
-
+  Result['Error'] = []
+  Result['Error'] += Check.GetCheck(Class, Key, Value, Type, Tag)
+  Result['Error'] += Check.GetCheckRef(Relation, Relations)
+  Result['Error'] += Check.GetCheckOSM(OSM, Relation)
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
   Result['Color'] = "#d6e090"
@@ -117,6 +104,8 @@ def GetOSM(Class, Relations, FileName):
  FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", FileName)
  CSV = Load(FileName)
  #
- Result += [ GetLine(Class, Key, Value, Relations) for Key, Value in CSV.items() ] 
+ OSM = osmapi.OsmApi()
+ Result += [ GetLine(OSM, Class, Key, Value, Relations) for Key, Value in CSV.items() ] 
+ OSM.close()
  Result += [ GetErrorLine(Key, Relation) for Key, Relation in GetNotFound(Class, Relations, CSV).items()]
  return Result
