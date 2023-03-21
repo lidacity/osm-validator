@@ -75,14 +75,14 @@ def GetLine(Class, Key, Value, Relations):
 
 
 def ReadOSM(Class, R):
- logger.info(f"Read Main Relation {R}")
+ logger.info(f"Read relation {R}")
  Result, List = {}, {}
  #
  OSM = osmapi.OsmApi()
  Relation = OSM.RelationGet(R)
  for Type, Member in CacheIterator(256, Relation['member']):
-  if Type != "relation":
-   logger.info(f"{Type.title()} {Member['id']}")
+#  if Type != "relation":
+#   logger.info(f"{Type.title()} {Member['id']}")
   Member['type'] = Type
   Member['class'] = Class
   Ref = GetRef(Member['tag'])
@@ -98,7 +98,7 @@ def GetNotFound(Class, Relation, CSV):
 
 
 def GetOSM(Class, Relations, FileName):
- logger.info(f"Get Relation {Class}")
+ logger.info(f"Parse relation {Class}")
  Result = []
  #
  FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", FileName)

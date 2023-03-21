@@ -1,7 +1,9 @@
 import re
 from collections import Counter
 
-from OSMCacheIterator import CacheIterator
+from haversine import haversine
+
+from OSMCacheIterator import CacheIterator, ArrayCacheIterator
 
 
 #
@@ -165,6 +167,43 @@ def GetNodes(Ways):
  return [ [Node for Node in Way['nd']] for Way in Ways ]
 
 
+def Island(Ways, Real):
+ Limit = GetLimits(Ways)
+ Result = []
+ while len(Limit) > 1:
+  for Item in Limit[1:]:
+   if not Real:
+    if Limit[0][0] == Item[0]:
+     Limit[0][0] = Item[1]
+     Limit.remove(Item)
+     break
+    if Limit[0][0] == Item[1]:
+     Limit[0][0] = Item[0]
+     Limit.remove(Item)
+     break
+    if Limit[0][1] == Item[1]:
+     Limit[0][1] = Item[0]
+     Limit.remove(Item)
+     break
+   if Limit[0][1] == Item[0]:
+    Limit[0][1] = Item[1]
+    Limit.remove(Item)
+    break
+  else:
+   Result.append(Limit[0])
+   Limit.pop(0)
+ Result.append(Limit[0])
+ Limit.pop(0)
+ return Result
+
+
+def GetCoord(Ways):
+ Nodes = Island(Ways, False)
+ Array = [Item for Row in Nodes for Item in Row]
+ Result = { Item['id']: (Item['lat'], Item['lon']) for Item in ArrayCacheIterator(256, Array, "node") }
+ return [ [ Result[ID] for ID in Row ] for Row in Nodes ]
+
+
 #
 
 
@@ -235,41 +274,29 @@ def GetCheckCross(Ways):
    Result.append(f"аўтадарога замкнутая ў пятлю")
  return Result
 
-
-def Island(Ways, Real):
- Limit = GetLimits(Ways)
- Result = []
- while len(Limit) > 1:
-  for Item in Limit[1:]:
-   if not Real:
-    if Limit[0][0] == Item[0]:
-     Limit[0][0] = Item[1]
-     Limit.remove(Item)
-     break
-    if Limit[0][0] == Item[1]:
-     Limit[0][0] = Item[0]
-     Limit.remove(Item)
-     break
-    if Limit[0][1] == Item[1]:
-     Limit[0][1] = Item[0]
-     Limit.remove(Item)
-     break
-   if Limit[0][1] == Item[0]:
-    Limit[0][1] = Item[1]
-    Limit.remove(Item)
-    break
-  else:
-   Result.append(Limit[0])
-   Limit.pop(0)
- Result.append(Limit[0])
- Limit.pop(0)
- return Result
-
-
 def GetIsland(Ways):
  Result = []
  if Island(Ways, True) != Island(Ways, False):
   Result.append(f"way не паслядоўныя")
+ return Result
+
+
+def GetHaversine(Ways):
+ Result = []
+ Coords = GetCoord(Ways)
+ #
+ Lengths = []
+ for Item1 in Coords:
+  SubLengths = []
+  for Item2 in Coords:
+   if Item1 != Item2:
+    SubLengths += [ haversine(x, y) for x in Item1 for y in Item2 ]
+  if SubLengths:
+   Lengths.append(min(SubLengths))
+ #
+ if Lengths:
+  if max(Lengths) > 1.0:
+   Result.append(f"занадта разарваная дарога")
  return Result
 
 
@@ -307,5 +334,5 @@ def GetCheckOSM(Relation):
  Result += GetCheckTagsInWay(Relation['tag'], Ways)
  Result += GetCheckCross(Ways)
  Result += GetIsland(Ways)
-
+ Result += GetHaversine(Ways)
  return Result

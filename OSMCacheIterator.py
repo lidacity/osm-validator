@@ -97,3 +97,70 @@ class CacheIterator:
 
  def __iter__(self):
   return self
+
+
+
+class ArrayCacheIterator:
+
+ # захаваць прамежуткавыя значэнні
+ def __init__(self, Count, Array, Type):
+  self.OSM = osmapi.OsmApi()
+  self.Count = Count
+  self.Array = Array
+  self.Type = Type
+  self.Iters = self.GetItems()
+  self.i = 0
+  self.j = 0
+  self.Cache = {}
+
+
+ # абнавіць значэнне і вярнуць вынік
+ def __next__(self):
+  i, j = self.i, self.j
+  IsCache = self.j == 0
+  #
+  if self.i > len(self.Iters) - 1:
+   raise StopIteration
+  if self.j < len(self.Iters[i]) - 1:
+   self.j += 1
+  else:
+   self.i += 1
+   self.j = 0
+  #
+  if IsCache:
+   Cache = self.GetCache(self.Iters[i])
+   self.Cache = { Key: Cache[Key] for Key in self.Iters[i] }
+  #
+  Index = self.Iters[i][j]
+  return self.Cache[Index]
+ 
+
+ def GetCache(self, IDs):
+  if self.Type == "node":
+   return self.OSM.NodesGet(IDs)
+  elif self.Type == "way":
+   return self.OSM.WaysGet(IDs)
+  elif self.Type == "relation":
+   return self.OSM.RelationsGet(IDs)
+  else:
+   raise "Error!"
+
+
+ def GetItems(self):
+  Result = []
+  Index, Items = 0, []
+  for Item in self.Array:
+   Items.append(Item)
+   if Index >= self.Count - 1:
+    Result.append(Items)
+    Index, Items = 0, []
+   else:
+    Index += 1
+  if Items:
+   Result.append(Items)
+  #
+  return Result
+
+
+ def __iter__(self):
+  return self
