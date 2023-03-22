@@ -2,7 +2,7 @@ import re
 from collections import Counter
 
 from haversine import haversine
-from lingua import Language, LanguageDetectorBuilder
+#from lingua import Language, LanguageDetectorBuilder
 
 from OSMCacheIterator import CacheIterator, ArrayCacheIterator
 
@@ -144,27 +144,27 @@ def GetImpossible(Tag):
  return Result
 
 
-Languages = [Language.RUSSIAN, Language.BELARUSIAN] #Language.ENGLISH
-Detector = LanguageDetectorBuilder.from_languages(*Languages).build()
+#Languages = [Language.RUSSIAN, Language.BELARUSIAN] #Language.ENGLISH
+#Detector = LanguageDetectorBuilder.from_languages(*Languages).build()
 
-def GetLanguage(Tag):
- Result = []
- global Detector
-# for language, value in Detector.compute_language_confidence_values(Line):
-#  print(f"{language.name}: {value:.2f}")
-# print(Detector.detect_language_of(Line))
-# sys.exit(0)
- for Name in ['name:ru']:
-  if Name in Tag:
-   if Detector.detect_language_of(Tag[Name]) != Language.RUSSIAN:
-    Result.append(f"у '{Name}' мова не руская")
-    break
- for Name in ['name', 'name:be']:
-  if Name in Tag:
-   if Detector.detect_language_of(Tag[Name]) != Language.BELARUSIAN:
-    Result.append(f"у '{Name}' мова не беларуская")
-    break
- return Result
+#def GetLanguage(Tag):
+# Result = []
+# global Detector
+## for language, value in Detector.compute_language_confidence_values(Line):
+##  print(f"{language.name}: {value:.2f}")
+## print(Detector.detect_language_of(Line))
+## sys.exit(0)
+# for Name in ['name:ru']:
+#  if Name in Tag:
+#   if Detector.detect_language_of(Tag[Name]) != Language.RUSSIAN:
+#    Result.append(f"у '{Name}' мова не руская")
+#    break
+# for Name in ['name', 'name:be']:
+#  if Name in Tag:
+#   if Detector.detect_language_of(Tag[Name]) != Language.BELARUSIAN:
+#    Result.append(f"у '{Name}' мова не беларуская")
+#    break
+# return Result
 
 
 #
@@ -382,7 +382,7 @@ def GetCheck(Class, Key, Value, Type, Tag):
  Result += GetLatin(Tag)
  Result += GetLength(Tag)
  Result += GetImpossible(Tag)
- Result += GetLanguage(Tag)
+# Result += GetLanguage(Tag)
  return Result
 
 
