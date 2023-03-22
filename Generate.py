@@ -19,7 +19,6 @@ logger.add(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".log", "osm
 logger.info("Start")
 
 Context = {}
-Context['DateTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 Context['PravoError'], Context['Pravo'] = GetPravo()
 Relations = ReadOSM("М", 1246287) | ReadOSM("Р", 1246288) | ReadOSM("Н", 1246286)
 Context['Highway'] = {
@@ -27,6 +26,7 @@ Context['Highway'] = {
  'P': { 'Desc': "Рэспубліканскія аўтамабільныя дарогі", 'List': GetOSM("Р", Relations, "P.csv"), },
  'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", Relations, "H.csv"), },
 }
+Context['DateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 FileNames = ["index.html", "relation.html", "error.html", "index.csv", "relation.csv", "error.csv", ]
 for FileName in FileNames:
  Generate(FileName, Context)
