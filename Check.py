@@ -2,6 +2,7 @@ import re
 from collections import Counter
 
 from haversine import haversine
+from lingua import Language, LanguageDetectorBuilder
 
 from OSMCacheIterator import CacheIterator, ArrayCacheIterator
 
@@ -98,6 +99,71 @@ def GetOfficialName(Tag):
   Result.append(f"прысутнічае непатрэбны 'description:ru'")
  if 'fixme' in Tag:
   Result.append(f"прысутнічае 'fixme' у relation")
+ return Result
+
+
+ReLatin = re.compile("[a-zA-Z]")
+#ReLatin = re.compile("^(?!.*SOS).*$")
+
+def GetLatin(Tag):
+ Result = []
+ for Name in ['name', 'name:be', 'name:ru']:
+  if Name in Tag:
+   if re.findall(ReLatin, Tag[Name].replace("SOS", "")):
+    Result.append(f"у '{Name}' прысутнічаюць лацінскія літары")
+    break
+ return Result
+
+
+def GetLength(Tag):
+ Result = []
+ Be = len(Tag.get('name:be', ""))
+ Ru = len(Tag.get('name:ru', ""))
+ if abs(Be - Ru) > 12:
+  Result.append(f"вялікая розніца паміж даўжынёй 'name:be' і 'name:ru'")
+ return Result
+
+
+#https://vl2d.livejournal.com/21053.html
+#https://yadro-servis.ru/blog/nevosmosnoe-sochetanie-bukv/ 
+Impossible = {
+ 'name:ru': [ "ёя", "ёь", "ёэ", "ъж", "эё", "ъд", "цё", "уь", "щч", "чй", "шй", "шз", "ыф", "жщ", "жш", "жц", "ыъ", "ыэ", "ыю", "ыь", "жй", "ыы", "жъ", "жы", "ъш", "пй", "ъщ", "зщ", "ъч", "ъц", "ъу", "ъф", "ъх", "ъъ", "ъы", "ыо", "жя", "зй", "ъь", "ъэ", "ыа", "нй", "еь", "цй", "ьй", "ьл", "ьр", "пъ", "еы", "еъ", "ьа", "шъ", "ёы", "ёъ", "ът", "щс", "оь", "къ", "оы", "щх", "щщ", "щъ", "щц", "кй", "оъ", "цщ", "лъ", "мй", "шщ", "ць", "цъ", "щй", "йь", "ъг", "иъ", "ъб", "ъв", "ъи", "ъй", "ъп", "ър", "ъс", "ъо", "ън", "ък", "ъл", "ъм", "иы", "иь", "йу", "щэ", "йы", "йъ", "щы", "щю", "щя", "ъа", "мъ", "йй", "йж", "ьу", "гй", "эъ", "уъ", "аь", "чъ", "хй", "тй", "чщ", "ръ", "юъ", "фъ", "уы", "аъ", "юь", "аы", "юы", "эь", "эы", "бй", "яь", "ьы", "ьь", "ьъ", "яъ", "яы", "хщ", "дй", "фй", ],
+ 'name:be': [ "и", "щ", "ъ", "жі", "же", "жё", "жя", "жю", "рі", "ре", "рё", "ря", "рю", "чі", "че", "чё", "чя", "чю", "ші", "ше", "шё", "шя", "шю", "ді", "де", "дё", "дя", "дю", "ті", "те", "тё", "тя", "тю", "еу", "ыу", "ау", "оу", "эу", "яу", "іу", "юу", "ёу", "уу", "еь", "ыь", "аь", "оь", "эь", "яь", "іь", "юь", "ёь", "уь", "ўь", "йь", "йў", "цў", "кў", "нў", "гў", "шў", "ўў", "зў", "хў", "фў", "вў", "пў", "рў", "лў", "дў", "жў", "чў", "сў", "мў", "тў", "ьў", "бў", "йй", "цй", "кй", "нй", "гй", "шй", "ўй", "зй", "хй", "фй", "вй", "пй", "рй", "лй", "дй", "жй", "чй", "сй", "мй", "тй", "ьй", "бй", "жш", "жц", "ыэ", "ыю", "ыы", "ыо", "ыа", "ьр", "ьа", "ёы", "оы", "йу", "йы", "йж", "ьу", "гй", "уы", "юь", "аы", "юы", "эы", "ьы", "ьь", "яы", ],
+}
+
+
+def GetImpossible(Tag):
+ Result = []
+ for Name in ['name:ru', 'name:be']:
+  if Name in Tag:
+   Line = Tag[Name].lower()
+   for s in Impossible[Name]:
+    if s in Line:
+     Result.append(f"у '{Name}' немагчымае спалучэнне \"{s}\"")
+     break
+ return Result
+
+
+Languages = [Language.RUSSIAN, Language.BELARUSIAN] #Language.ENGLISH
+Detector = LanguageDetectorBuilder.from_languages(*Languages).build()
+
+def GetLanguage(Tag):
+ Result = []
+ global Detector
+# for language, value in Detector.compute_language_confidence_values(Line):
+#  print(f"{language.name}: {value:.2f}")
+# print(Detector.detect_language_of(Line))
+# sys.exit(0)
+ for Name in ['name:ru']:
+  if Name in Tag:
+   if Detector.detect_language_of(Tag[Name]) != Language.RUSSIAN:
+    Result.append(f"у '{Name}' мова не руская")
+    break
+ for Name in ['name', 'name:be']:
+  if Name in Tag:
+   if Detector.detect_language_of(Tag[Name]) != Language.BELARUSIAN:
+    Result.append(f"у '{Name}' мова не беларуская")
+    break
  return Result
 
 
@@ -252,7 +318,7 @@ def GetCheckTagsInWay(Tag, Ways):
  for KeyWay, KeyRelation in Tags.items():
   for Way in Ways:
    TagWay = Way['tag']
-   if Tag[KeyRelation] != TagWay.get(KeyWay, None) is not None:
+   if Tag.get(KeyRelation, None) != TagWay.get(KeyWay, None) is not None:
     Result.append(f"не супадае '{KeyRelation}' у relation і '{KeyWay}' яе ways")
     break
  return Result
@@ -313,6 +379,10 @@ def GetCheck(Class, Key, Value, Type, Tag):
  Result += GetRu(Tag, Value)
  Result += GetAbbr(Tag)
  Result += GetOfficialName(Tag)
+ Result += GetLatin(Tag)
+ Result += GetLength(Tag)
+ Result += GetImpossible(Tag)
+ Result += GetLanguage(Tag)
  return Result
 
 

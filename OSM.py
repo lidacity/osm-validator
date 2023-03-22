@@ -10,6 +10,7 @@ import osmapi
 
 from OSMCacheIterator import CacheIterator
 import Check
+import Check1
 
 
 def Load(FileName):
@@ -30,7 +31,8 @@ def GetErrorLine(Key, Relation):
  Result['Key'] = Key
  Result['Color'] = "#ff9090"
  Tag = Relation['tag']
- Result['Type'] = Relation['type']
+ Type = Relation['type']
+ Result['Type'] = Type
  Result['ID'] = Relation.get('id', None)
  Be = Tag.get('name', "")
  if Be:
@@ -41,6 +43,7 @@ def GetErrorLine(Key, Relation):
  #
  Result['Relation'] = []
  Result['Relation'] += Check.GetRef(Key)
+ Result['Relation'] += Check.GetRelation(Type)
  Result['Relation'] += ["'{ref}' адсутнічае ў Законе"]
  return Result
 
@@ -50,6 +53,7 @@ def GetLine(Class, Key, Value, Relations):
  Result['Key'] = Key
  Relation = Relations.get(Key, {})
  if Relation:
+#  logger.info(f"parse relation {Relation['id']}")
   Type = Relation['type']
   Result['Type'] = Type
   Result['ID'] = Relation['id']
@@ -61,9 +65,12 @@ def GetLine(Class, Key, Value, Relations):
   if Ru:
    Result['Ru'] = Ru
   Result['Error'] = []
-  Result['Error'] += Check.GetCheck(Class, Key, Value, Type, Tag)
-  Result['Error'] += Check.GetCheckRef(Relation, Relations)
-  Result['Error'] += Check.GetCheckOSM(Relation)
+#  Result['Error'] += Check.GetCheck(Class, Key, Value, Type, Tag)
+#  Result['Error'] += Check.GetCheckRef(Relation, Relations)
+#  Result['Error'] += Check.GetCheckOSM(Relation)
+
+  Result['Error'] += Check1.GetCheck(Class, Key, Value, Type, Tag)
+
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
   Result['Color'] = "#d6e090"

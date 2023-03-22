@@ -32,6 +32,7 @@ for FileName in FileNames:
  Generate(FileName, Context)
 
 if GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
- logger.info("Git Push complete")
+ Diff = repo.git.diff('HEAD~1')
+ logger.info(f"Git Push complete\n{Diff}")
 
 logger.info("Done")
