@@ -71,53 +71,48 @@ def GetRu(Tag, Name):
  return Result
 
 
+Abbreviations = re.compile("|".join(["’", "—", "а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", ])).search
+
+
 def GetAbbr(Tag):
  Result = []
- for N in [ 'name', 'name:be', 'name:ru' ]:
-  Name = Tag.get(N, "")
-  Abbreviations = ["’", "—", "а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", ]
-  for A in Abbreviations:
-   if A in Name:
-    Result.append(f"недапушчальны скарот \"{A}\" у '{N}'")
-    break
+ for TagName in ['name', 'name:be', 'name:ru']:
+  Name = Tag.get(TagName, "")
+  Abbr = Abbreviations(Name)
+  if Abbr:
+   Result.append(f"недапушчальны скарот \"{Abbr}\" у '{TagName}'")
+   break
  return Result
 
 
 def GetOfficialName(Tag):
  Result = []
- for Name in ['official_name', 'official_name:be', 'official_name:ru', 'description', 'description:be', 'description:ru']:
-  if Name in Tag:
-   Result.append(f"прысутнічае непатрэбны '{Name}'")
+ for TagName in ['official_name', 'official_name:be', 'official_name:ru', 'description', 'description:be', 'description:ru']:
+  if TagName in Tag:
+   Result.append(f"прысутнічае непатрэбны '{TagName}'")
  if 'fixme' in Tag:
   Result.append(f"прысутнічае 'fixme' у relation")
  return Result
 
 
 Latin = re.compile("[a-zA-Z]").search
+Special = re.compile("|".join(map(re.escape, ".,:;!_*+#¤%&[]{}$@^\\"))).search
 #ReLatin = re.compile("^(?!.*SOS).*$")
 #regex = re.compile('SOS')
 #print(regex.sub('СОС', text))
 
 
-def GetLatin(Tag):
+def GetLetter(Tag):
  Result = []
- for Name in ['name', 'name:be', 'name:ru']:
-  if Name in Tag:
-   if Latin(Tag[Name].replace("SOS", "СОС")):
-    Result.append(f"у '{Name}' прысутнічаюць лацінскія літары")
+ for TagName in ['name', 'name:be', 'name:ru']:
+  if TagName in Tag:
+   L = Latin(Tag[TagName].replace("SOS", "СОС"))
+   if L:
+    Result.append(f"у '{TagName}' прысутнічаюць лацінскія літары \"{L}\"")
     break
- return Result
-
-
-Special = re.compile("|".join(map(re.escape, ".,:;!_*+#¤%&[]{}"))).search
-
-
-def GetSpecial(Tag):
- Result = []
- for Name in ['name', 'name:be', 'name:ru']:
-  if Name in Tag:
-   if Special(Tag[Name]):
-    Result.append(f"у '{Name}' прысутнічаюць спецыяльныя знакі")
+   S = Special(Tag[TagName])
+   if S:
+    Result.append(f"у '{TagName}' прысутнічаюць спецыяльныя знакі \"{S}\"")
     break
  return Result
 
@@ -134,20 +129,20 @@ def GetLength(Tag):
 #https://vl2d.livejournal.com/21053.html
 #https://yadro-servis.ru/blog/nevosmosnoe-sochetanie-bukv/ 
 Impossible = {
- 'name:ru': [ "ёя", "ёь", "ёэ", "ъж", "эё", "ъд", "цё", "уь", "щч", "чй", "шй", "шз", "ыф", "жщ", "жш", "жц", "ыъ", "ыэ", "ыю", "ыь", "жй", "ыы", "жъ", "жы", "ъш", "пй", "ъщ", "зщ", "ъч", "ъц", "ъу", "ъф", "ъх", "ъъ", "ъы", "ыо", "жя", "зй", "ъь", "ъэ", "ыа", "нй", "еь", "цй", "ьй", "ьл", "ьр", "пъ", "еы", "еъ", "ьа", "шъ", "ёы", "ёъ", "ът", "щс", "оь", "къ", "оы", "щх", "щщ", "щъ", "щц", "кй", "оъ", "цщ", "лъ", "мй", "шщ", "ць", "цъ", "щй", "йь", "ъг", "иъ", "ъб", "ъв", "ъи", "ъй", "ъп", "ър", "ъс", "ъо", "ън", "ък", "ъл", "ъм", "иы", "иь", "йу", "щэ", "йы", "йъ", "щы", "щю", "щя", "ъа", "мъ", "йй", "йж", "ьу", "гй", "эъ", "уъ", "аь", "чъ", "хй", "тй", "чщ", "ръ", "юъ", "фъ", "уы", "аъ", "юь", "аы", "юы", "эь", "эы", "бй", "яь", "ьы", "ьь", "ьъ", "яъ", "яы", "хщ", "дй", "фй", ],
- 'name:be': [ "и", "щ", "ъ", "жі", "же", "жё", "жя", "жю", "рі", "ре", "рё", "ря", "рю", "чі", "че", "чё", "чя", "чю", "ші", "ше", "шё", "шя", "шю", "ді", "де", "дё", "дя", "дю", "ті", "те", "тё", "тя", "тю", "еу", "ыу", "ау", "оу", "эу", "яу", "іу", "юу", "ёу", "уу", "еь", "ыь", "аь", "оь", "эь", "яь", "іь", "юь", "ёь", "уь", "ўь", "йь", "йў", "цў", "кў", "нў", "гў", "шў", "ўў", "зў", "хў", "фў", "вў", "пў", "рў", "лў", "дў", "жў", "чў", "сў", "мў", "тў", "ьў", "бў", "йй", "цй", "кй", "нй", "гй", "шй", "ўй", "зй", "хй", "фй", "вй", "пй", "рй", "лй", "дй", "жй", "чй", "сй", "мй", "тй", "ьй", "бй", "жш", "жц", "ыэ", "ыю", "ыы", "ыо", "ыа", "ьр", "ьа", "ёы", "оы", "йу", "йы", "йж", "ьу", "гй", "уы", "юь", "аы", "юы", "эы", "ьы", "ьь", "яы", ],
+ 'name:ru': re.compile("|".join([ "ёя", "ёь", "ёэ", "ъж", "эё", "ъд", "цё", "уь", "щч", "чй", "шй", "шз", "ыф", "жщ", "жш", "жц", "ыъ", "ыэ", "ыю", "ыь", "жй", "ыы", "жъ", "жы", "ъш", "пй", "ъщ", "зщ", "ъч", "ъц", "ъу", "ъф", "ъх", "ъъ", "ъы", "ыо", "жя", "зй", "ъь", "ъэ", "ыа", "нй", "еь", "цй", "ьй", "ьл", "ьр", "пъ", "еы", "еъ", "ьа", "шъ", "ёы", "ёъ", "ът", "щс", "оь", "къ", "оы", "щх", "щщ", "щъ", "щц", "кй", "оъ", "цщ", "лъ", "мй", "шщ", "ць", "цъ", "щй", "йь", "ъг", "иъ", "ъб", "ъв", "ъи", "ъй", "ъп", "ър", "ъс", "ъо", "ън", "ък", "ъл", "ъм", "иы", "иь", "йу", "щэ", "йы", "йъ", "щы", "щю", "щя", "ъа", "мъ", "йй", "йж", "ьу", "гй", "эъ", "уъ", "аь", "чъ", "хй", "тй", "чщ", "ръ", "юъ", "фъ", "уы", "аъ", "юь", "аы", "юы", "эь", "эы", "бй", "яь", "ьы", "ьь", "ьъ", "яъ", "яы", "хщ", "дй", "фй", ])).search,
+ 'name:be': re.compile("|".join([ "и", "щ", "ъ", "жі", "же", "жё", "жя", "жю", "рі", "ре", "рё", "ря", "рю", "чі", "че", "чё", "чя", "чю", "ші", "ше", "шё", "шя", "шю", "ді", "де", "дё", "дя", "дю", "ті", "те", "тё", "тя", "тю", "еу", "ыу", "ау", "оу", "эу", "яу", "іу", "юу", "ёу", "уу", "еь", "ыь", "аь", "оь", "эь", "яь", "іь", "юь", "ёь", "уь", "ўь", "йь", "йў", "цў", "кў", "нў", "гў", "шў", "ўў", "зў", "хў", "фў", "вў", "пў", "рў", "лў", "дў", "жў", "чў", "сў", "мў", "тў", "ьў", "бў", "йй", "цй", "кй", "нй", "гй", "шй", "ўй", "зй", "хй", "фй", "вй", "пй", "рй", "лй", "дй", "жй", "чй", "сй", "мй", "тй", "ьй", "бй", "жш", "жц", "ыэ", "ыю", "ыы", "ыо", "ыа", "ьр", "ьа", "ёы", "оы", "йу", "йы", "йж", "ьу", "гй", "уы", "юь", "аы", "юы", "эы", "ьы", "ьь", "яы", ])).search,
 }
 
 
 def GetImpossible(Tag):
  Result = []
- for Name in ['name:ru', 'name:be']:
-  if Name in Tag:
-   Line = Tag[Name].lower()
-   for s in Impossible[Name]:
-    if s in Line:
-     Result.append(f"у '{Name}' немагчымае спалучэнне \"{s}\"")
-     break
+ for TagName in ['name:ru', 'name:be']:
+  if TagName in Tag:
+   Line = Tag[TagName].lower()
+   Imp = Impossible[TagName](Line)
+   if Imp:
+    Result.append(f"у '{TagName}' немагчымае спалучэнне \"{Imp}\"")
+    break
  return Result
 
 
@@ -161,15 +156,15 @@ def GetImpossible(Tag):
 ##  print(f"{language.name}: {value:.2f}")
 ## print(Detector.detect_language_of(Line))
 ## sys.exit(0)
-# for Name in ['name:ru']:
-#  if Name in Tag:
-#   if Detector.detect_language_of(Tag[Name]) != Language.RUSSIAN:
-#    Result.append(f"у '{Name}' мова не руская")
+# for TagName in ['name:ru']:
+#  if TagName in Tag:
+#   if Detector.detect_language_of(Tag[TagName]) != Language.RUSSIAN:
+#    Result.append(f"у '{TagName}' мова не руская")
 #    break
-# for Name in ['name', 'name:be']:
-#  if Name in Tag:
-#   if Detector.detect_language_of(Tag[Name]) != Language.BELARUSIAN:
-#    Result.append(f"у '{Name}' мова не беларуская")
+# for TagName in ['name', 'name:be']:
+#  if TagName in Tag:
+#   if Detector.detect_language_of(Tag[TagName]) != Language.BELARUSIAN:
+#    Result.append(f"у '{TagName}' мова не беларуская")
 #    break
 # return Result
 
@@ -177,15 +172,15 @@ def GetImpossible(Tag):
 #
 
 
-ReRefs = { 'ok': re.compile("[МР]-[0-9]+/[ЕП] [0-9]+|[МРН]-[0-9]+"), 'bad': re.compile("[МРН][0-9]+"), }
+Refs = { 'ok': re.compile("[МР]-[0-9]+/[ЕП] [0-9]+|[МРН]-[0-9]+"), 'bad': re.compile("[МРН][0-9]+"), }
 
 
 def GetList(Name, Type):
- return re.findall(ReRefs[Type], Name)
+ return re.findall(Refs[Type], Name)
 
 
-def GetIndex(S, Ref):
- return [m.start() for m in re.finditer(Ref, S)]
+def GetIndex(Name, Ref):
+ return [Index.start() for Index in re.finditer(Ref, Name)]
 
 
 def ExcludeRef(Name, Index):
@@ -195,31 +190,31 @@ def ExcludeRef(Name, Index):
 def GetBadRefInRelation(Relation, Relations):
  Result = []
  Tag = Relation['tag']
- for Name in [ 'name', 'name:be', 'name:ru' ]:
-  if Name in Tag:
-   if GetList(Tag[Name], 'bad'):
-    Result.append(f"Не вызначаны 'ref' у апісанні {Name}")
+ for TagName in ['name', 'name:be', 'name:ru']:
+  if TagName in Tag:
+   if GetList(Tag[TagName], 'bad'):
+    Result.append(f"Не вызначаны 'ref' у апісанні '{TagName}'")
  return Result
 
 
 def GetRefInRelation(Relation, Relations):
  Result = []
  Tag = Relation['tag']
- for Name in [ 'name', 'name:be', 'name:ru' ]:
-  if Name in Tag:
-   for Ref in GetList(Tag[Name], 'ok'):
+ for TagName in [ 'name', 'name:be', 'name:ru' ]:
+  if TagName in Tag:
+   for Ref in GetList(Tag[TagName], 'ok'):
     if Ref in Relations:
-     for Index in GetIndex(Tag[Name], Ref):
+     for Index in GetIndex(Tag[TagName], Ref):
       Tag2 = Relations[Ref]['tag']
-      if Name in Tag2:
+      if TagName in Tag2:
        I = Index + len(Ref) + 1
-       S2 = Tag2[Name]
-       S = Tag[Name][I:I+len(S2)]
-       if S2 != S and not ExcludeRef(Tag[Name], I):
-        Result.append(f"апісанне {Ref} не адпавядае свайму апісанню ў '{Name}'")
+       S2 = Tag2[TagName]
+       S = Tag[TagName][I:I+len(S2)]
+       if S2 != S and not ExcludeRef(Tag[TagName], I):
+        Result.append(f"апісанне {Ref} не адпавядае свайму апісанню ў '{TagName}'")
         break
     else:
-     Result.append(f"не вызначаны {Ref} у апісанні '{Name}'")
+     Result.append(f"не вызначаны {Ref} у апісанні '{TagName}'")
  return Result
 
 
@@ -317,8 +312,8 @@ def GetCoord(Ways):
 
 def GetCheckWays(Relation):
  Result = []
- for Item in Relation['member']:
-  if Item['type'] != "way":
+ for Member in Relation['member']:
+  if Member['type'] != "way":
    Result.append(f"у relation прысутнічае ня толькі way")
    break
  return Result
@@ -357,11 +352,10 @@ def GetCheckTagsInWay(Tag, Ways):
   'official_name:be': 'name:be',
   'official_name:ru': 'name:ru',
   }
- for KeyWay, KeyRelation in Tags.items():
+ for TagWay, TagRelation in Tags.items():
   for Way in Ways:
-   TagWay = Way['tag']
-   if Tag.get(KeyRelation, None) != TagWay.get(KeyWay, None) is not None:
-    Result.append(f"не супадае '{KeyRelation}' у relation і '{KeyWay}' яе ways")
+   if Tag.get(TagRelation, None) != Way['tag'].get(TagWay, None) is not None:
+    Result.append(f"не супадае '{TagRelation}' у relation і '{TagWay}' яе ways")
     break
  return Result
 
@@ -395,11 +389,11 @@ def GetHaversine(Ways):
  Coords = GetCoord(Ways)
  #
  Lengths = []
- for Item1 in Coords:
+ for Coord1 in Coords:
   SubLengths = []
-  for Item2 in Coords:
-   if Item1 != Item2:
-    SubLengths += [ haversine(x, y) for x in Item1 for y in Item2 ]
+  for Coord2 in Coords:
+   if Coord1 != Coord2:
+    SubLengths += [ haversine(x, y) for x in Coord1 for y in Coord2 ]
   if SubLengths:
    Lengths.append(min(SubLengths))
  #
@@ -422,8 +416,7 @@ def GetCheck(Class, Key, Value, Type, Tag):
  Result += GetRu(Tag, Value)
  Result += GetAbbr(Tag)
  Result += GetOfficialName(Tag)
- Result += GetLatin(Tag)
- Result += GetSpecial(Tag)
+ Result += GetLetter(Tag)
  Result += GetLength(Tag)
  Result += GetImpossible(Tag)
 # Result += GetLanguage(Tag)
@@ -450,3 +443,4 @@ def GetCheckOSM(Relation):
  Result += GetIsland(Ways)
  Result += GetHaversine(Ways)
  return Result
+
