@@ -31,8 +31,10 @@ FileNames = ["index.html", "relation.html", "error.html", "index.csv", "relation
 for FileName in FileNames:
  Generate(FileName, Context)
 
-if GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}"):
- Diff = repo.git.diff('HEAD~1')
- logger.info(f"Git Push complete\n{Diff}")
+Diff = GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}")
+if Diff: 
+ logger.info(f"git push complete:\n{Diff}")
+else:
+ logger.error(f"Git error")
 
 logger.info("Done")

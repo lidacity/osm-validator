@@ -18,7 +18,7 @@
 {%- for Item in Road['List'] %}
 {%- if Item['Relation'] is defined and Item['Key'][:6] != "error-" %}
    <tr bgcolor='{{Item['Color']}}' valign='top'>
-    <td>{{Item['Key']}}</td>
+    <td><nobr>{{Item['Key']}}</nobr></td>
     <td>&nbsp;</td>
     <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
     <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>

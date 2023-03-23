@@ -78,7 +78,7 @@ def GetAbbr(Tag):
   Abbreviations = ["’", "—", "а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", ]
   for A in Abbreviations:
    if A in Name:
-    Result.append(f"недапушчальны скарот у '{N}'")
+    Result.append(f"недапушчальны скарот \"{A}\" у '{N}'")
     break
  return Result
 
@@ -102,15 +102,30 @@ def GetOfficialName(Tag):
  return Result
 
 
-ReLatin = re.compile("[a-zA-Z]")
+ReLatin = re.compile("[a-zA-Z]").search
 #ReLatin = re.compile("^(?!.*SOS).*$")
+#regex = re.compile('SOS')
+#print(regex.sub('СОС', text))
 
 def GetLatin(Tag):
  Result = []
  for Name in ['name', 'name:be', 'name:ru']:
   if Name in Tag:
-   if re.findall(ReLatin, Tag[Name].replace("SOS", "")):
+   if ReLatin(Tag[Name].replace("SOS", "СОС")):
     Result.append(f"у '{Name}' прысутнічаюць лацінскія літары")
+    break
+ return Result
+
+
+ReSpecial = re.compile("|".join(map(re.escape, ".,:;!_*+#¤%&[]{}"))).search
+
+
+def GetSpecial(Tag):
+ Result = []
+ for Name in ['name', 'name:be', 'name:ru']:
+  if Name in Tag:
+   if ReSpecial(Tag[Name]):
+    Result.append(f"у '{Name}' прысутнічаюць спецыяльныя знакі")
     break
  return Result
 
@@ -210,6 +225,7 @@ def GetRefInRelation(Relation, Relations):
        S = Tag[Name][I:I+len(S2)]
        if S2 != S and not ExcludeRef(Tag[Name], I):
         Result.append(f"апісанне {Ref} не адпавядае свайму апісанню ў '{Name}'")
+        break
     else:
      Result.append(f"не вызначаны {Ref} у апісанні '{Name}'")
  return Result
@@ -233,38 +249,72 @@ def GetNodes(Ways):
  return [ [Node for Node in Way['nd']] for Way in Ways ]
 
 
-def Island(Ways, Real):
- Limit = GetLimits(Ways)
+def Island(Ways):
+ Limits = GetLimits(Ways)
  Result = []
- while len(Limit) > 1:
-  for Item in Limit[1:]:
-   if not Real:
-    if Limit[0][0] == Item[0]:
-     Limit[0][0] = Item[1]
-     Limit.remove(Item)
-     break
-    if Limit[0][0] == Item[1]:
-     Limit[0][0] = Item[0]
-     Limit.remove(Item)
-     break
-    if Limit[0][1] == Item[1]:
-     Limit[0][1] = Item[0]
-     Limit.remove(Item)
-     break
-   if Limit[0][1] == Item[0]:
-    Limit[0][1] = Item[1]
-    Limit.remove(Item)
+ while len(Limits) > 1:
+  for Item in Limits[1:]:
+   if Limits[0][0] == Item[0]:
+    Limits[0][0] = Item[1]
+    Limits.remove(Item)
+    break
+   if Limits[0][0] == Item[1]:
+    Limits[0][0] = Item[0]
+    Limits.remove(Item)
+    break
+   if Limits[0][1] == Item[1]:
+    Limits[0][1] = Item[0]
+    Limits.remove(Item)
+    break
+   if Limits[0][1] == Item[0]:
+    Limits[0][1] = Item[1]
+    Limits.remove(Item)
     break
   else:
-   Result.append(Limit[0])
-   Limit.pop(0)
- Result.append(Limit[0])
- Limit.pop(0)
+   Result.append(Limits[0])
+   Limits.pop(0)
+ Result.append(Limits[0])
+ Limits.pop(0)
+ return Result
+
+
+def IslandLine(Ways):
+ Limits = GetLimits(Ways)
+ Result = []
+ Index = -1
+ while len(Limits) > 1:
+  for Item in Limits[1:]:
+   #
+   if Index == -1:
+    if Limits[0][0] in Item:
+     Index = 0
+    elif Limits[0][1] in Item:
+     Index = 1
+   #
+   if Limits[0][Index] == Item[0]:
+    Limits[0][Index] = Item[1]
+    Limits.remove(Item)
+    break
+   elif Limits[0][Index] == Item[1]:
+    Limits[0][Index] = Item[0]
+    Limits.remove(Item)
+    break
+   #
+   Result.append(Limits[0])
+   Limits.pop(0)
+   Index = -1
+  else:
+   Result.append(Limits[0])
+   Limits.pop(0)
+ #
+ if Limits:
+  Result.append(Limits[0])
+  Limits.pop(0)
  return Result
 
 
 def GetCoord(Ways):
- Nodes = Island(Ways, False)
+ Nodes = IslandLine(Ways)
  Array = [Item for Row in Nodes for Item in Row]
  Result = { Item['id']: (Item['lat'], Item['lon']) for Item in ArrayCacheIterator(256, Array, "node") }
  return [ [ Result[ID] for ID in Row ] for Row in Nodes ]
@@ -326,8 +376,8 @@ def GetCheckTagsInWay(Tag, Ways):
 
 def GetCheckCross(Ways):
  Result = []
- Limit = GetLimits(Ways)
- Nodes = [Node for Row in Limit for Node in Row]
+ Limits = GetLimits(Ways)
+ Nodes = [Node for Row in Limits for Node in Row]
  c = Counter(Nodes)
  if max(c.values()) > 2:
   Result.append(f"аўтадарога замкнутая ў пятлю")
@@ -340,9 +390,10 @@ def GetCheckCross(Ways):
    Result.append(f"аўтадарога замкнутая ў пятлю")
  return Result
 
+
 def GetIsland(Ways):
  Result = []
- if Island(Ways, True) != Island(Ways, False):
+ if Island(Ways) != IslandLine(Ways):
   Result.append(f"way не паслядоўныя")
  return Result
 
@@ -380,6 +431,7 @@ def GetCheck(Class, Key, Value, Type, Tag):
  Result += GetAbbr(Tag)
  Result += GetOfficialName(Tag)
  Result += GetLatin(Tag)
+ Result += GetSpecial(Tag)
  Result += GetLength(Tag)
  Result += GetImpossible(Tag)
 # Result += GetLanguage(Tag)

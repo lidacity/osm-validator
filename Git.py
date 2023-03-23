@@ -19,7 +19,7 @@ def GitPush(Message):
   repo.index.commit(Message)
   origin = repo.remote(name='origin')
   origin.push()
-  return True
+  return repo.git.diff('HEAD~1')
  except:
   logger.error('Some error occured while pushing the code')
-  return False
+  return None
