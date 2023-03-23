@@ -85,46 +85,38 @@ def GetAbbr(Tag):
 
 def GetOfficialName(Tag):
  Result = []
- if 'official_name' in Tag:
-  Result.append(f"прысутнічае непатрэбны 'official_name'")
- if 'official_name:be' in Tag:
-  Result.append(f"прысутнічае непатрэбны 'official_name:be'")
- if 'official_name:ru' in Tag:
-  Result.append(f"прысутнічае непатрэбны 'official_name:ru'")
- if 'description' in Tag:
-  Result.append(f"прысутнічае непатрэбны 'description'")
- if 'description:be' in Tag:
-  Result.append(f"прысутнічае непатрэбны 'description:be'")
- if 'description:ru' in Tag:
-  Result.append(f"прысутнічае непатрэбны 'description:ru'")
+ for Name in ['official_name', 'official_name:be', 'official_name:ru', 'description', 'description:be', 'description:ru']:
+  if Name in Tag:
+   Result.append(f"прысутнічае непатрэбны '{Name}'")
  if 'fixme' in Tag:
   Result.append(f"прысутнічае 'fixme' у relation")
  return Result
 
 
-ReLatin = re.compile("[a-zA-Z]").search
+Latin = re.compile("[a-zA-Z]").search
 #ReLatin = re.compile("^(?!.*SOS).*$")
 #regex = re.compile('SOS')
 #print(regex.sub('СОС', text))
+
 
 def GetLatin(Tag):
  Result = []
  for Name in ['name', 'name:be', 'name:ru']:
   if Name in Tag:
-   if ReLatin(Tag[Name].replace("SOS", "СОС")):
+   if Latin(Tag[Name].replace("SOS", "СОС")):
     Result.append(f"у '{Name}' прысутнічаюць лацінскія літары")
     break
  return Result
 
 
-ReSpecial = re.compile("|".join(map(re.escape, ".,:;!_*+#¤%&[]{}"))).search
+Special = re.compile("|".join(map(re.escape, ".,:;!_*+#¤%&[]{}"))).search
 
 
 def GetSpecial(Tag):
  Result = []
  for Name in ['name', 'name:be', 'name:ru']:
   if Name in Tag:
-   if ReSpecial(Tag[Name]):
+   if Special(Tag[Name]):
     Result.append(f"у '{Name}' прысутнічаюць спецыяльныя знакі")
     break
  return Result
