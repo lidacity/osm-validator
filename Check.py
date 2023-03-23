@@ -80,7 +80,7 @@ def GetAbbr(Tag):
   Name = Tag.get(TagName, "")
   Abbr = Abbreviations(Name)
   if Abbr:
-   Result.append(f"недапушчальны скарот \"{Abbr}[0]\" у '{TagName}'")
+   Result.append(f"недапушчальны скарот \"{Abbr[0]}\" у '{TagName}'")
    break
  return Result
 
@@ -108,11 +108,11 @@ def GetLetter(Tag):
   if TagName in Tag:
    L = Latin(Tag[TagName].replace("SOS", "СОС"))
    if L:
-    Result.append(f"у '{TagName}' прысутнічаюць лацінскія літары \"{L}[0]\"")
+    Result.append(f"у '{TagName}' прысутнічаюць лацінскія літары \"{L[0]}\"")
     break
    S = Special(Tag[TagName])
    if S:
-    Result.append(f"у '{TagName}' прысутнічаюць спецыяльныя знакі \"{S}[0]\"")
+    Result.append(f"у '{TagName}' прысутнічаюць спецыяльныя знакі \"{S[0]}\"")
     break
  return Result
 
@@ -141,7 +141,7 @@ def GetImpossible(Tag):
    Line = Tag[TagName].lower()
    Imp = Impossible[TagName](Line)
    if Imp:
-    Result.append(f"у '{TagName}' немагчымае спалучэнне \"{Imp}][0]\"")
+    Result.append(f"у '{TagName}' немагчымае спалучэнне \"{Imp[0]}\"")
     break
  return Result
 
