@@ -96,6 +96,7 @@ def GetOfficialName(Tag):
 
 
 Latin = re.compile("[a-zA-Z]").search
+Hyphen = re.compile("[^ ]–|–[^ ]|[ ]-|-[ ]").search
 Special = re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\"))).search
 #ReLatin = re.compile("^(?!.*SOS).*$")
 #regex = re.compile('SOS')
@@ -109,6 +110,10 @@ def GetLetter(Tag):
    L = Latin(Tag[TagName].replace("SOS", "СОС"))
    if L:
     Result.append(f"у '{TagName}' прысутнічаюць лацінскія літары \"{L[0]}\"")
+    break
+   H = Special(Tag[TagName])
+   if H:
+    Result.append(f"у '{TagName}' неправільны злучок \"{H[0]}\"")
     break
    S = Special(Tag[TagName])
    if S:
@@ -344,6 +349,14 @@ def GetCheckHighway(Ways):
  return Result
 
 
+def GetCheckDouble(Ways):
+ Result = []
+ c = Counter([Way['id'] for Way in Ways])
+ if max(c.values()) > 1:
+  Result.append(f"прысутнічаюць падвоеныя way")
+ return Result
+
+
 def GetCheckTagsInWay(Tag, Ways):
  Result = []
  Tags = {
@@ -436,6 +449,7 @@ def GetCheckOSM(Relation):
  Result += GetCheckWays(Relation)
  Result += GetCheckFixme(Ways)
  Result += GetCheckHighway(Ways)
+ Result += GetCheckDouble(Ways)
  #
  Ways = GetWays(Relation, Exclude=["link"])
  Result += GetCheckTagsInWay(Relation['tag'], Ways)
