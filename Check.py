@@ -39,7 +39,7 @@ def GetTag(Tag, Class):
    if Tag[Key] != Value:
     Result.append(f"у '{Key}' не зададзена '{Value}'")
  return Result
-   
+
 
 def GetClass(Tag, Class):
  Result = []
@@ -96,7 +96,7 @@ def GetOfficialName(Tag):
 
 
 Latin = re.compile("[a-zA-Z]").search
-Hyphen = re.compile("[^ ]–|–[^ ]|[ ]-|-[ ]").search
+Hyphen = re.compile("[^ …]–|–[^ …]|[ ]-|-[ ]").search
 Special = re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\"))).search
 #ReLatin = re.compile("^(?!.*SOS).*$")
 #regex = re.compile('SOS')
@@ -111,7 +111,7 @@ def GetLetter(Tag):
    if L:
     Result.append(f"у '{TagName}' прысутнічаюць лацінскія літары \"{L[0]}\"")
     break
-   H = Special(Tag[TagName])
+   H = Hyphen(Tag[TagName])
    if H:
     Result.append(f"у '{TagName}' неправільны злучок \"{H[0]}\"")
     break
@@ -134,8 +134,8 @@ def GetLength(Tag):
 #https://vl2d.livejournal.com/21053.html
 #https://yadro-servis.ru/blog/nevosmosnoe-sochetanie-bukv/ 
 Impossible = {
- 'name:ru': re.compile("|".join([ "ёя", "ёь", "ёэ", "ъж", "эё", "ъд", "цё", "уь", "щч", "чй", "шй", "шз", "ыф", "жщ", "жш", "ыъ", "ыэ", "ыю", "ыь", "жй", "ыы", "жъ", "жы", "ъш", "пй", "ъщ", "зщ", "ъч", "ъц", "ъу", "ъф", "ъх", "ъъ", "ъы", "ыо", "жя", "зй", "ъь", "ъэ", "ыа", "нй", "еь", "цй", "ьй", "ьл", "ьр", "пъ", "еы", "еъ", "ьа", "шъ", "ёы", "ёъ", "ът", "щс", "оь", "къ", "оы", "щх", "щщ", "щъ", "щц", "кй", "оъ", "цщ", "лъ", "мй", "шщ", "ць", "цъ", "щй", "йь", "ъг", "иъ", "ъб", "ъв", "ъи", "ъй", "ъп", "ър", "ъс", "ъо", "ън", "ък", "ъл", "ъм", "иы", "иь", "йу", "щэ", "йы", "йъ", "щы", "щю", "щя", "ъа", "мъ", "йй", "йж", "ьу", "гй", "эъ", "уъ", "аь", "чъ", "хй", "тй", "чщ", "ръ", "юъ", "фъ", "уы", "аъ", "юь", "аы", "юы", "эь", "эы", "бй", "яь", "ьы", "ьь", "ьъ", "яъ", "яы", "хщ", "дй", "фй", ])).search,
- 'name:be': re.compile("|".join([ "и", "щ", "ъ", "ї", "жі", "же", "жё", "жя", "жю", "рі", "ре", "рё", "ря", "рю", "чі", "че", "чё", "чя", "чю", "ші", "ше", "шё", "шя", "шю", "ді", "де", "дё", "дя", "дю", "ті", "те", "тё", "тя", "тю", "еу", "ыу", "ау", "оу", "эу", "яу", "іу", "юу", "ёу", "уу", "еь", "ыь", "аь", "оь", "эь", "яь", "іь", "юь", "ёь", "уь", "ўь", "йь", "йў", "цў", "кў", "нў", "гў", "шў", "ўў", "зў", "хў", "фў", "вў", "пў", "рў", "лў", "дў", "жў", "чў", "сў", "мў", "тў", "ьў", "бў", "йй", "цй", "кй", "нй", "гй", "шй", "ўй", "зй", "хй", "фй", "вй", "пй", "рй", "лй", "дй", "жй", "чй", "сй", "мй", "тй", "ьй", "бй", "жш", "жц", "ыэ", "ыы", "ыо", "ьр", "ьа", "ёы", "оы", "йу", "йы", "йж", "ьу", "гй", "уы", "юь", "аы", "юы", "эы", "ьы", "ьь", "яы", ])).search,
+ 'name:ru': re.compile("|".join(["ёя", "ёь", "ёэ", "ъж", "эё", "ъд", "цё", "уь", "щч", "чй", "шй", "шз", "ыф", "жщ", "жш", "ыъ", "ыэ", "ыю", "ыь", "жй", "ыы", "жъ", "жы", "ъш", "пй", "ъщ", "зщ", "ъч", "ъц", "ъу", "ъф", "ъх", "ъъ", "ъы", "ыо", "жя", "зй", "ъь", "ъэ", "ыа", "нй", "еь", "цй", "ьй", "ьл", "ьр", "пъ", "еы", "еъ", "ьа", "шъ", "ёы", "ёъ", "ът", "щс", "оь", "къ", "оы", "щх", "щщ", "щъ", "щц", "кй", "оъ", "цщ", "лъ", "мй", "шщ", "ць", "цъ", "щй", "йь", "ъг", "иъ", "ъб", "ъв", "ъи", "ъй", "ъп", "ър", "ъс", "ъо", "ън", "ък", "ъл", "ъм", "иы", "иь", "йу", "щэ", "йы", "йъ", "щы", "щю", "щя", "ъа", "мъ", "йй", "йж", "ьу", "гй", "эъ", "уъ", "аь", "чъ", "хй", "тй", "чщ", "ръ", "юъ", "фъ", "уы", "аъ", "юь", "аы", "юы", "эь", "эы", "бй", "яь", "ьы", "ьь", "ьъ", "яъ", "яы", "хщ", "дй", "фй", ])).search,
+ 'name:be': re.compile("|".join(["и", "щ", "ъ", "ї", "жі", "же", "жё", "жя", "жю", "рі", "ре", "рё", "ря", "рю", "чі", "че", "чё", "чя", "чю", "ші", "ше", "шё", "шя", "шю", "ді", "де", "дё", "дя", "дю", "ті", "те", "тё", "тя", "тю", "еу", "ыу", "ау", "оу", "эу", "яу", "іу", "юу", "ёу", "уу", "еь", "ыь", "аь", "оь", "эь", "яь", "іь", "юь", "ёь", "уь", "ўь", "йь", "йў", "цў", "кў", "нў", "гў", "шў", "ўў", "зў", "хў", "фў", "вў", "пў", "рў", "лў", "дў", "жў", "чў", "сў", "мў", "тў", "ьў", "бў", "йй", "цй", "кй", "нй", "гй", "шй", "ўй", "зй", "хй", "фй", "вй", "пй", "рй", "лй", "дй", "жй", "чй", "сй", "мй", "тй", "ьй", "бй", "жш", "жц", "ыэ", "ыы", "ыо", "ьр", "ьа", "ёы", "оы", "йу", "йы", "йж", "ьу", "гй", "уы", "юь", "аы", "юы", "эы", "ьы", "ьь", "яы", ])).search,
 }
 
 
@@ -205,17 +205,20 @@ def GetBadRefInRelation(Relation, Relations):
 def GetRefInRelation(Relation, Relations):
  Result = []
  Tag = Relation['tag']
- for TagName in [ 'name', 'name:be', 'name:ru' ]:
+ for TagName in ['name', 'name:be', 'name:ru']:
   if TagName in Tag:
    for Ref in GetList(Tag[TagName], 'ok'):
     if Ref in Relations:
      for Index in GetIndex(Tag[TagName], Ref):
-      Tag2 = Relations[Ref]['tag']
+      Tag2 = Relations[Ref]['tag'] # з агульнага спісу аўтадарог
       if TagName in Tag2:
        I = Index + len(Ref) + 1
-       S2 = Tag2[TagName]
+       S2 = Tag2[TagName] #
        S = Tag[TagName][I:I+len(S2)]
-       if S2 != S and not ExcludeRef(Tag[TagName], I):
+       Len = len(S2) - (1 if S2[-1:] == "…" else 0)
+       if Len == 0:
+        Len = len(S2)
+       if S2[:Len] != S[:Len] and not ExcludeRef(Tag[TagName], I):
         Result.append(f"апісанне {Ref} не адпавядае свайму апісанню ў '{TagName}'")
         break
     else:
@@ -335,12 +338,12 @@ def GetCheckFixme(Ways):
 
 def GetCheckHighway(Ways):
  Result = []
- Highways = [ "motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link" ]
+ Highways = ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", ]
  for Way in Ways:
   Tag = Way['tag']
   if 'highway' in Tag:
    if Tag['highway'] not in Highways:
-    Result.append(f"памылковы тып 'highway'={Tag['highway']} на way")
+    Result.append(f"памылковы тып 'highway'=\"{Tag['highway']}\" на way")
     break
  for Way in Ways:
   if 'highway' not in Way['tag']:

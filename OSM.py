@@ -71,7 +71,7 @@ def GetLine(Class, Key, Value, Relations):
  else:
   Result['Color'] = "#d6e090"
   Result['Ru'] = Value
-  Result['Relation'] = ["'relation' адсутнічае"]
+  Result['Relation'] = ["relation адсутнічае"]
  return Result
 
 
