@@ -26,7 +26,7 @@ def GetRef(Key):
 def GetRelation(Type):
  Result = []
  if Type != "relation":
-  Result.append(f"не 'relation'")
+  Result.append(f"не relation")
  return Result
 
 
@@ -37,7 +37,7 @@ def GetTag(Tag, Class):
    Result.append(f"'{Key}' не знойдзены")
   elif Value is not None:
    if Tag[Key] != Value:
-    Result.append(f"у '{Key}' не зададзена '{Value}'")
+    Result.append(f"у '{Key}' не зададзена \"{Value}\"")
  return Result
 
 
@@ -46,9 +46,9 @@ def GetClass(Tag, Class):
  Ref, OfficialRef = Tag.get('ref', ""), Tag.get('official_ref', "")
  if Ref and OfficialRef:
   if Ref[0] != Class:
-   Result.append(f"'ref' не пачынаецца з '{Class}'")
+   Result.append(f"'ref' не пачынаецца з \"{Class}\"")
   if OfficialRef[:2] != f"{Class}-":
-   Result.append(f"'official_ref' не пачынаецца з '{Class}-'")
+   Result.append(f"'official_ref' не пачынаецца з \"{Class}-\"")
   if Ref[1:] != OfficialRef[2:2+len(Ref[1:])]:
    Result.append(f"'official_ref' не адпавядае 'ref'")
  return Result
@@ -347,7 +347,7 @@ def GetCheckHighway(Ways):
     break
  for Way in Ways:
   if 'highway' not in Way['tag']:
-   Result.append(f"пусты тып highway на way")
+   Result.append(f"пусты тып 'highway' на way")
    break
  return Result
 
@@ -460,4 +460,3 @@ def GetCheckOSM(Relation):
  Result += GetIsland(Ways)
  Result += GetHaversine(Ways)
  return Result
-
