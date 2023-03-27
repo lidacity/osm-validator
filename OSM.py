@@ -6,9 +6,9 @@ import random
 import datetime
 
 from loguru import logger
-import osmapi
 
-from OSMCacheIterator import CacheIterator
+from OsmApi import OsmApi, CacheIterator
+
 import Check
 
 
@@ -29,7 +29,7 @@ def GetErrorLine(Key, Relation):
  Result = {}
  Result['Key'] = Key
  Result['Color'] = "#ff9090"
- Tag = Relation['tag']
+ Tag = Relation['tags']
  Type = Relation['type']
  Result['Type'] = Type
  Result['ID'] = Relation.get('id', None)
@@ -56,7 +56,7 @@ def GetLine(Class, Key, Value, Relations):
   Type = Relation['type']
   Result['Type'] = Type
   Result['ID'] = Relation['id']
-  Tag = Relation['tag']
+  Tag = Relation['tags']
   Be = Tag.get('name', "")
   if Be:
    Result['Be'] = Be
@@ -82,16 +82,16 @@ def ReadOSM(Class, R):
  logger.info(f"Read relation {R}")
  Result, List = {}, {}
  #
- OSM = osmapi.OsmApi()
- Relation = OSM.RelationGet(R)
- for Type, Member in CacheIterator(256, Relation['member']):
+ OSM = OsmApi()
+ Relation = OSM.ReadRelation(R)
+ for Type, Member in CacheIterator(256, Relation['members']):
 #  if Type != "relation":
 #   logger.info(f"{Type.title()} {Member['id']}")
   Member['type'] = Type
   Member['class'] = Class
-  Ref = GetRef(Member['tag'])
+  Ref = GetRef(Member['tags'])
   Result[Ref] = Member
- OSM.close()
+ OSM.Close()
  #
  return Result
 

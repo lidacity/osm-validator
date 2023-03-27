@@ -4,7 +4,7 @@ from collections import Counter
 from haversine import haversine
 #from lingua import Language, LanguageDetectorBuilder
 
-from OSMCacheIterator import CacheIterator, ArrayCacheIterator
+from OsmApi import CacheIterator, ArrayCacheIterator
 
 
 #
@@ -188,7 +188,7 @@ def ExcludeRef(Name, Index):
 
 def GetBadRefInRelation(Relation, Relations):
  Result = []
- Tag = Relation['tag']
+ Tag = Relation['tags']
  for TagName in ['name', 'name:be', 'name:ru']:
   if TagName in Tag:
    if GetList(Tag[TagName], 'bad'):
@@ -198,13 +198,13 @@ def GetBadRefInRelation(Relation, Relations):
 
 def GetRefInRelation(Relation, Relations):
  Result = []
- Tag = Relation['tag']
+ Tag = Relation['tags']
  for TagName in ['name', 'name:be', 'name:ru']:
   if TagName in Tag:
    for Ref in GetList(Tag[TagName], 'ok'):
     if Ref in Relations:
      for Index in GetIndex(Tag[TagName], Ref):
-      Tag2 = Relations[Ref]['tag'] # з агульнага спісу аўтадарог
+      Tag2 = Relations[Ref]['tags'] # з агульнага спісу аўтадарог
       if TagName in Tag2:
        I = Index + len(Ref) + 1
        S2 = Tag2[TagName] #
@@ -225,17 +225,17 @@ def GetRefInRelation(Relation, Relations):
 
 def GetWays(Relation, Exclude=[]):
  Result = []
- for Type, Member in CacheIterator(256, Relation['member'], Type=["way"], Role=Exclude):
+ for Type, Member in CacheIterator(256, Relation['members'], Type=["way"], Role=Exclude):
   Result.append(Member)
  return Result
 
 
 def GetLimits(Ways):
- return [ [Way['nd'][0], Way['nd'][-1]] for Way in Ways ]
+ return [ [Way['nodes'][0], Way['nodes'][-1]] for Way in Ways ]
 
 
 def GetNodes(Ways):
- return [ [Node for Node in Way['nd']] for Way in Ways ]
+ return [ [Node for Node in Way['nodes']] for Way in Ways ]
 
 
 def Island(Ways):
@@ -314,7 +314,7 @@ def GetCoord(Ways):
 
 def GetCheckWays(Relation):
  Result = []
- for Member in Relation['member']:
+ for Member in Relation['members']:
   if Member['type'] != "way":
    Result.append(f"у relation прысутнічае ня толькі way")
    break
@@ -324,7 +324,7 @@ def GetCheckWays(Relation):
 def GetCheckFixme(Ways):
  Result = []
  for Way in Ways:
-  if "fixme" in Way['tag']:
+  if "fixme" in Way['tags']:
    Result.append(f"прысутнічае 'fixme' у way")
    break
  return Result
@@ -334,12 +334,12 @@ def GetCheckHighway(Ways):
  Result = []
  Highways = ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", ]
  for Way in Ways:
-  Tag = Way['tag']
+  Tag = Way['tags']
   if 'highway' in Tag:
    if Tag['highway'] not in Highways:
     Result.append(f"памылковы тып 'highway'=\"{Tag['highway']}\" на way")
     break
- if not any(Tag in ['highway', 'ferry'] for Way in Ways for Tag in Way['tag']):
+ if not any(Tag in ['highway', 'ferry'] for Way in Ways for Tag in Way['tags']):
   Result.append(f"пусты тып 'highway' на way")
  return Result
 
@@ -362,7 +362,7 @@ def GetCheckTagsInWay(Tag, Ways):
   }
  for TagWay, TagRelation in Tags.items():
   for Way in Ways:
-   if Tag.get(TagRelation, None) != Way['tag'].get(TagWay, None) is not None:
+   if Tag.get(TagRelation, None) != Way['tags'].get(TagWay, None) is not None:
     Result.append(f"не супадае '{TagRelation}' у relation і '{TagWay}' яе ways")
     break
  return Result
@@ -447,7 +447,7 @@ def GetCheckOSM(Relation):
  Result += GetCheckDouble(Ways)
  #
  Ways = GetWays(Relation, Exclude=["link"])
- Result += GetCheckTagsInWay(Relation['tag'], Ways)
+ Result += GetCheckTagsInWay(Relation['tags'], Ways)
  Result += GetCheckCross(Ways)
  Result += GetIsland(Ways)
  Result += GetHaversine(Ways)
