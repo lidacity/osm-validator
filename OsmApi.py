@@ -1,16 +1,9 @@
 #https://wiki.openstreetmap.org/wiki/RU:API_v0.6
 #https://josm.openstreetmap.de/wiki/Ru%3AHelp/RemoteControlCommands
 
+import sys
 import json
 import requests
-
-#API = "https://master.apis.dev.openstreetmap.org/api/0.6"
-
-# OSM.RelationGet(R)
-# OSM.NodesGet(IDs)
-# OSM.WaysGet(IDs)
-# OSM.RelationsGet(IDs)
-#OAuth2
 
 
 class OsmApi:
@@ -20,15 +13,12 @@ class OsmApi:
   if Referer:
    self.Headers['referer'] = Referer
   #
+  self.Requests = requests.Session()
   if OAuth:
    self.OAuth = OAuth
   else:
    self.OAuth = None
    self.UserName, self.Password = UserName, Password
-
-  self.Requests = requests.Session()
-#   self.Requests.auth = (UserName, Password)
-#   self.Auth = self.Requests.post(API)
 
 #  self.Requests = requests
 
@@ -98,14 +88,29 @@ class OsmApi:
   return self.GetJson(Type, ID, Parameters="history")
 
 
+ def Arrange(self, List, Dict):
+  for ID in List:
+   for Item in Dict:
+    if Item['id'] == ID:
+     yield Item
+     break
+
+
+ #Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
+ def MultiFetch(self, Type, IDs):
+  Json = self.GetJson(Type, IDs)
+  Result = list(self.Arrange(IDs, Json))
+  return Result
+
+
  #Relations for element: GET /api/0.6/[node|way|relation]/#id/relations
  def RelationsForElement(self, Type, ID):
   return self.GetJson(Type, ID, Parameters="relations")
 
 
- #Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
- def MultiFetch(self, Type, IDs):
-  return self.GetJson(Type, IDs)
+ #Full: GET /api/0.6/[way|relation]/#id/full
+ def Full(self, Type, ID):
+  return self.GetJson(Type, ID, Parameters="full")
 
 
  ##################################################
@@ -116,7 +121,27 @@ class OsmApi:
  #Read: GET /api/0.6/[node|way|relation]/#id
  #Version: GET /api/0.6/[node|way|relation]/#id/#version
  def ReadNode(self, ID, Version=None):
-  return self.GetJson("node", ID, One=True, Parameters=Version)
+  return self.Read("node", ID, Version=Version)
+
+
+ #History: GET /api/0.6/[node|way|relation]/#id/history
+ def HistoryNode(self, ID):
+  return self.History("node", ID)
+
+
+ #Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
+ def ReadNodes(self, IDs):
+  return self.MultiFetch("nodes", IDs)
+
+
+ #Relations for element: GET /api/0.6/[node|way|relation]/#id/relations
+ def RelationsForNode(self, ID):
+  return self.RelationsForElement("node", ID)
+
+
+ #Ways for node: GET /api/0.6/node/#id/ways
+ def WaysForNode(self, ID):
+  return self.GetJson("node", ID, Parameters="ways")
 
 
  #def NodeCreate(self, NodeData):
@@ -129,25 +154,6 @@ class OsmApi:
  # return self._do("delete", "node", NodeData)
 
 
- #History: GET /api/0.6/[node|way|relation]/#id/history
- def HistoryNode(self, ID):
-  return self.GetJson("node", ID, Parameters="history")
-
-
- #Ways for node: GET /api/0.6/node/#id/ways
- def WaysForNode(self, ID):
-  return self.GetJson("node", ID, Parameters="ways")
-
-
- #Relations for element: GET /api/0.6/[node|way|relation]/#id/relations
- def RelationsForNode(self, ID):
-  return self.GetJson("node", ID, Parameters="relations")
-
-
- #Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
- def ReadNodes(self, IDs):
-  return self.GetJson("nodes", IDs)
-
 
  ##################################################
  # Way                                            #
@@ -157,7 +163,27 @@ class OsmApi:
  #Read: GET /api/0.6/[node|way|relation]/#id
  #Version: GET /api/0.6/[node|way|relation]/#id/#version
  def ReadWay(self, ID, Version=None):
-  return self.GetJson("way", ID, One=True, Parameters=Version)
+  return self.Read("way", ID, Version=Version)
+
+
+ #History: GET /api/0.6/[node|way|relation]/#id/history
+ def HistoryWay(self, ID):
+  return self.History("way", ID)
+
+
+ #Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
+ def ReadWays(self, IDs):
+  return self.MultiFetch("ways", IDs)
+
+
+ #Relations for element: GET /api/0.6/[node|way|relation]/#id/relations
+ def RelationsForWay(self, ID):
+  return self.RelationsForElement("way", ID)
+
+
+ #Full: GET /api/0.6/[way|relation]/#id/full
+ def FullWay(self, ID):
+  return self.Full("node", ID)
 
 
  #def WayCreate(self, WayData):
@@ -170,25 +196,6 @@ class OsmApi:
  # return self._do("delete", "way", WayData)
 
 
- #History: GET /api/0.6/[node|way|relation]/#id/history
- def HistoryWay(self, ID):
-  return self.GetJson("way", ID, Parameters="history")
-
-
- #Relations for element: GET /api/0.6/[node|way|relation]/#id/relations
- def RelationsForWay(self, ID):
-  return self.GetJson("way", ID, Parameters="relations")
-
-
- #Full: GET /api/0.6/[way|relation]/#id/full
- def FullWay(self, ID):
-  return self.GetJson("way", ID, Parameters="full")
-
-
- #Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
- def ReadWays(self, IDs):
-  return self.GetJson("ways", IDs)
-
 
  ##################################################
  # Relation                                       #
@@ -198,27 +205,27 @@ class OsmApi:
  #Read: GET /api/0.6/[node|way|relation]/#id
  #Version: GET /api/0.6/[node|way|relation]/#id/#version
  def ReadRelation(self, ID, Version=None):
-  return self.GetJson("relation", ID, One=True, Parameters=Version)
-
-
- #def RelationCreate(self, RelationData):
- # return self._do("create", "relation", RelationData)
-
- #def RelationUpdate(self, RelationData):
- # return self._do("modify", "relation", RelationData)
-
- #def RelationDelete(self, RelationData):
- # return self._do("delete", "relation", RelationData)
+  return self.Read("relation", ID, Version=Version)
 
 
  #History: GET /api/0.6/[node|way|relation]/#id/history
  def HistoryRelation(self, ID):
-  return self.GetJson("relation", ID, Parameters="history")
+  return self.History("relation", ID)
+
+
+ #Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
+ def ReadRelations(self, IDs):
+  return self.MultiFetch("relations", IDs)
 
 
  #Relations for element: GET /api/0.6/[node|way|relation]/#id/relations
  def RelationsForRelation(self, ID):
-  return self.GetJson("relation", ID, Parameters="relations")
+  return self.RelationsForElement("relation", ID)
+
+
+ #Full: GET /api/0.6/[way|relation]/#id/full
+ def FullRelation(self, ID):
+  return self.Full("relation", ID)
 
 
 #def FullRelationRecur(ID):
@@ -238,14 +245,41 @@ class OsmApi:
 # return Result
 
 
- #Full: GET /api/0.6/[way|relation]/#id/full
- def FullRelation(self, ID):
-  return self.GetJson("relation", ID, Parameters="full")
+ #def RelationCreate(self, RelationData):
+ # return self._do("create", "relation", RelationData)
+
+ #def RelationUpdate(self, RelationData):
+ # return self._do("modify", "relation", RelationData)
+
+ #def RelationDelete(self, RelationData):
+ # return self._do("delete", "relation", RelationData)
 
 
- #Multi fetch: GET /api/0.6/[nodes|ways|relations]?#parameters
- def ReadRelations(self, IDs):
-  return self.GetJson("relations", IDs)
+
+ ##################################################
+ # Changeset                                      #
+ ##################################################
+
+ #Retrieving permissions: GET /api/0.6/permissions
+ def Permissions(self, Tag='permissions'):
+  API = self.API
+  URI = f"{API}/permissions.json"
+  with self.Requests.get(URI, headers=self.Headers) as Response:
+   Response.encoding = Response.apparent_encoding
+   OK, Result = Response.ok, Response.json()
+  if OK:
+   return Result[Tag]
+  else:
+   return None
+
+
+
+
+
+
+
+
+
 
 
  ##################################################
@@ -466,20 +500,18 @@ class CacheIterator:
    self.j = 0
   #
   if IsCache:
-   Cache = self.GetCache(self.Iters[i])
-   self.Cache = { Key: Cache[Key] for Key in self.Iters[i] }
+   self.Cache = self.GetCache(self.Iters[i])
   #
-  Index = self.Iters[i][j]
-  return self.Type, self.Cache[Index]
+  return self.Type, self.Cache[j]
  
 
  def GetCache(self, IDs):
   if self.Type == "node":
-   return { Item['id']: Item for Item in self.OSM.ReadNodes(IDs) }
+   return self.OSM.ReadNodes(IDs)
   elif self.Type == "way":
-   return { Item['id']: Item for Item in self.OSM.ReadWays(IDs) }
+   return self.OSM.ReadWays(IDs)
   elif self.Type == "relation":
-   return { Item['id']: Item for Item in self.OSM.ReadRelations(IDs) }
+   return self.OSM.ReadRelations(IDs)
   else:
    raise "Error!"
 
@@ -556,6 +588,7 @@ class ArrayCacheIterator:
   IsCache = self.j == 0
   #
   if self.i > len(self.Iters) - 1:
+   self.OSM.Close()
    raise StopIteration
   if self.j < len(self.Iters[i]) - 1:
    self.j += 1
@@ -564,20 +597,18 @@ class ArrayCacheIterator:
    self.j = 0
   #
   if IsCache:
-   Cache = self.GetCache(self.Iters[i])
-   self.Cache = { Key: Cache[Key] for Key in self.Iters[i] }
+   self.Cache = self.GetCache(self.Iters[i])
   #
-  Index = self.Iters[i][j]
-  return self.Cache[Index]
+  return self.Cache[j]
  
 
  def GetCache(self, IDs):
   if self.Type == "node":
-   return { Item['id']: Item for Item in self.OSM.ReadNodes(IDs) }
+   return self.OSM.ReadNodes(IDs)
   elif self.Type == "way":
-   return { Item['id']: Item for Item in self.OSM.ReadWays(IDs) }
+   return self.OSM.ReadWays(IDs)
   elif self.Type == "relation":
-   return { Item['id']: Item for Item in self.OSM.ReadRelations(IDs) }
+   return self.OSM.ReadRelations(IDs)
   else:
    raise "Error!"
 

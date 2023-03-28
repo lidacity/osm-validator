@@ -97,19 +97,25 @@ def GetOfficialName(Tag):
 
 Letter = {
  'Latin': { 're': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары" },
- 'Hyphen': { 're': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]|[^МРН]-[^0-9]").search, 'Desc': "неправільны злучок" },
+ 'Number': { 're': re.compile("[a-zA-Zа-яА-ЯёЁ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁ]").search, 'Desc': "лацінскія літары" },
+ 'Hyphen': { 're': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок" },
  'Bracket': { 're': re.compile("[^ ]\(|\)[^ …]").search, 'Desc': "неправільныя дужкі" },
  'Special': { 're': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\"))).search, 'Desc': "спецыяльныя знакі" },
 }
+
+
+Replace = { 'SOS': "СОС", 'III': "3", 'II': "2", 'I': "1", }
 
 
 def GetLetter(Tag):
  Result = []
  for TagName in ['name', 'name:be', 'name:ru']:
   if TagName in Tag:
-   Tag = Tag[TagName].replace("SOS", "СОС")
+   S = Tag[TagName]
+   for Key, Value in Replace.items():
+    S = S.replace(Key, Value)
    for _, Value in Letter.items():
-    R = Value['re'](Tag)
+    R = Value['re'](S)
     if R:
      Result.append(f"у '{TagName}' {Value['Desc']} \"{R[0]}\"")
      break
@@ -339,8 +345,11 @@ def GetCheckHighway(Ways):
    if Tag['highway'] not in Highways:
     Result.append(f"памылковы тып 'highway'=\"{Tag['highway']}\" на way")
     break
- if not any(Tag in ['highway', 'ferry'] for Way in Ways for Tag in Way['tags']):
-  Result.append(f"пусты тып 'highway' на way")
+ for Way in Ways:
+  Tag = Way['tags']
+  if not('highway' in Tag or 'ferry' in Tag):
+   Result.append(f"пусты тып 'highway' на way")
+   break
  return Result
 
 
