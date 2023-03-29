@@ -109,6 +109,27 @@ def GetWrong(Tag):
  return Result
 
 
+Pair = {
+ 'Split': re.compile("|".join(map(re.escape, "{}()[]\"«»")) + "|" + "|".join(["\B'", "'\B"])).findall,
+ 'Replace': re.compile("|".join([re.escape(s) for s in ["{}", "()", "[]", "''", "\"\"", "«»"]])).sub,
+}
+
+
+def CheckPair(Tag):
+ Result = []
+ for TagName in ['name:be', 'name:ru']:
+  if TagName in Tag:
+   Check = "".join(Pair['Split'](Tag[TagName]))
+   if Check:
+    S = ""
+    while Check != S:
+     S, Check = Check, Pair['Replace']("", Check)
+   if Check != "":
+    Result.append(f"у '{TagName}' непарныя дужкі ці двукоссі \"{Check}\"")
+    break
+ return Result
+
+
 def GetLength(Tag):
  Result = []
  Be = len(Tag.get('name:be', ""))
@@ -420,6 +441,7 @@ def GetCheck(Class, Key, Value, Type, Tag):
  Result += GetRu(Tag, Value)
  Result += GetOfficialName(Tag)
  Result += GetWrong(Tag)
+ Result += CheckPair(Tag)
  Result += GetLength(Tag)
  Result += GetImpossible(Tag)
 # Result += GetLanguage(Tag)
