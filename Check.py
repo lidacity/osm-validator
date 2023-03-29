@@ -67,7 +67,7 @@ def GetRu(Tag, Name):
  Result = []
  Ru = Tag.get('name:ru', "")
  if Name[:254] != Ru[:254]:
-  Result.append(f"'name:ru' не супадае Законам")
+  Result.append(f"'name:ru' не супадае з Законам")
  return Result
 
 
