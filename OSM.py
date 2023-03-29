@@ -43,7 +43,7 @@ def GetErrorLine(Key, Relation):
  Result['Relation'] = []
  Result['Relation'] += Check.GetRef(Key)
  Result['Relation'] += Check.GetRelation(Type)
- Result['Relation'] += ["'{ref}' адсутнічае ў Законе"]
+ Result['Relation'] += ["'ref' адсутнічае ў Законе"]
  return Result
 
 

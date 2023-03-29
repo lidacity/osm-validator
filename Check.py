@@ -19,7 +19,7 @@ Classes = {
 def GetRef(Key):
  Result = []
  if Key[:6] == "error-":
-  Result.append(f"'official_ref' несапраўдны!")
+  Result.append(f"несапраўдны 'official_ref'")
  return Result
 
 
@@ -32,12 +32,12 @@ def GetRelation(Type):
 
 def GetTag(Tag, Class):
  Result = []
- for Key, Value in Classes[Class].items():
-  if Key not in Tag:
-   Result.append(f"'{Key}' не знойдзены")
+ for TagName, Value in Classes[Class].items():
+  if TagName not in Tag:
+   Result.append(f"не знойдзены '{TagName}'")
   elif Value is not None:
-   if Tag[Key] != Value:
-    Result.append(f"у '{Key}' не зададзена \"{Value}\"")
+   if Tag[TagName] != Value:
+    Result.append(f"'{TagName}' не роўны \"{Value}\"")
  return Result
 
 
@@ -67,7 +67,7 @@ def GetRu(Tag, Name):
  Result = []
  Ru = Tag.get('name:ru', "")
  if Name[:254] != Ru[:254]:
-  Result.append(f"'name:ru' не супадае з назвай у Законе")
+  Result.append(f"'name:ru' не супадае Законам")
  return Result
 
 
@@ -80,7 +80,7 @@ def GetAbbr(Tag):
   Name = Tag.get(TagName, "")
   Abbr = Abbreviations(Name)
   if Abbr:
-   Result.append(f"недапушчальны скарот \"{Abbr[0]}\" у '{TagName}'")
+   Result.append(f"у '{TagName}' недапушчальны скарот \"{Abbr[0]}\"")
    break
  return Result
 
@@ -89,9 +89,9 @@ def GetOfficialName(Tag):
  Result = []
  for TagName in ['official_name', 'official_name:be', 'official_name:ru', 'description', 'description:be', 'description:ru']:
   if TagName in Tag:
-   Result.append(f"прысутнічае непатрэбны '{TagName}'")
+   Result.append(f"непатрэбны '{TagName}'")
  if 'fixme' in Tag:
-  Result.append(f"прысутнічае 'fixme' у relation")
+  Result.append(f"'fixme' у relation")
  return Result
 
 
@@ -99,7 +99,7 @@ Letter = {
  'Latin': { 're': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары" },
  'Number': { 're': re.compile("[a-zA-Zа-яА-ЯёЁ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁ]").search, 'Desc': "лацінскія літары" },
  'Hyphen': { 're': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок" },
- 'Bracket': { 're': re.compile("[^ ]\(|\)[^ …]").search, 'Desc': "неправільныя дужкі" },
+ 'Bracket': { 're': re.compile("[^ \"(]\(|\)[^ …\")]").search, 'Desc': "неправільныя дужкі" },
  'Special': { 're': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\"))).search, 'Desc': "спецыяльныя знакі" },
 }
 
@@ -127,7 +127,7 @@ def GetLength(Tag):
  Be = len(Tag.get('name:be', ""))
  Ru = len(Tag.get('name:ru', ""))
  if abs(Be - Ru) > 12:
-  Result.append(f"вялікая розніца паміж даўжынёй 'name:be' і 'name:ru'")
+  Result.append(f"розніца паміж даўжынёй 'name:be' і 'name:ru'")
  return Result
 
 
@@ -198,7 +198,7 @@ def GetBadRefInRelation(Relation, Relations):
  for TagName in ['name', 'name:be', 'name:ru']:
   if TagName in Tag:
    if GetList(Tag[TagName], 'bad'):
-    Result.append(f"Не вызначаны 'ref' у апісанні '{TagName}'")
+    Result.append(f"у '{TagName}' не вызначаны 'ref'")
  return Result
 
 
@@ -213,16 +213,16 @@ def GetRefInRelation(Relation, Relations):
       Tag2 = Relations[Ref]['tags'] # з агульнага спісу аўтадарог
       if TagName in Tag2:
        I = Index + len(Ref) + 1
-       S2 = Tag2[TagName] #
+       S2 = Tag2[TagName] # з агульнага спісу аўтадарог
        S = Tag[TagName][I:I+len(S2)]
        Len = len(S2) - (1 if S2[-1:] == "…" else 0)
        if Len == 0:
         Len = len(S2)
        if S2[:Len] != S[:Len] and not ExcludeRef(Tag[TagName], I):
-        Result.append(f"апісанне {Ref} не адпавядае свайму апісанню ў '{TagName}'")
+        Result.append(f"\"{Ref}\" не адпавядае найменню ў '{TagName}'")
         break
     else:
-     Result.append(f"не вызначаны {Ref} у апісанні '{TagName}'")
+     Result.append(f"у '{TagName}' не вызначаны \"{Ref}\"")
  return Result
 
 
@@ -331,7 +331,7 @@ def GetCheckFixme(Ways):
  Result = []
  for Way in Ways:
   if "fixme" in Way['tags']:
-   Result.append(f"прысутнічае 'fixme' у way")
+   Result.append(f"'fixme' у way")
    break
  return Result
 
@@ -343,12 +343,12 @@ def GetCheckHighway(Ways):
   Tag = Way['tags']
   if 'highway' in Tag:
    if Tag['highway'] not in Highways:
-    Result.append(f"памылковы тып 'highway'=\"{Tag['highway']}\" на way")
+    Result.append(f"памылковы 'highway'=\"{Tag['highway']}\" на way")
     break
  for Way in Ways:
   Tag = Way['tags']
   if not('highway' in Tag or 'ferry' in Tag):
-   Result.append(f"пусты тып 'highway' на way")
+   Result.append(f"пусты 'highway' на way")
    break
  return Result
 
@@ -357,7 +357,7 @@ def GetCheckDouble(Ways):
  Result = []
  c = Counter([Way['id'] for Way in Ways])
  if max(c.values()) > 1:
-  Result.append(f"прысутнічаюць падвоеныя way")
+  Result.append(f"падвоеныя way")
  return Result
 
 
@@ -383,14 +383,14 @@ def GetCheckCross(Ways):
  Nodes = [Node for Row in Limits for Node in Row]
  c = Counter(Nodes)
  if max(c.values()) > 2:
-  Result.append(f"аўтадарога замкнутая ў пятлю")
+  Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
  else:
   Nodes = GetNodes(Ways)
   Nodes1 = [Node for Row in Nodes for Node in Row]
   Nodes2 = [Node for Row in Nodes for Node in Row[1:-1]]
   c = Counter(Nodes1 + Nodes2)
   if max(c.values()) > 2:
-   Result.append(f"аўтадарога замкнутая ў пятлю")
+   Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
  return Result
 
 
@@ -416,7 +416,7 @@ def GetHaversine(Ways):
  #
  if Lengths:
   if max(Lengths) > 1.0:
-   Result.append(f"занадта разарваная дарога")
+   Result.append(f"разарваная дарога")
  return Result
 
 

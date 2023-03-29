@@ -4,24 +4,50 @@
 import sys
 import json
 import requests
+from requests_oauthlib import OAuth2Session
 
 
 class OsmApi:
- def __init__(self, UserName=None, Password=None, OAuth=None, CreatedBy="OsmApi/1.0", API="https://openstreetmap.org/api/0.6", Referer=None):
+ def __init__(self,  HTTPBasic=None, OAuth2=None, CreatedBy="OsmApi/1.0", API="https://www.openstreetmap.org/api/0.6", Referer=None):
   self.API = API.strip('/')
   self.Headers = {'user-agent': CreatedBy}
   if Referer:
    self.Headers['referer'] = Referer
   #
-  self.Requests = requests.Session()
-  if OAuth:
-   self.OAuth = OAuth
+  Auth = "https://api.openstreetmap.org/"
+  if OAuth2:
+   #OAuth2 = {'client_id': "<client_id>", 'client_secret': "<client_secret>", 'scope': ["read_prefs", "write_notes", ...], 'redirect_uri': "<redirect_uri>"}
+   #Register an application with application's name, redirect URIs and scope(s).
+   #Then, receive client ID and client secret.
+   #Typically, these settings are saved on the client application.
+   AuthURL = "https://www.openstreetmap.org/oauth2/authorize"
+   AccessTokenURL = "https://www.openstreetmap.org/oauth2/token"
+   AuthURL = "https://master.apis.dev.openstreetmap.org/oauth2/authorize"
+   AccessTokenURL = "https://master.apis.dev.openstreetmap.org/oauth2/token"
+   #When users login from the application, they must first log in to OSM
+   #to authenticate their identity by calling the Auth URL and the client
+   #application redirects to <REDIRECT_URI>?code=AUTHORIZATION_CODE
+   #where the application receives authorization code,
+   #(<REDIRECT_URI> is specified during the client application registration)
+   self.Requests = OAuth2Session(OAuth2['client_id'], scope=OAuth2['scope'], redirect_uri=OAuth2['redirect_uri'])
+   RedirectURL, state = self.Requests.authorization_url(AuthURL)
+   print('Please go here and authorize,', RedirectURL)
+   #An access token is requested by the client application from the
+   #Access Token URL by passing the authorization code along with
+   #authentication details, including the client secret.
+   RedirectResponse = input('Paste the full redirect URL here:')
+   #If the authorization is valid, the OSM API will send the access token
+   #to the application as a response. The response will look something
+   #like this {"access_token":"<ACCESS_TOKEN>","token_type":"Bearer","scope":"read_prefs write_api","created_at":1646669786}
+   token = self.Requests.fetch_token(AccessTokenURL, client_secret=OAuth2['client_secret'], authorization_response=RedirectResponse)
+   #Now the application is authorized.
+   #It may use the token to access OSM APIs, limited to the scope of access,
+   #until the token expires or is revoked.
   else:
-   self.OAuth = None
-   self.UserName, self.Password = UserName, Password
-
-#  self.Requests = requests
-
+   #HTTPBasic = (UserName, Password)
+   self.Requests = requests.Session()
+   self.Requests.auth = HTTPBasic
+   self.Auth = self.Requests.post(Auth)
 
 
  def Close(self):
@@ -29,27 +55,26 @@ class OsmApi:
 
 
  def GetJson(self, Type, ID, One=False, Parameters=None, Tag='elements'):
-  API = self.API
   if isinstance(ID, list):
    List = ",".join([str(Item) for Item in ID])
-   URI = f"{API}/{Type}.json?{Type}={List}"
+   URI = f"{self.API}/{Type}.json?{Type}={List}"
   elif isinstance(Parameters, dict):
    List = urllib.parse.urlencode(Parameters)
    if ID is None:
     if List:
-     URI = f"{API}/{Type}.json?{List}"
+     URI = f"{self.API}/{Type}.json?{List}"
     else:
-     URI = f"{API}/{Type}.json"
+     URI = f"{self.API}/{Type}.json"
    else:
     if List:
-     URI = f"{API}/{Type}/{ID}.json?{List}"
+     URI = f"{self.API}/{Type}/{ID}.json?{List}"
     else:
-     URI = f"{API}/{Type}/{ID}.json"
+     URI = f"{self.API}/{Type}/{ID}.json"
   else:
    if Parameters is not None:
-    URI = f"{API}/{Type}/{ID}/{Parameters}.json"
+    URI = f"{self.API}/{Type}/{ID}/{Parameters}.json"
    else:
-    URI = f"{API}/{Type}/{ID}.json"
+    URI = f"{self.API}/{Type}/{ID}.json"
   #print(URI)
   with self.Requests.get(URI, headers=self.Headers) as Response:
    Response.encoding = Response.apparent_encoding
@@ -63,24 +88,205 @@ class OsmApi:
    return None
 
 
+ def GetJsonSimple(self, URI, Params={}, Tag=None):
+  with self.Requests.get(URI, headers=self.Headers) as Response:
+   Response.encoding = Response.apparent_encoding
+   OK, Result = Response.ok, Response.json()
+#  print(Result)
+  if OK:
+   if Tag:
+    return Result[Tag]
+   else:
+    return Result
+  else:
+   return None
+
+
+ def PostJson(self, URI, Data):
+  with self.Requests.post(URI, data=Data, headers=self.Headers) as Response:
+   Response.encoding = Response.apparent_encoding
+   OK, Result = Response.ok, Response.json()
+  if OK:
+   return Result
+  else:
+   return None
+
+
+ def GetXML(self, URI):
+  with self.Requests.get(URI, headers=self.Headers) as Response:
+   Response.encoding = Response.apparent_encoding
+   OK, Result = Response.ok, Response.text
+  print(Result)
+  if OK:
+   return Result
+  else:
+   return None
+
+
+
  ##################################################
- # Capabilities                                   #
+ # Miscellaneous                                  #
  ##################################################
 
 
- #def Capabilities():
- # uri = "/api/capabilities"
+#Available API versions: GET /api/versions
+#Capabilities: GET /api/capabilities
+
+
+ #Retrieving map data by bounding box: GET /api/0.6/map
+ def Map(self, MinLat, MinLon, MaxLat, MaxLon):
+  URI = f"{self.API}/map?bbox={MinLon},{MinLat},{MaxLon},{MaxLat}"
+  print(URI)
+#  response = self._session.request(method, path, data=send)
+#  if response.status_code != 200:
+#   payload = response.content.strip()
+  with urllib.request.urlopen(URI) as URL:
+   return json.load(URL)
+
+
+ #Retrieving permissions: GET /api/0.6/permissions
+ def Permissions(self):
+  URI = f"{self.API}/permissions.json"
+  return self.GetJsonSimple(URI, Tag='permissions')
+
 
 
  ##################################################
- # Node|Way|Relation                              #
+ # Changesets                                     #
  ##################################################
+
+
+#Create: PUT /api/0.6/changeset/create
+
+
+ #Read: GET /api/0.6/changeset/#id?include_discussion=true
+ def ReadChangeset(self, ID, IncludeDiscussion={}):
+  return self.GetJson("changeset", ID, True, Parameters=IncludeDiscussion)
+
+
+#Update: PUT /api/0.6/changeset/#id
+#Close: PUT /api/0.6/changeset/#id/close
+#Download: GET /api/0.6/changeset/#id/download
+
+
+ #Query: GET /api/0.6/changesets
+ def QueryChangesets(self, BBox=None, UserID=None, UserName=None, ClosedAfter=None, CreatedBefore=None, OnlyOpen=False, OnlyClosed=False):
+ # bbox=min_lon,min_lat,max_lon,max_lat
+  URI = f"{self.API}/changesets.json"
+  Params = {}
+  if BBox:
+   Params["bbox"] = ",".join([str(BBox[1]), str(BBox[0]), str(BBox[3]), str(BBox[2])])
+  if UserID:
+   Params["user"] = UserID
+  if UserName:
+   Params["display_name"] = UserName
+  if ClosedAfter and not CreatedBefore:
+   Params["time"] = ClosedAfter
+  if CreatedBefore:
+   if not ClosedAfter:
+    ClosedAfter = "1970-01-01T00:00:00Z"
+   Params["time"] = f"{ClosedAfter},{CreatedBefore}"
+  if OnlyOpen:
+   Params["open"] = 1
+  if OnlyClosed:
+   Params["closed"] = 1
+  return self.GetJsonSimple(URI, Params=Parameters, Tag='changesets')
+
+
+#Diff upload: POST /api/0.6/changeset/#id/upload
+
+
+
+ ##################################################
+ # Changeset discussion                           #
+ ##################################################
+
+
+#Comment: POST /api/0.6/changeset/#id/comment
+#Subscribe: POST /api/0.6/changeset/#id/subscribe
+#Unsubscribe: POST /api/0.6/changeset/#id/unsubscribe
+#Hide changeset comment: POST /api/0.6/changeset/comment/#comment_id/hide
+#Unhide changeset comment: POST /api/0.6/changeset/comment/#comment_id/unhide
+
+
+
+
+#Comment: POST /api/0.6/changeset/#id/comment (JSON response)
+#def CommentChangeset(ChangesetId, comment):
+#        params = urllib.parse.urlencode({'text': comment})
+#        try:
+#            data = self._session._post(
+#                "/api/0.6/changeset/%s/comment" % (ChangesetId),
+#                params,
+#                forceAuth=True
+#            )
+#        except errors.ApiError as e:
+#            if e.status == 409:
+#                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
+#            else:
+#                raise
+#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
+#        return dom.DomParseChangeset(changeset)
+
+
+#Subscribe: POST /api/0.6/changeset/#id/subscribe (JSON response)
+#    def ChangesetSubscribe(self, ChangesetId):
+#        try:
+#            data = self._session._post(
+#                "/api/0.6/changeset/%s/subscribe" % (ChangesetId),
+#                None,
+#                forceAuth=True
+#            )
+#        except errors.ApiError as e:
+#            if e.status == 409:
+#                raise errors.AlreadySubscribedApiError(e.status, e.reason, e.payload)
+#            else:
+#                raise
+#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
+#        return dom.DomParseChangeset(changeset)
+
+
+#Unsubscribe: POST /api/0.6/changeset/#id/unsubscribe (JSON response)
+#    def ChangesetUnsubscribe(self, ChangesetId):
+#        try:
+#            data = self._session._post(
+#                "/api/0.6/changeset/%s/unsubscribe" % (ChangesetId),
+#                None,
+#                forceAuth=True
+#            )
+#        except errors.ElementNotFoundApiError as e:
+#            raise errors.NotSubscribedApiError(e.status, e.reason, e.payload)
+#
+#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
+#        return dom.DomParseChangeset(changeset)
+
+
+
+
+
+
+
+
+
+
+
+
+ ##################################################
+ # Elements                                       #
+ ##################################################
+
+
+#Create: PUT /api/0.6/[node|way|relation]/create
 
 
  #Read: GET /api/0.6/[node|way|relation]/#id
  #Version: GET /api/0.6/[node|way|relation]/#id/#version
  def Read(self, Type, ID, Version=None):
   return self.GetJson(Type, ID, One=True, Parameters=Version)
+
+
+#Update: PUT /api/0.6/[node|way|relation]/#id
+#Delete: DELETE /api/0.6/[node|way|relation]/#id
 
 
  #History: GET /api/0.6/[node|way|relation]/#id/history
@@ -111,6 +317,10 @@ class OsmApi:
  #Full: GET /api/0.6/[way|relation]/#id/full
  def Full(self, Type, ID):
   return self.GetJson(Type, ID, Parameters="full")
+
+
+#Redaction: POST /api/0.6/[node|way|relation]/#id/#version/redact?redaction=#redaction_id
+
 
 
  ##################################################
@@ -257,184 +467,120 @@ class OsmApi:
 
 
  ##################################################
- # Changeset                                      #
+ # GPS traces                                     #
  ##################################################
 
- #Retrieving permissions: GET /api/0.6/permissions
- def Permissions(self, Tag='permissions'):
-  API = self.API
-  URI = f"{API}/permissions.json"
-  with self.Requests.get(URI, headers=self.Headers) as Response:
-   Response.encoding = Response.apparent_encoding
-   OK, Result = Response.ok, Response.json()
-  if OK:
-   return Result[Tag]
-  else:
-   return None
 
-
-
-
-
-
-
-
+#Get GPS Points: Get /api/0.6/trackpoints?bbox=left,bottom,right,top&page=pageNumber
+#Create: POST /api/0.6/gpx/create
+#Update: PUT /api/0.6/gpx/#id
+#Delete: DELETE /api/0.6/gpx/#id
+#Download Metadata: GET /api/0.6/gpx/#id/details
+#Download Data: GET /api/0.6/gpx/#id/data
+#List: GET /api/0.6/user/gpx_files
 
 
 
  ##################################################
- # Changeset                                      #
+ # Methods for user data                          #
  ##################################################
- #Hide changeset comment: POST /api/0.6/changeset/comment/#comment_id/hide (JSON response)
- #Unhide changeset comment: POST /api/0.6/changeset/comment/#comment_id/unhide (JSON response)
 
 
- #def Changeset(self, ChangesetTags={}):
- # #Create a new changeset
+ #Details of a user: GET /api/0.6/user/#id
+ def User(self, ID):
+  URI = f"{self.API}/user/{ID}.json"
+  return self.GetJsonSimple(URI, Tag='user')
 
 
- #Read: GET /api/0.6/changeset/#id?include_discussion=true
- def ReadChangeset(self, ID, IncludeDiscussion={}):
-  return self.GetJson("changeset", ID, True, Parameters=IncludeDiscussion)
+ #Details of multiple users: GET /api/0.6/users?users=#id1,#id2,...,#idn
+ def Users(self, IDs):
+  List = ",".join([str(Item) for Item in IDs])
+  URI = f"{self.API}/users.json?users={List}"
+  Json = [Item['user'] for Item in self.GetJsonSimple(URI, Tag='users')]
+  Result = list(self.Arrange(IDs, Json))
+  return Result
 
 
- #def ChangesetUpdate(self, ChangesetTags={}):
- # #Updates current changeset with `ChangesetTags`.
-
- #def ChangesetCreate(self, ChangesetTags={}):
- # Opens a changeset.
-
- #def ChangesetClose(self):
- # #Closes current changeset.
-
- #def ChangesetUpload(self, ChangesData):
- # #Upload data with the `ChangesData` list of dicts:
-
- #def ChangesetDownload(self, ChangesetId):
- # #Download data from changeset `ChangesetId`.
+ #Details of the logged-in user: GET /api/0.6/user/details
+ def Details(self):
+  URI = f"{self.API}/user/details.json"
+  return self.GetJsonSimple(URI, Tag='user')
 
 
- #Query: GET /api/0.6/changesets
- def QueryChangesets(self, bbox=None, UserID=None, UserName=None, ClosedAfter=None, CreatedBefore=None, OnlyOpen=False, OnlyClosed=False):
- # bbox=min_lon,min_lat,max_lon,max_lat
-  Params = {}
-  if bbox:
-   Params["bbox"] = bbox
-  if UserID:
-   Params["user"] = UserID
-  if UserName:
-   Params["display_name"] = UserName
-  if ClosedAfter and not CreatedBefore:
-   Params["time"] = ClosedAfter
-  if CreatedBefore:
-   if not ClosedAfter:
-    ClosedAfter = "1970-01-01T00:00:00Z"
-   Params["time"] = f"{ClosedAfter},{CreatedBefore}"
-  if OnlyOpen:
-   Params["open"] = 1
-  if OnlyClosed:
-   Params["closed"] = 1
-  return self.GetJson("changesets", None, Parameters=Params, Tag='changesets')
+ #Preferences of the logged-in user: GET /api/0.6/preferences
+ def Preferences(self):
+  URI = f"{self.API}/user/preferences.json"
+  return self.GetJsonSimple(URI, Tag='preferences')
 
 
-#Comment: POST /api/0.6/changeset/#id/comment (JSON response)
-#def CommentChangeset(ChangesetId, comment):
-#        params = urllib.parse.urlencode({'text': comment})
-#        try:
-#            data = self._session._post(
-#                "/api/0.6/changeset/%s/comment" % (ChangesetId),
-#                params,
-#                forceAuth=True
-#            )
-#        except errors.ApiError as e:
-#            if e.status == 409:
-#                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
-#            else:
-#                raise
-#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
-#        return dom.DomParseChangeset(changeset)
+
+ ##################################################
+ # Map Notes API                                  #
+ ##################################################
 
 
-#Subscribe: POST /api/0.6/changeset/#id/subscribe (JSON response)
-#    def ChangesetSubscribe(self, ChangesetId):
-#        try:
-#            data = self._session._post(
-#                "/api/0.6/changeset/%s/subscribe" % (ChangesetId),
-#                None,
-#                forceAuth=True
-#            )
-#        except errors.ApiError as e:
-#            if e.status == 409:
-#                raise errors.AlreadySubscribedApiError(e.status, e.reason, e.payload)
-#            else:
-#                raise
-#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
-#        return dom.DomParseChangeset(changeset)
+ #Retrieving notes data by bounding box: GET /api/0.6/notes
+ def ReadNotes(self, MinLat, MinLon, MaxLat, MaxLon, Limit=100, Closed=7):
+  URI = f"{self.API}/notes.json?bbox={MinLon},{MinLat},{MaxLon},{MaxLat}&limit={Limit}&closed={Closed}"
+  return self.GetJsonSimple(URI, Tag='features')
 
 
-#Unsubscribe: POST /api/0.6/changeset/#id/unsubscribe (JSON response)
-#    def ChangesetUnsubscribe(self, ChangesetId):
-#        try:
-#            data = self._session._post(
-#                "/api/0.6/changeset/%s/unsubscribe" % (ChangesetId),
-#                None,
-#                forceAuth=True
-#            )
-#        except errors.ElementNotFoundApiError as e:
-#            raise errors.NotSubscribedApiError(e.status, e.reason, e.payload)
-#
-#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
-#        return dom.DomParseChangeset(changeset)
+ #Read: GET /api/0.6/notes/#id
+ def ReadNote(self, ID):
+  URI = f"{self.API}/notes/{ID}.json"
+  return self.GetJsonSimple(URI)
 
 
-##################################################
-# Notes                                          #
-##################################################
+ #Create a new note: Create: POST /api/0.6/notes
+ def CreateNote(self, Lat, Lon, Text):
+  URI = f"{self.API}/notes.json"
+  return self.PostJson(URI, Data={'lat': Lat, 'lon': Lon, 'text': Text})
 
-#Retrieving notes data by bounding box: GET /api/0.6/notes
-#    def NotesGet(min_lon, min_lat, max_lon, max_lat, limit=100, closed=7):
-#        uri = (
-#            "/api/0.6/notes?bbox=%f,%f,%f,%f&limit=%d&closed=%d"
-#            % (min_lon, min_lat, max_lon, max_lat, limit, closed)
-#        )
-#        data = self._session._get(uri)
-#        return parser.ParseNotes(data)
 
-#Read: GET /api/0.6/notes/#id
-#    def NoteGet(self, id):
-#        uri = "/api/0.6/notes/%s" % (id)
-#        data = self._session._get(uri)
-#        noteElement = dom.OsmResponseToDom(data, tag="note", single=True)
-#        return dom.DomParseNote(noteElement)
+#Create a new comment: Create: POST /api/0.6/notes/#id/comment
+#Close: POST /api/0.6/notes/#id/close
+#Reopen: POST /api/0.6/notes/#id/reopen
 
-#Create a new note: Create: POST /api/0.6/notes
-#    def NoteCreate(self, NoteData):
-#        uri = "/api/0.6/notes"
-#        uri += "?" + urllib.parse.urlencode(NoteData)
-#        return self._NoteAction(uri)
-
-#    def NoteComment(self, NoteId, comment):
-#        path = "/api/0.6/notes/%s/comment" % NoteId
-#        return self._NoteAction(path, comment)
-
-#    def NoteClose(self, NoteId, comment):
-#        path = "/api/0.6/notes/%s/close" % NoteId
-#        return self._NoteAction(path, comment, optionalAuth=False)
-
-#    def NoteReopen(self, NoteId, comment):
-#        path = "/api/0.6/notes/%s/reopen" % NoteId
-#        return self._NoteAction(path, comment, optionalAuth=False)
 
 #Search for notes: GET /api/0.6/notes/search
-#    def NotesSearch(self, query, limit=100, closed=7):
-#        uri = "/api/0.6/notes/search"
-#        params = {}
-#        params['q'] = query
-#        params['limit'] = limit
-#        params['closed'] = closed
-#        uri += "?" + urllib.parse.urlencode(params)
-#        data = self._session._get(uri)
-#        return parser.ParseNotes(data)
+ def SearchNotes(self, Query="", Limit=100, Closed=7, DisplayName=None, User=None, From=None, To=None, Sort="updated_at", Order="updated_at"):
+  Params = {}
+  if Query:
+   Params['q'] = Query
+  if Limit:
+   Params['limit'] = Limit
+  if Closed:
+   Params['closed'] = Closed
+  if DisplayName:
+   Params['display_name'] = DisplayName
+  if User:
+   Params['user'] = User
+  if From:
+   Params['from'] = From
+  if To:
+   Params['to'] = To
+  if Sort:
+   Params['sort'] = Sort #created_at or updated_at
+  if Order:
+   Params['order'] = Order #oldest or newest
+  Parameters = urllib.parse.urlencode(Params)
+  URI = f"{self.API}/notes/search.json?{Parameters}"
+  return self.GetJsonSimple(URI)
+
+
+ #RSS Feed: GET /api/0.6/notes/feed
+ def RSS(self, MinLat, MinLon, MaxLat, MaxLon):
+  URI = f"{self.API}/notes/feed?bbox={MinLon},{MinLat},{MaxLon},{MaxLat}"
+  return self.GetXML(URI)
+
+
+
+
+
+
+
+
+
 
 
 ##################################################
@@ -442,27 +588,7 @@ class OsmApi:
 ##################################################
 
 
- #Retrieving map data by bounding box: GET /api/0.6/map
- def Map(self, MinLon, MinLat, MaxLon, MaxLat):
-  API = self.API
-  URI = f"{API}/map?bbox={MinLon},{MinLat},{MaxLon},{MaxLat}"
-  print(URI)
-#  response = self._session.request(method, path, data=send)
-#  if response.status_code != 200:
-#   payload = response.content.strip()
-  with urllib.request.urlopen(URI) as URL:
-   return json.load(URL)
 
-
-##################################################
-# Internal method                                #
-##################################################
-#Retrieving permissions: GET /api/0.6/permissions
-#Methods for user data
-#Details of a user: GET /api/0.6/user/#id
-#Details of multiple users: GET /api/0.6/users?users=#id1,#id2,...,#idn
-#Details of the logged-in user: GET /api/0.6/user/details
-#Preferences of the logged-in user: GET /api/0.6/preferences
 
 
 
