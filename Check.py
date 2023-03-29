@@ -76,7 +76,7 @@ Abbreviations = re.compile("|".join([re.escape(s) for s in ["’", "—", "а/д
 
 def GetAbbr(Tag):
  Result = []
- for TagName in ['name', 'name:be', 'name:ru']:
+ for TagName in ['name:be', 'name:ru']:
   Name = Tag.get(TagName, "")
   Abbr = Abbreviations(Name)
   if Abbr:
@@ -109,7 +109,7 @@ Replace = { 'SOS': "СОС", 'III': "3", 'II': "2", 'I': "1", }
 
 def GetLetter(Tag):
  Result = []
- for TagName in ['name', 'name:be', 'name:ru']:
+ for TagName in ['name:be', 'name:ru']:
   if TagName in Tag:
    S = Tag[TagName]
    for Key, Value in Replace.items():
@@ -195,7 +195,7 @@ def ExcludeRef(Name, Index):
 def GetBadRefInRelation(Relation, Relations):
  Result = []
  Tag = Relation['tags']
- for TagName in ['name', 'name:be', 'name:ru']:
+ for TagName in ['name:be', 'name:ru']:
   if TagName in Tag:
    if GetList(Tag[TagName], 'bad'):
     Result.append(f"у '{TagName}' не вызначаны 'ref'")
@@ -205,7 +205,7 @@ def GetBadRefInRelation(Relation, Relations):
 def GetRefInRelation(Relation, Relations):
  Result = []
  Tag = Relation['tags']
- for TagName in ['name', 'name:be', 'name:ru']:
+ for TagName in ['name:be', 'name:ru']:
   if TagName in Tag:
    for Ref in GetList(Tag[TagName], 'ok'):
     if Ref in Relations:
