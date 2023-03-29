@@ -71,20 +71,6 @@ def GetRu(Tag, Name):
  return Result
 
 
-Abbreviations = re.compile("|".join([re.escape(s) for s in ["’", "—", "а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", "вул.", "ул.", ]])).search
-
-
-def GetAbbr(Tag):
- Result = []
- for TagName in ['name:be', 'name:ru']:
-  Name = Tag.get(TagName, "")
-  Abbr = Abbreviations(Name)
-  if Abbr:
-   Result.append(f"у '{TagName}' недапушчальны скарот \"{Abbr[0]}\"")
-   break
- return Result
-
-
 def GetOfficialName(Tag):
  Result = []
  for TagName in ['official_name', 'official_name:be', 'official_name:ru', 'description', 'description:be', 'description:ru']:
@@ -95,26 +81,27 @@ def GetOfficialName(Tag):
  return Result
 
 
-Letter = {
- 'Latin': { 're': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары" },
- 'Number': { 're': re.compile("[a-zA-Zа-яА-ЯёЁ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁ]").search, 'Desc': "лацінскія літары" },
- 'Hyphen': { 're': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок" },
- 'Bracket': { 're': re.compile("[^ \"(]\(|\)[^ …\")]").search, 'Desc': "неправільныя дужкі" },
- 'Special': { 're': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\"))).search, 'Desc': "спецыяльныя знакі" },
+Wrong = {
+ 'Latin': {'re': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары"},
+ 'Number': {'re': re.compile("[a-zA-Zа-яА-ЯёЁ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁ]").search, 'Desc': "няправільныя лічбы"},
+ 'Hyphen': {'re': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок"},
+ 'Bracket': {'re': re.compile("[^ \"(]\(|\)[^ …\")]").search, 'Desc': "неправільныя дужкі"},
+ 'Special': {'re': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\"))).search, 'Desc': "спецыяльныя знакі"},
+ 'Abbreviations': {'re': re.compile("|".join([re.escape(s) for s in ["’", "—", "а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", "вул.", "ул.", ]])).search, 'Desc': "недапушчальны скарот"},
 }
 
 
 Replace = { 'SOS': "СОС", 'III': "3", 'II': "2", 'I': "1", }
 
 
-def GetLetter(Tag):
+def GetWrong(Tag):
  Result = []
  for TagName in ['name:be', 'name:ru']:
   if TagName in Tag:
    S = Tag[TagName]
    for Key, Value in Replace.items():
     S = S.replace(Key, Value)
-   for _, Value in Letter.items():
+   for _, Value in Wrong.items():
     R = Value['re'](S)
     if R:
      Result.append(f"у '{TagName}' {Value['Desc']} \"{R[0]}\"")
@@ -431,9 +418,8 @@ def GetCheck(Class, Key, Value, Type, Tag):
  Result += GetClass(Tag, Class)
  Result += GetBe(Tag)
  Result += GetRu(Tag, Value)
- Result += GetAbbr(Tag)
  Result += GetOfficialName(Tag)
- Result += GetLetter(Tag)
+ Result += GetWrong(Tag)
  Result += GetLength(Tag)
  Result += GetImpossible(Tag)
 # Result += GetLanguage(Tag)
