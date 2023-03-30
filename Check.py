@@ -134,7 +134,7 @@ def GetLength(Tag):
  Result = []
  Be = len(Tag.get('name:be', ""))
  Ru = len(Tag.get('name:ru', ""))
- if abs(Be - Ru) > 12:
+ if abs(Be - Ru) > 18:
   Result.append(f"розніца паміж даўжынёй 'name:be' і 'name:ru'")
  return Result
 
@@ -424,7 +424,7 @@ def GetHaversine(Ways):
  #
  if Lengths:
   if max(Lengths) > 1.0:
-   Result.append(f"разарваная дарога")
+   Result.append(f"way занадта разарваны")
  return Result
 
 
