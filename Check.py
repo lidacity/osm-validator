@@ -200,6 +200,20 @@ def ExcludeRef(Name, Index):
  return Name[Index-1:].strip()[:1] in ["(", ")", ""]
 
 
+
+def GetEqRef(Relation):
+ Result = []
+ Tag = Relation['tags']
+ Refs = { 'name:be': [], 'name:ru': [] }
+ for TagName in ['name:be', 'name:ru']:
+  if TagName in Tag:
+   for Ref in GetList(Tag[TagName], 'ok'):
+    Refs[TagName].append(Ref)
+ if Counter(Refs['name:be']) != Counter(Refs['name:ru']):
+  Result.append(f"у 'name:be' і 'name:ru' не аднолькавыя 'ref'")
+ return Result
+
+
 def GetBadRefInRelation(Relation, Relations):
  Result = []
  Tag = Relation['tags']
@@ -445,6 +459,7 @@ def GetCheck(Class, Key, Value, Type, Tag):
  Result += GetLength(Tag)
  Result += GetImpossible(Tag)
 # Result += GetLanguage(Tag)
+ Result += GetEqRef(Tag)
  return Result
 
 
