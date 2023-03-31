@@ -1,98 +1,90 @@
-#https://wiki.openstreetmap.org/wiki/RU:API_v0.6
+#https://wiki.openstreetmap.org/wiki/API_v0.6
 #https://josm.openstreetmap.de/wiki/Ru%3AHelp/RemoteControlCommands
 
-import sys
 import json
 import requests
 from requests_oauthlib import OAuth2Session
 
 
 class OsmApi:
- def __init__(self,  HTTPBasic=None, OAuth2=None, CreatedBy="OsmApi/1.0", API="https://www.openstreetmap.org/api/0.6", Referer=None):
+ def __init__(self,  Auth=None, CreatedBy="OsmApi/1.0", API="https://www.openstreetmap.org/api/0.6", Referer=None):
   self.API = API.strip('/')
   self.Headers = {'user-agent': CreatedBy}
   if Referer:
    self.Headers['referer'] = Referer
   #
-  Auth = "https://api.openstreetmap.org/"
-  if OAuth2:
-   #OAuth2 = {'client_id': "<client_id>", 'client_secret': "<client_secret>", 'scope': ["read_prefs", "write_notes", ...], 'redirect_uri': "<redirect_uri>"}
-   #Register an application with application's name, redirect URIs and scope(s).
-   #Then, receive client ID and client secret.
-   #Typically, these settings are saved on the client application.
-   AuthURL = "https://www.openstreetmap.org/oauth2/authorize"
-   AccessTokenURL = "https://www.openstreetmap.org/oauth2/token"
-#   AuthURL = "https://master.apis.dev.openstreetmap.org/oauth2/authorize"
-#   AccessTokenURL = "https://master.apis.dev.openstreetmap.org/oauth2/token"
-   #When users login from the application, they must first log in to OSM
-   #to authenticate their identity by calling the Auth URL and the client
-   #application redirects to <REDIRECT_URI>?code=AUTHORIZATION_CODE
-   #where the application receives authorization code,
-   #(<REDIRECT_URI> is specified during the client application registration)
-   self.Requests = OAuth2Session(OAuth2['client_id'], scope=OAuth2['scope'], redirect_uri=OAuth2['redirect_uri'])
-   RedirectURL, state = self.Requests.authorization_url(AuthURL)
-   print('Please go here and authorize,', RedirectURL)
-   #An access token is requested by the client application from the
-   #Access Token URL by passing the authorization code along with
-   #authentication details, including the client secret.
-   RedirectResponse = input('Paste the full redirect URL here:')
-   #If the authorization is valid, the OSM API will send the access token
-   #to the application as a response. The response will look something
-   #like this {"access_token":"<ACCESS_TOKEN>","token_type":"Bearer","scope":"read_prefs write_api","created_at":1646669786}
-   token = self.Requests.fetch_token(AccessTokenURL, client_secret=OAuth2['client_secret'], authorization_response=RedirectResponse)
-   #Now the application is authorized.
-   #It may use the token to access OSM APIs, limited to the scope of access,
-   #until the token expires or is revoked.
+  if Auth:
+   if Auth['Type'] == "OAuth2":
+    #OAuth2 = {'client_id': "<client_id>", 'client_secret': "<client_secret>", 'scope': ["read_prefs", "write_notes", ...], 'redirect_uri': "<redirect_uri>"}
+    #Register an application with application's name, redirect URIs and scope(s).
+    #Then, receive client ID and client secret.
+    #Typically, these settings are saved on the client application.
+    #AuthURL = "https://www.openstreetmap.org/oauth2/authorize"
+    #AccessTokenURL = "https://www.openstreetmap.org/oauth2/token"
+    #When users login from the application, they must first log in to OSM
+    #to authenticate their identity by calling the Auth URL and the client
+    #application redirects to <REDIRECT_URI>?code=AUTHORIZATION_CODE
+    #where the application receives authorization code,
+    #(<REDIRECT_URI> is specified during the client application registration)
+    self.Requests = OAuth2Session(Auth['client_id'], scope=Auth['scope'], redirect_uri=Auth['redirect_uri'])
+    RedirectURL, state = self.Requests.authorization_url(Auth['AuthURL'])
+    print('Please go here and authorize,', RedirectURL)
+    #An access token is requested by the client application from the
+    #Access Token URL by passing the authorization code along with
+    #authentication details, including the client secret.
+    RedirectResponse = input('Paste the full redirect URL here:')
+    #If the authorization is valid, the OSM API will send the access token
+    #to the application as a response. The response will look something
+    #like this {"access_token":"<ACCESS_TOKEN>","token_type":"Bearer","scope":"read_prefs write_api","created_at":1646669786}
+    token = self.Requests.fetch_token(Auth['AccessTokenURL'], client_secret=Auth['client_secret'], authorization_response=RedirectResponse)
+    #Now the application is authorized.
+    #It may use the token to access OSM APIs, limited to the scope of access,
+    #until the token expires or is revoked.
+   elif Auth['Type'] == "HTTPBasic":
+    #HTTPBasic = (UserName, Password)
+    #https://api.openstreetmap.org/
+    self.Requests = requests.Session()
+    self.Requests.auth = (Auth['UserName'], Auth['Password'])
+    self.Auth = self.Requests.post(Auth['AuthURL'])
   else:
-   #HTTPBasic = (UserName, Password)
    self.Requests = requests.Session()
-   self.Requests.auth = HTTPBasic
-   self.Auth = self.Requests.post(Auth)
 
 
  def Close(self):
   self.Requests.close()
 
 
+ def GetError(self, Response):
+  return {'code': Response.status_code, 'error': Response.text, 'url': Response.url}
+  #Response.raise_for_status()
+
+
  def GetJson(self, URI, Params={}, Single=False, Tag=None):
   with self.Requests.get(URI, params=Params, headers=self.Headers) as Response:
    Response.encoding = Response.apparent_encoding
-   try:
-    OK, Result = Response.ok, Response.json()
-   except:
-    Response.raise_for_status()
-
-   print(Response.request.url)
-#   print(Result)
-
-  if OK:
-   if Tag:
-    if Single:
-     return Result[Tag][0]
+   #print(Response.request.url)
+   #print(Result)
+   if Response.ok:
+    Result = Response.json()
+    if Tag:
+     return Result[Tag][0] if Single else Result[Tag]
     else:
-     return Result[Tag]
+     return Result
    else:
-    return Result
-  else:
-   return None
+    return self.GetError(Response)
 
 
  def PostJson(self, URI, Data={}):
   with self.Requests.post(URI, data=Data, headers=self.Headers) as Response:
    Response.encoding = Response.apparent_encoding
-   OK, Result = Response.ok, Response.json()
-   print(Response.text, OK, Response)
-  if OK:
-   return Result
-  else:
-   return None
+   return Response.json() if Response.ok else self.GetError(Response)
 
 
- def GetXML(self, URI):
-  with self.Requests.get(URI, headers=self.Headers) as Response:
+ def GetXML(self, URI, Params={}):
+  with self.Requests.get(URI, params=Params, headers=self.Headers) as Response:
    Response.encoding = Response.apparent_encoding
    OK, Result = Response.ok, Response.text
-  print(Result)
+   #print(Result)
   if OK:
    return Result
   else:
@@ -100,7 +92,10 @@ class OsmApi:
 
 
  def GetBBox(self, Box):
-  # bbox = min_lat,min_lon,max_lat,max_lon -> min_lon,min_lat,max_lon,max_lat
+  """
+  Convert human bbox to osm bbox
+  (min_lat,min_lon,max_lat,max_lon -> min_lon,min_lat,max_lon,max_lat)
+  """
   return ",".join([str(Box[i]) for i in [1, 0, 3, 2]])
 
 
@@ -118,43 +113,48 @@ class OsmApi:
   """
   === Retrieving map data by bounding box: GET /api/0.6/map.json ===
   The following command returns:
-  * All nodes that are inside a given bounding box and any relations that reference them.
-  * All ways that reference at least one node that is inside a given bounding box,
-    any relations that reference them [the ways], and any nodes outside the bounding box
-    that the ways may reference.
-  * All relations that reference one of the nodes, ways or relations included due
-    to the above rules. (Does '''not''' apply recursively, see explanation below.)
+  * All nodes that are inside a given bounding box and any relations that
+    reference them.
+  * All ways that reference at least one node that is inside a given bounding
+    box, any relations that reference them [the ways], and any nodes outside
+    the bounding box that the ways may reference.
+  * All relations that reference one of the nodes, ways or relations included
+    due to the above rules. (Does '''not''' apply recursively, see explanation
+    below.)
 
   GET /api/0.6/map?bbox.json=left,bottom,right,top
   where:
   * left is the longitude of the left (westernmost) side of the bounding box.
-  * bottom is the latitude of the bottom (southernmost) side of the bounding box.
+  * bottom is the latitude of the bottom (southernmost) side of the bounding
+    box.
   * right is the longitude of the right (easternmost) side of the bounding box.
   * top is the latitude of the top (northernmost) side of the bounding box.
 
-  Note that, while this command returns those relations that reference the aforementioned
-  nodes and ways, the reverse is not true: it does not (necessarily) return all of the nodes
-  and ways that are referenced by these relations. This prevents unreasonably-large result sets.
+  Note that, while this command returns those relations that reference the
+  aforementioned nodes and ways, the reverse is not true: it does not
+  (necessarily) return all of the nodes and ways that are referenced by these
+  relations. This prevents unreasonably-large result sets.
   For example, imagine the case where:
   * There is a relation named "England" that references every node in England.
-  * The nodes, ways, and relations are retrieved for a bounding box that covers a small
-     portion of England.
+  * The nodes, ways, and relations are retrieved for a bounding box that covers
+    a small portion of England.
 
-  While the result would include the nodes, ways, and relations as specified by the rules
-  for the command, including the "England" relation, it would (fortuitously) 'not' include
-  'every' node and way in England.
-  If desired, the nodes and ways referenced by the "England" relation could be retrieved by
-  their respective IDs.
+  While the result would include the nodes, ways, and relations as specified by
+  the rules for the command, including the "England" relation, it would
+  (fortuitously) 'not' include 'every' node and way in England.
+  If desired, the nodes and ways referenced by the "England" relation could be
+  retrieved by their respective IDs.
 
-  Also note that ways which intersect the bounding box but have no nodes within the bounding
-  box will not be returned.
+  Also note that ways which intersect the bounding box but have no nodes within
+  the bounding box will not be returned.
 
   ==== Error codes ====
-  ; HTTP status code 400 (Bad Request) : When any of the node/way/relation limits are exceeded,
-    in particular if the call would return more than 50'000 nodes.
+  ; HTTP status code 400 (Bad Request) : When any of the node/way/relation
+    limits are exceeded, in particular if the call would return more than
+    50'000 nodes.
     See above for other uses of this code.
-  ; HTTP status code 509 (Bandwidth Limit Exceeded) : "Error:  You have downloaded too much data.
-    Please try again later."
+  ; HTTP status code 509 (Bandwidth Limit Exceeded) : "Error:  You have
+    downloaded too much data. Please try again later."
   """
   Parameters = {}
   Parameters['bbox'] = self.GetBBox(BBox)
@@ -167,14 +167,18 @@ class OsmApi:
   """
   === Retrieving permissions: GET /api/0.6/permissions.json ===
   Returns the permissions granted to the current API connection.
-  * If the API client is not authorized, an empty list of permissions will be returned.
-  * If the API client uses Basic Auth, the list of permissions will contain all permissions.
-  * If the API client uses OAuth 1.0a, the list will contain the permissions actually granted
-    by the user.
-  * If the API client uses OAuth 2.0, the list will be based on the granted scopes.
+  * If the API client is not authorized, an empty list of permissions will be
+    returned.
+  * If the API client uses Basic Auth, the list of permissions will contain
+    all permissions.
+  * If the API client uses OAuth 1.0a, the list will contain the permissions
+    actually granted by the user.
+  * If the API client uses OAuth 2.0, the list will be based on the granted
+    scopes.
 
-  Note that for compatibility reasons, all OAuth 2.0 scopes will be prefixed by "allow_",
-  e.g. scope "read_prefs" will be shown as permission "allow_read_prefs".
+  Note that for compatibility reasons, all OAuth 2.0 scopes will be prefixed by
+  "allow_", e.g. scope "read_prefs" will be shown as permission
+  "allow_read_prefs".
 
   ==== Response ====
   GET /api/0.6/permissions.json
@@ -186,8 +190,8 @@ class OsmApi:
   }
 
   ==== Notes ====
-  Currently the following permissions can appear in the result, corresponding directly
-  to the ones used in the OAuth 1.0a application definition:
+  Currently the following permissions can appear in the result, corresponding
+  directly to the ones used in the OAuth 1.0a application definition:
   * allow_read_prefs (read user preferences)
   * allow_write_prefs (modify user preferences)
   * allow_write_diary (create diary entries, comments and make friends)
@@ -217,11 +221,14 @@ class OsmApi:
 
   ==== Parameters ====
   ; id : The id of the changeset to retrieve
-  ; include_discussion : Indicates whether the result should contain the changeset discussion or not. If this parameter is set to anything, the discussion is returned. If it is empty or omitted, the discussion will not be in the result.
+  ; include_discussion : Indicates whether the result should contain the
+    changeset discussion or not. If this parameter is set to anything, the
+    discussion is returned. If it is empty or omitted, the discussion will
+    not be in the result.
 
   ==== Response ====
-  Returns the single changeset element containing the changeset tags with a content type
-  of application/json
+  Returns the single changeset element containing the changeset tags with a
+  content type of application/json
   GET /api/0.6/changeset/#id.json?include_discussion=true
   {
    'version': "0.6",
@@ -256,19 +263,19 @@ class OsmApi:
   }
 
   ==== Error codes ====
-  ; HTTP status code 404 (Not Found) : When no changeset with the given id could be found
+  ; HTTP status code 404 (Not Found) : When no changeset with the given id
+    could be found
 
   ==== Notes ====
-  * The uid might not be available for changesets auto generated by the API v0.5 to
-    API v0.6 transition?
+  * The uid might not be available for changesets auto generated by the API
+    v0.5 to API v0.6 transition?
   * The bounding box attributes will be missing for an empty changeset.
-  * The changeset bounding box is a rectangle that contains the bounding boxes of
-    all objects changed in this changeset. It is not necessarily the smallest possible
-    rectangle that does so.
-  * This API call only returns information about the changeset itself but not the actual
-    changes made to elements in this changeset. To access this information use the 'download'
-    API call.
-
+  * The changeset bounding box is a rectangle that contains the bounding boxes
+    of all objects changed in this changeset. It is not necessarily the
+    smallest possible rectangle that does so.
+  * This API call only returns information about the changeset itself but not
+    the actual changes made to elements in this changeset. To access this
+    information use the 'download' API call.
   """
   Parameters = {}
   if IncludeDiscussion:
@@ -286,34 +293,40 @@ class OsmApi:
  def QueryChangesets(self, BBox=None, UserID=None, UserName=None, ClosedAfter=None, CreatedBefore=None, OnlyOpen=False, OnlyClosed=False):
   """
   === Query: GET /api/0.6/changesets.json ===
-  This is an API method for querying changesets. It supports querying by different criteria.
+  This is an API method for querying changesets. It supports querying by
+  different criteria.
 
-  Where multiple queries are given the result will be those which match all of the requirements.
+  Where multiple queries are given the result will be those which match all of
+  the requirements.
   The contents of the returned document are the changesets and their tags.
-  To get the full set of changes associated with a changeset, use the 'download' method
-  on each changeset ID individually.
+  To get the full set of changes associated with a changeset, use the
+  'download' method on each changeset ID individually.
 
-  Modification and extension of the basic queries above may be required to support rollback
-  and other uses we find for changesets.
+  Modification and extension of the basic queries above may be required to
+  support rollback and other uses we find for changesets.
 
-  This call returns at most 100 changesets matching criteria, it returns latest changesets
-  ordered by created_at.
+  This call returns at most 100 changesets matching criteria, it returns latest
+  changesets ordered by created_at.
 
   ==== Parameters ====
-  ; bbox=min_lon,min_lat,max_lon,max_lat (W,S,E,N) : Find changesets within the given bounding box
-  ; user=#uid 'or' display_name=#name : Find changesets by the user with the given
-    user id or display name. Providing both is an error.
+  ; bbox=min_lon,min_lat,max_lon,max_lat (W,S,E,N) : Find changesets within the
+    given bounding box
+  ; user=#uid 'or' display_name=#name : Find changesets by the user with the
+    given user id or display name. Providing both is an error.
   ; time=T1 : Find changesets 'closed' after T1
-  ; time=T1,T2 : Find changesets that were 'closed' after T1 and 'created' before T2.
-    In other words, any changesets that were open 'at some time' during the given
-    time range T1 to T2.
-  ; open=true : Only finds changesets that are still 'open' but excludes changesets that
-    are closed or have reached the element limit for a changeset (10.000 at the moment)
-  ; closed=true : Only finds changesets that are 'closed' or have reached the element limit
+  ; time=T1,T2 : Find changesets that were 'closed' after T1 and 'created'
+    before T2. In other words, any changesets that were open 'at some time'
+    during the given time range T1 to T2.
+  ; open=true : Only finds changesets that are still 'open' but excludes
+    changesets that are closed or have reached the element limit for a
+    changeset (10.000 at the moment)
+  ; closed=true : Only finds changesets that are 'closed' or have reached the
+    element limit
   ; changesets=#cid{,#cid} : Finds changesets with the specified ids
     Time format:
     Anything that this Ruby function will parse.
-    The default str is ’-4712-01-01T00:00:00+00:00’; this is Julian Day Number day 0.
+    The default str is ’-4712-01-01T00:00:00+00:00’; this is Julian Day Number
+    day 0.
 
   ==== Response ====
   Returns a list of all changeset ordered by creation date.
@@ -322,10 +335,11 @@ class OsmApi:
 
   ==== Error codes ====
   ; HTTP status code 400 (Bad Request) - text/plain : On misformed parameters.
-    A text message explaining the error is returned. In particular, trying to provide
-    both the UID and display name as user query parameters will result in this error.
-  ; HTTP status code 404 (Not Found) : When no user with the given uid or display_name
-    could be found.
+    A text message explaining the error is returned. In particular, trying to
+    provide both the UID and display name as user query parameters will result
+    in this error.
+  ; HTTP status code 404 (Not Found) : When no user with the given uid or
+    display_name could be found.
 
   ==== Notes ====
   * Only changesets by public users are returned.
@@ -361,72 +375,189 @@ class OsmApi:
  ##################################################
 
 
-#Comment: POST /api/0.6/changeset/#id/comment
-#Subscribe: POST /api/0.6/changeset/#id/subscribe
-#Unsubscribe: POST /api/0.6/changeset/#id/unsubscribe
-#Hide changeset comment: POST /api/0.6/changeset/comment/#comment_id/hide
-#Unhide changeset comment: POST /api/0.6/changeset/comment/#comment_id/unhide
+ #Comment: POST /api/0.6/changeset/#id/comment
+ def CommentChangeset(self, ID, Text):
+  """
+  === Comment: POST /api/0.6/changeset/#id/comment.json ===
+  Add a comment to a changeset. The changeset must be closed.
+
+  ==== Requests ====
+  POST /api/0.6/changeset/#id/comment.json
+  Body content: {'test': "Test"}
+
+  Return type: application/json
+  {
+   'version': "0.6",
+   'generator': "OpenStreetMap server",
+   'changeset':
+   {
+    'id': 257934,
+    'created_at': "2023-03-29T17:26:28Z",
+    'open': False,
+    'comments_count': 1,
+    'changes_count': 2,
+    'closed_at': "2023-03-29T17:26:30Z",
+    'min_lat': -22.5779486,
+    'min_lon': 18.5373289,
+    'max_lat': 75.2958681,
+    'max_lon': 134.8229272,
+    'uid': 14235,
+    'user': "OrganicMapsTestUser",
+    'tags':
+    {
+     'created_by': "OMaps Unit Test",
+     'comment': "For test purposes only (updated)."
+    }
+   }
+  }
+
+  This request needs to be done as an authenticated user.
+
+  ==== Parameters ====
+  ; text : The comment text.
+    The content type is "application/x-www-form-urlencoded".
+
+  ==== Error codes ====
+  ; HTTP status code 400 (Bad Request) : if the text field was not present
+  ; HTTP status code 409 (Conflict) : The changeset is not closed
+  """
+  URI = f"{self.API}/changeset/{ID}/comment.json"
+  Data = {'text': Text}
+  return self.PostJson(URI, Data=Data, Tag='changeset')
 
 
+ #Subscribe: POST /api/0.6/changeset/#id/subscribe
+ def SubscribeChangeset(self, ID):
+  """
+  === Subscribe: POST /api/0.6/changeset/#id/subscribe.json ===
+  Subscribe to the discussion of a changeset to receive notifications
+  for new comments.
+
+  ==== Requests ====
+  POST /api/0.6/changeset/#id/subscribe.json
+
+  Return type: application/json
+  {
+   'version': "0.6",
+   'generator': "OpenStreetMap server",
+   'changeset':
+   {
+    'id': 257934,
+    'created_at': "2023-03-29T17:26:28Z",
+    'open': False,
+    'comments_count': 1,
+    'changes_count': 2,
+    'closed_at': "2023-03-29T17:26:30Z",
+    'min_lat': -22.5779486,
+    'min_lon': 18.5373289,
+    'max_lat': 75.2958681,
+    'max_lon': 134.8229272,
+    'uid': 14235,
+    'user': 'OrganicMapsTestUser',
+    'tags':
+    {
+     'created_by': "OMaps Unit Test",
+     'comment': "For test purposes only (updated)."
+    }
+   }
+  }
+
+  This request needs to be done as an authenticated user.
+
+  ==== Error codes ====
+  ; HTTP status code 409 (Conflict) : if the user is already subscribed to this
+    changeset
+  """
+  URI = f"{self.API}/changeset/{ID}/subscribe.json"
+  return self.PostJson(URI, Tag='changeset')
 
 
-#Comment: POST /api/0.6/changeset/#id/comment (JSON response)
-#def CommentChangeset(ChangesetId, comment):
-#        params = urllib.parse.urlencode({'text': comment})
-#        try:
-#            data = self._session._post(
-#                "/api/0.6/changeset/%s/comment" % (ChangesetId),
-#                params,
-#                forceAuth=True
-#            )
-#        except errors.ApiError as e:
-#            if e.status == 409:
-#                raise errors.ChangesetClosedApiError(e.status, e.reason, e.payload)
-#            else:
-#                raise
-#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
-#        return dom.DomParseChangeset(changeset)
+ #Unsubscribe: POST /api/0.6/changeset/#id/unsubscribe
+ def UnsubscribeChangeset(self, ID):
+  """
+  === Unsubscribe: POST /api/0.6/changeset/#id/unsubscribe.json ===
+  Unsubscribe from the discussion of a changeset to stop receiving
+  notifications.
+
+  ==== Requests ====
+  POST /api/0.6/changeset/#id/subscribe.json
+
+  Return type: application/json
+  {
+   'version': "0.6",
+   'generator': "OpenStreetMap server",
+   'changeset':
+   {
+    'id': 257934,
+    'created_at': "2023-03-29T17:26:28Z",
+    'open': False,
+    'comments_count': 1,
+    'changes_count': 2,
+    'closed_at': "2023-03-29T17:26:30Z",
+    'min_lat': -22.5779486,
+    'min_lon': 18.5373289,
+    'max_lat': 75.2958681,
+    'max_lon': 134.8229272,
+    'uid': 14235,
+    'user': "OrganicMapsTestUser",
+    'tags':
+    {
+     'created_by': "OMaps Unit Test",
+     'comment': "For test purposes only (updated)."
+    }
+   }
+  }
+
+  This request needs to be done as an authenticated user.
+
+  ==== Error codes ====
+  ; HTTP status code 404 (Not Found) : if the user is not subscribed to this
+    changeset
+  """
+  URI = f"{self.API}/changeset/{ID}/unsubscribe.json"
+  return self.PostJson(URI, Tag='changeset')
 
 
-#Subscribe: POST /api/0.6/changeset/#id/subscribe (JSON response)
-#    def ChangesetSubscribe(self, ChangesetId):
-#        try:
-#            data = self._session._post(
-#                "/api/0.6/changeset/%s/subscribe" % (ChangesetId),
-#                None,
-#                forceAuth=True
-#            )
-#        except errors.ApiError as e:
-#            if e.status == 409:
-#                raise errors.AlreadySubscribedApiError(e.status, e.reason, e.payload)
-#            else:
-#                raise
-#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
-#        return dom.DomParseChangeset(changeset)
+ #Hide changeset comment: POST /api/0.6/changeset/comment/#comment_id/hide
+ def HideComment(self, ID):
+  """
+  === Hide changeset comment: POST /api/0.6/changeset/comment/#comment_id/hide.json ===
+  Sets visible flag on changeset comment to false. 
+
+  POST /api/0.6/changeset/comment/#comment_id/hide.json
+  Return type: application/json
+
+  This request needs to be done as an authenticated user with moderator role.
+
+  Note that the changeset comment id differs from the changeset id.
+
+  ==== Error codes ====
+  ; HTTP status code 403 (Forbidden) : if the user is not a moderator
+  ; HTTP status code 404 (Not Found) : if the changeset comment id is unknown
+  """
+  URI = f"{self.API}/changeset/comment/{ID}/hide.json"
+  return self.PostJson(URI)
 
 
-#Unsubscribe: POST /api/0.6/changeset/#id/unsubscribe (JSON response)
-#    def ChangesetUnsubscribe(self, ChangesetId):
-#        try:
-#            data = self._session._post(
-#                "/api/0.6/changeset/%s/unsubscribe" % (ChangesetId),
-#                None,
-#                forceAuth=True
-#            )
-#        except errors.ElementNotFoundApiError as e:
-#            raise errors.NotSubscribedApiError(e.status, e.reason, e.payload)
-#
-#        changeset = dom.OsmResponseToDom(data, tag="changeset", single=True)
-#        return dom.DomParseChangeset(changeset)
+ #Unhide changeset comment: POST /api/0.6/changeset/comment/#comment_id/unhide
+ def UnhideComment(self, ID):
+  """
+  === Unhide changeset comment: POST /api/0.6/changeset/comment/#comment_id/unhide.json ===
+  Sets visible flag on changeset comment to true.
 
+  POST /api/0.6/changeset/comment/#comment_id/unhide.json
+  Return type: application/json
 
+  This request needs to be done as an authenticated user with moderator role.
 
+  Note that the changeset comment id differs from the changeset id.
 
-
-
-
-
-
+  ==== Error codes ====
+  ; HTTP status code 403 (Forbidden) : if the user is not a moderator
+  ; HTTP status code 404 (Not Found) : if the changeset comment id is unknown
+  """
+  URI = f"{self.API}/changeset/comment/{ID}/unhide.json"
+  return self.PostJson(URI)
 
 
 
@@ -466,7 +597,8 @@ class OsmApi:
   }
 
   ==== Error codes ====
-  ; HTTP status code 404 (Not Found) : When no element with the given id could be found
+  ; HTTP status code 404 (Not Found) : When no element with the given id could
+    be found
   ; HTTP status code 410 (Gone) : If the element has been deleted
   """
   URI = f"{self.API}/{Type}/{ID}.json"
@@ -484,7 +616,8 @@ class OsmApi:
   Retrieves all old versions of an element.
 
   ==== Error codes ====
-  ; HTTP status code 404 (Not Found) : When no element with the given id could be found
+  ; HTTP status code 404 (Not Found) : When no element with the given id could
+    be found
   """
   URI = f"{self.API}/{Type}/{ID}/history.json"
   return self.GetJson(URI, Tag='elements')
@@ -497,9 +630,10 @@ class OsmApi:
   Retrieves a specific version of the element.
 
   ==== Error codes ====
-  ; HTTP status code 403 (Forbidden) : When the version of the element is not available
-    (due to redaction)
-  ; HTTP status code 404 (Not Found) : When no element with the given id could be found
+  ; HTTP status code 403 (Forbidden) : When the version of the element is not
+    available (due to redaction)
+  ; HTTP status code 404 (Not Found) : When no element with the given id could
+    be found
   """
   URI = f"{self.API}/{Type}/{ID}/{Version}.json"
   return self.GetJson(URI, Single=True, Tag='elements')
@@ -520,25 +654,26 @@ class OsmApi:
   Allows a user to fetch multiple elements at once.
 
   ==== Parameters ====
-  ; [nodes|ways|relations]=comma separated list : The parameter has to be the same
-    in the URL (e.g. /api/0.6/nodes.json?nodes=123,456,789)
-  : Version numbers for each object may be optionally provided following a lowercase
-    "v" character, e.g. /api/0.6/nodes?nodes=421586779v1,421586779v2
+  ; [nodes|ways|relations]=comma separated list : The parameter has to be the
+    same in the URL (e.g. /api/0.6/nodes.json?nodes=123,456,789)
+    Version numbers for each object may be optionally provided following a
+    lowercase "v" character, e.g. /api/0.6/nodes?nodes=421586779v1,421586779v2
 
   ==== Error codes ====
-  ; HTTP status code 400 (Bad Request) : On a malformed request (parameters missing or wrong)
-  ; HTTP status code 404 (Not Found) : If one of the elements could not be found
-    (By "not found" is meant never existed in the database, if the object was deleted,
-    it will be returned with the attribute visible="false")
+  ; HTTP status code 400 (Bad Request) : On a malformed request (parameters
+    missing or wrong)
+  ; HTTP status code 404 (Not Found) : If one of the elements could not be
+    found (By "not found" is meant never existed in the database, if the object
+    was deleted, it will be returned with the attribute visible="false")
   ; HTTP status code 414 (Request-URI Too Large) : If the URI was too long
-    (tested to be > 8213 characters in the URI, or > 725 elements for 10 digit IDs when
-    not specifying versions)
+    (tested to be > 8213 characters in the URI, or > 725 elements for 10 digit
+    IDs when not specifying versions)
 
   ==== Notes ====
-  As the multi fetch call returns deleted objects it is the practical way to determine
-  the version at which an object was deleted (useful for example for conflict resolution),
-  the alternative to using this would be the history call that however may potentially
-  require 1000's of version to be processed.
+  As the multi fetch call returns deleted objects it is the practical way to
+  determine the version at which an object was deleted (useful for example for
+  conflict resolution), the alternative to using this would be the history call
+  that however may potentially require 1000's of version to be processed.
   """
   URI = f"{self.API}/{Types}.json"
   List = ",".join([str(Item) for Item in IDs])
@@ -551,14 +686,14 @@ class OsmApi:
  #Relations for element: GET /api/0.6/[node|way|relation]/#id/relations
  def RelationsForElement(self, Type, ID):
   """
-  === Relations for element: GET /api/0.6/[node|way|relation]/#id/relations ===
-  Returns a JSON document containing all (not deleted) relations in which the given
-  element is used.
+  === Relations for element: GET /api/0.6/[node|way|relation]/#id/relations.json ===
+  Returns a JSON document containing all (not deleted) relations in which the
+  given element is used.
 
   ==== Notes ====
   * There is no error if the element does not exist.
-  * If the element does not exist or it isn't used in any relations an empty JSON document
-    is returned (apart from the {} elements)
+  * If the element does not exist or it isn't used in any relations an empty
+    JSON document is returned (apart from the {} elements)
   """
   URI = f"{self.API}/{Type}/{ID}/relations.json"
   return self.GetJson(URI, Tag='elements')
@@ -747,7 +882,8 @@ class OsmApi:
   or an empty file if no user found for given identifier.
 
   Note that user accounts which made edits may be deleted.
-  Such users are listed at https://planet.osm.org/users_deleted/users_deleted.txt
+  Such users are listed at
+  https://planet.osm.org/users_deleted/users_deleted.txt
   """
   URI = f"{self.API}/user/{ID}.json"
   return self.GetJson(URI, Tag='user')
@@ -756,7 +892,7 @@ class OsmApi:
  #Details of multiple users: GET /api/0.6/users?users=#id1,#id2,...,#idn
  def Users(self, IDs):
   """
-  === Details of multiple users: >GET /api/0.6/users?users=#id1,#id2,...,#idn ===
+  === Details of multiple users: >GET /api/0.6/users.json?users=#id1,#id2,...,#idn ===
   You can get the details of a number of users via
 
   ==== Response ====
@@ -846,7 +982,7 @@ class OsmApi:
  #Preferences of the logged-in user: GET /api/0.6/preferences
  def Preferences(self):
   """
-  === Preferences of the logged-in user: GET /api/0.6/user/preferences ===
+  === Preferences of the logged-in user: GET /api/0.6/user/preferences.json ===
   The OSM server supports storing arbitrary user preferences.
   This can be used by editors, for example, to offer the same configuration
   wherever the user logs in, instead of a locally-stored configuration.
@@ -897,23 +1033,28 @@ class OsmApi:
 
   Return type: application/json
 
-  Parameter
-  * bbox : Coordinates for the area to retrieve the notes from Floating point numbers
-    in degrees, expressing a valid bounding box, not larger than the configured size limit,
-    25 square degrees, not overlapping the dateline.
+  ==== Parameters ====
+  ; bbox : Coordinates for the area to retrieve the notes from Floating point
+    numbers in degrees, expressing a valid bounding box, not larger than the
+    configured size limit, 25 square degrees, not overlapping the dateline.
     Default value is none, parameter required
-  * limit : Specifies the number of entries returned at max
+  ; limit : Specifies the number of entries returned at max
     A value of between 1 and 10000 is valid
     100 is the default
-  * closed : Specifies the number of days a note needs to be closed to no longer be returned 
-    A value of 0 means only open notes are returned. A value of -1 means all notes are returned.
+  ; closed : Specifies the number of days a note needs to be closed to no
+    longer be returned 
+    A value of 0 means only open notes are returned.
+    A value of -1 means all notes are returned.
     7 is the default
 
-  You can specify the format you want the results returned as by specifying a file extension.
-  E.g. https://api.openstreetmap.org/api/0.6/notes.json?bbox=-0.65094,51.312159,0.374908,51.669148
-  example to get results in json. Currently the format RSS, XML, json and gpx are supported.
+  You can specify the format you want the results returned as by specifying a
+  file extension.
+  E.g. https://api.openstreetmap.org/api/0.6/notes.json?bbox=-0.65,51.3,0.35,51.6
+  example to get results in json. Currently the format RSS, XML, json and gpx
+  are supported.
 
-  The comment properties [uid, user, user_url] will be omitted if the comment was anonymous.
+  The comment properties [uid, user, user_url] will be omitted if the comment
+  was anonymous.
 
   ==== Response ====
   GET /api/0.6/notes.json
@@ -980,7 +1121,8 @@ class OsmApi:
   Return type: application/json
 
   ==== Error codes ====
-  ; HTTP status code 404 (Not Found) : When no note with the given id could be found
+  ; HTTP status code 404 (Not Found) : When no note with the given id could be
+    found
   """
   URI = f"{self.API}/notes/{ID}.json"
   return self.GetJson(URI)
@@ -1003,19 +1145,20 @@ class OsmApi:
   A JSON-file with the details of the note will be returned
 
   ==== Parameters ====
-  Parameter:
-  * lat : Specifies the latitude of the note floatingpoint number in degrees
+  ; lat : Specifies the latitude of the note floatingpoint number in degrees
     No default, needs to be specified
-  * lon : Specifies the longitude of the note floatingpoint number in degrees
+  ; lon : Specifies the longitude of the note floatingpoint number in degrees
     No default, needs to be specified
-  * text : A text field with arbitrary text containing the note
+  ; text : A text field with arbitrary text containing the note
     No default, needs to be present
 
-  If the request is made as an authenticated user, the note is associated to that user account.
+  If the request is made as an authenticated user, the note is associated to
+  that user account.
 
   ==== Error codes ====
   ; HTTP status code 400 (Bad Request) : if the text field was not present
-  ; HTTP status code 404 (Not found) : This applies, if the request is not a HTTP POST request
+  ; HTTP status code 404 (Not found) : This applies, if the request is not a
+    HTTP POST request
   """
   URI = f"{self.API}/notes.json"
   return self.PostJson(URI, Data={'lat': Lat, 'lon': Lon, 'text': Text})
@@ -1027,125 +1170,102 @@ class OsmApi:
 
 
  #Search for notes: GET /api/0.6/notes/search
- def SearchNotes(self, Query, Limit=100, Closed=7, DisplayName=None, User=None, From=None, To=None, Sort="updated_at", Order="updated_at"):
+ def SearchNotes(self, Query, Limit=None, Closed=None, DisplayName=None, User=None, From=None, To=None, Sort=None, Order=None):
   """
   === Search for notes: GET /api/0.6/notes/search.json ===
-  Returns the existing notes matching either the initial note text or any of the
-  comments. The notes will be ordered by the date of their last change, the most
-  recent one will be first.
+  Returns the existing notes matching either the initial note text or any
+  of the comments. The notes will be ordered by the date of their last change,
+  the most recent one will be first.
   If no query was specified, the latest notes are returned.
   The list of notes can be returned in several different forms
   (e.g. XML, RSS, json or GPX) depending on file extension given.
 
   GET /api/0.6/notes/search.json?q=SearchTerm
   (URL: https://api.openstreetmap.org/api/0.6/notes/search.json?q=Spam example)
-  Return type:''' application/xml<br />
+  Return type: application/json
 
-{| class="wikitable"
-|-
-! Parameter
-! Description
-! Allowed values
-! Default value
-|-
-| <code>q</code>
-| Specifies the search query
-| String
-| none, parameter required
-|-
-| <code>limit</code>
-| Specifies the number of entries returned at max
-| A value of between 1 and 10000 is valid
-| 100 is the default
-|-
-| <code>closed</code>
-| Specifies the number of days a note needs to be closed to no longer be returned 
-| A value of 0 means only open notes are returned. A value of -1 means all notes are returned.
-| 7 is the default
-|-
-|<code>display_name</code>
-|Specifies the person involved in actions of the returned notes, query by the display name. Does not work together with the <code>user</code> parameter (Returned are all where this user has taken some action - opened note, commented on, reactivated, or closed)
-|A valid user name
-|none, optional parameter
-|-
-|<code>user</code>
-|Specifies the creator of the returned notes by the id of the user. Does not work together with the <code>display_name</code> parameter
-|A valid user id
-|none, optional parameter
-|-
-|<code>from</code>
-|Specifies the beginning of a date range to search in for a note
-|A valid [https://en.wikipedia.org/wiki/ISO_8601 ISO 8601] date
-|none, optional parameter
-|-
-|<code>to</code>
-|Specifies the end of a date range to search in for a note
-|A valid [https://en.wikipedia.org/wiki/ISO_8601 ISO 8601] date
-|the date of today is the default, optional parameter
-|-
-|<code>sort</code>
-|Specifies the value which should be used to sort the notes. It is either possible to sort them by their creation date or the date of the last update.
-|<code>created_at</code> or <code>updated_at</code>
-|<code>updated_at</code>
-|-
-|<code>order</code>
-|Specifies the order of the returned notes. It is possible to order them in ascending or descending order.
-|<code>oldest</code> or <code>newest</code>
-|<code>newest</code>
-|}
+  ==== Parameters ====
+  ; q : Specifies the search query
+    Allowed values : String. 
+    none, parameter required
+  ; limit : Specifies the number of entries returned at max
+    A value of between 1 and 10000 is valid
+    100 is the default
+  ; closed : Specifies the number of days a note needs to be closed to no
+    longer be returned 
+    Allowed values : A value of 0 means only open notes are returned.
+    A value of -1 means all notes are returned.
+    7 is the default
+  ; display_name : Specifies the person involved in actions of the returned
+    notes, query by the display name. Does not work together with the 'user'
+    parameter (Returned are all where this user has taken some action - opened
+    note, commented on, reactivated, or closed)
+    Allowed values : A valid user name
+    none, optional  parameter
+  ; user : Specifies the creator of the returned notes by the id of the user.
+    Does not work together with the <code>display_name</code> parameter
+    Allowed values : A valid user id
+    none, optional parameter
+  ; from : Specifies the beginning of a date range to search in for a note
+    Allowed values : A valid ISO 8601 date
+    none, optional parameter
+  ; to : Specifies the end of a date range to search in for a note
+    Allowed values : A valid ISO 8601 date.
+    the date of today is the default, optional parameter
+  ; sort : Specifies the value which should be used to sort the notes.
+    It is either possible to sort them by their creation date or the date of
+    the last update.
+    Allowed values : "created_at" or "updated_at"
+    Default value : "updated_at"
+  ; order : Specifies the order of the returned notes. It is possible to order
+    them in ascending or descending order.
+    Allowed values : "oldest" or "newest"
+    Default value : "newest"
 
-==== Error codes ====
-; HTTP status code 400 (Bad Request)
-: When any of the limits are crossed
+  ==== Error codes ====
+  ; HTTP status code 400 (Bad Request) : When any of the limits are crossed
   """
-  Params = {}
-  if Query:
-   Params['q'] = Query
+  URI = f"{self.API}/notes/search.json"
+  Parameters = {}
+  Parameters['q'] = Query
   if Limit:
-   Params['limit'] = Limit
+   Parameters['limit'] = Limit
   if Closed:
-   Params['closed'] = Closed
+   Parameters['closed'] = Closed
   if DisplayName:
-   Params['display_name'] = DisplayName
+   Parameters['display_name'] = DisplayName
   if User:
-   Params['user'] = User
+   Parameters['user'] = User
   if From:
-   Params['from'] = From
+   Parameters['from'] = From
   if To:
-   Params['to'] = To
+   Parameters['to'] = To
   if Sort:
-   Params['sort'] = Sort #created_at or updated_at
+   Parameters['sort'] = Sort #created_at or updated_at
   if Order:
-   Params['order'] = Order #oldest or newest
-  Parameters = urllib.parse.urlencode(Params)
-  URI = f"{self.API}/notes/search.json?{Parameters}"
-  return self.GetJson(URI)
+   Parameters['order'] = Order #oldest or newest
+  return self.GetJson(URI, Params=Parameters)
 
 
  #RSS Feed: GET /api/0.6/notes/feed
- def RSS(self, MinLat, MinLon, MaxLat, MaxLon):
-  URI = f"{self.API}/notes/feed?bbox={MinLon},{MinLat},{MaxLon},{MaxLat}"
-  return self.GetXML(URI)
+ def RSS(self, BBox):
+  """
+  === RSS Feed: GET /api/0.6/notes/feed ===
+  Gets an RSS feed for notes within an area.
 
-
-
-
-
-
-
-
+  ==== Response ====
+  GET /api/0.6/notes/feed?bbox=left,bottom,right,top
+  Return type: application/xml
+  """
+  Parameters = {}
+  Parameters['bbox'] = self.GetBBox(BBox)
+  URI = f"{self.API}/notes/feed"
+  return self.GetXML(URI, Params=Parameters)
 
 
 
 ##################################################
 # Other                                          #
-##################################################
-
-
-
-
-
-
 ##################################################
 
 
