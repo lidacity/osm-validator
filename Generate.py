@@ -19,7 +19,7 @@ logger.add(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".log", "osm
 logger.info("Start")
 
 Context = {}
-Context['PravoError'], Context['Pravo'] = GetPravo()
+#Context['PravoError'], Context['Pravo'] = GetPravo()
 Relations = ReadOSM("М", 1246287) | ReadOSM("Р", 1246288) | ReadOSM("Н", 1246286)
 Context['Highway'] = {
  'M': { 'Desc': "Магістральныя аўтамабільныя дарогі", 'List': GetOSM("М", Relations, "M.csv"), },
@@ -31,10 +31,10 @@ FileNames = ["index.html", "relation.html", "error.html", "index.csv", "relation
 for FileName in FileNames:
  Generate(FileName, Context)
 
-Diff = GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}")
-if Diff: 
- logger.info(f"git push complete:\n{Diff}")
-else:
- logger.error(f"Git error")
+#Diff = GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}")
+#if Diff: 
+# logger.info(f"git push complete:\n{Diff}")
+#else:
+# logger.error(f"Git error")
 
 logger.info("Done")

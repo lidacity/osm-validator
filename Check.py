@@ -201,9 +201,8 @@ def ExcludeRef(Name, Index):
 
 
 
-def GetEqRef(Relation):
+def GetEqRef(Tag):
  Result = []
- Tag = Relation['tags']
  Refs = { 'name:be': [], 'name:ru': [] }
  for TagName in ['name:be', 'name:ru']:
   if TagName in Tag:
