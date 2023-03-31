@@ -577,7 +577,7 @@ class OsmApi:
 
   ==== Response ====
   GET /api/0.6/[node|way|relation]/#id.json
-  JSON representing the element, wrapped in an <code><json></code> element:
+  JSON representing the element, wrapped in an <json> element:
   {
    'version': "0.6",
    'elements':
@@ -626,7 +626,7 @@ class OsmApi:
  #Version: GET /api/0.6/[node|way|relation]/#id/#version
  def Version(self, Type, ID, Version):
   """
-  === Version: >GET /api/0.6/[node|way|relation]/#id/#version.json ===
+  === Version: GET /api/0.6/[node|way|relation]/#id/#version.json ===
   Retrieves a specific version of the element.
 
   ==== Error codes ====
@@ -892,7 +892,7 @@ class OsmApi:
  #Details of multiple users: GET /api/0.6/users?users=#id1,#id2,...,#idn
  def Users(self, IDs):
   """
-  === Details of multiple users: >GET /api/0.6/users.json?users=#id1,#id2,...,#idn ===
+  === Details of multiple users: GET /api/0.6/users.json?users=#id1,#id2,...,#idn ===
   You can get the details of a number of users via
 
   ==== Response ====
@@ -1203,7 +1203,7 @@ class OsmApi:
     Allowed values : A valid user name
     none, optional  parameter
   ; user : Specifies the creator of the returned notes by the id of the user.
-    Does not work together with the <code>display_name</code> parameter
+    Does not work together with the display_name parameter
     Allowed values : A valid user id
     none, optional parameter
   ; from : Specifies the beginning of a date range to search in for a note
