@@ -402,6 +402,8 @@ def GetCheckDoubleRelation(Ways, Relations):
   if Count > 1:
    Result.append(f"way знаходзяцца ў некалькіх relation")
    break
+  if Count == 0:
+   Result.append(f"way не знаходзіцца нават у адным relation")
  return Result
 
 
