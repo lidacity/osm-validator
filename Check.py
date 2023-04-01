@@ -6,6 +6,7 @@ from haversine import haversine
 
 from OsmApi import CacheIterator, ArrayCacheIterator
 
+re._MAXCACHE = 4096
 
 #
 
@@ -213,7 +214,7 @@ def GetEqRef(Tag):
  return Result
 
 
-def GetBadRefInRelation(Relation, Relations):
+def GetBadRefInRelation(Relation):
  Result = []
  Tag = Relation['tags']
  for TagName in ['name:be', 'name:ru']:
@@ -464,7 +465,7 @@ def GetCheck(Class, Key, Value, Type, Tag):
 
 def GetCheckRef(Relation, Relations):
  Result = []
- Result += GetBadRefInRelation(Relation, Relations)
+ Result += GetBadRefInRelation(Relation)
  Result += GetRefInRelation(Relation, Relations)
  return Result
 

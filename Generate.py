@@ -38,3 +38,5 @@ else:
  logger.error(f"Git error")
 
 logger.info("Done")
+
+#python -m cProfile -s time ./Generate.py
