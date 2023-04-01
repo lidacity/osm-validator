@@ -1277,7 +1277,7 @@ class CacheIterator:
   self.Count = Count
   self.Array = Array
   self.IncludeType = Type
-  self.ExcludeRole = Role
+  self.IncludeRole = Role # [] = All
   self.Type = ""
   self.Iters = self.GetIters()
   self.i = 0
@@ -1349,7 +1349,7 @@ class CacheIterator:
   Result = []
   Index, Items = 0, []
   for Item in self.Array:
-   if Item['type'] == Type and Item['role'] not in self.ExcludeRole:
+   if Item['type'] == Type and (not self.IncludeRole or Item['role'] in self.IncludeRole):
     Items.append(Item['ref'])
     if Index >= self.Count - 1:
      Result.append(Items)

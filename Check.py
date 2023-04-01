@@ -251,9 +251,9 @@ def GetRefInRelation(Relation, Relations):
 #
 
 
-def GetWays(Relation, Exclude=[]):
+def GetWays(Relation, Role=[]):
  Result = []
- for Type, Member in CacheIterator(256, Relation['members'], Type=["way"], Role=Exclude):
+ for Type, Member in CacheIterator(256, Relation['members'], Type=["way"], Role=Role):
   Result.append(Member)
  return Result
 
@@ -292,6 +292,10 @@ def Island(Ways):
    Limits.pop(0)
  Result.append(Limits[0])
  Limits.pop(0)
+ #
+ if len(Result) == 1:
+  if len(set(Result[0])) == 1:
+   Result = []
  return Result
 
 
@@ -327,6 +331,10 @@ def IslandLine(Ways):
  if Limits:
   Result.append(Limits[0])
   Limits.pop(0)
+ #
+ if len(Result) == 1:
+  if len(set(Result[0])) == 1:
+   Result = []
  return Result
 
 
@@ -481,11 +489,7 @@ def GetCheckRef(Relation, Relations):
  Result = []
  Result += GetBadRefInRelation(Relation)
  Result += GetRefInRelation(Relation, Relations)
- return Result
-
-
-def GetCheckOSM(Relation, Relations):
- Result = []
+ #
  Ways = GetWays(Relation)
  Result += GetCheckWays(Relation)
  Result += GetCheckFixme(Ways)
@@ -493,7 +497,7 @@ def GetCheckOSM(Relation, Relations):
  Result += GetCheckDouble(Ways)
  Result += GetCheckDoubleRelation(Ways, Relations)
  #
- Ways = GetWays(Relation, Exclude=["link"])
+ Ways = GetWays(Relation, Role=["", "route", "forward", "backward"])
  Result += GetCheckTagsInWay(Relation['tags'], Ways)
  Result += GetCheckCross(Ways)
  Result += GetIsland(Ways)
