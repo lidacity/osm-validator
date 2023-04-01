@@ -4,7 +4,7 @@ from collections import Counter
 from haversine import haversine
 #from lingua import Language, LanguageDetectorBuilder
 
-from OsmApi import CacheIterator, ArrayCacheIterator
+from OsmApi import OsmApi, CacheIterator, ArrayCacheIterator
 
 re._MAXCACHE = 4096
 
@@ -383,6 +383,20 @@ def GetCheckDouble(Ways):
  return Result
 
 
+def GetCheckDoubleRelation(Ways, Relations):
+ Result = []
+ OSM = OsmApi()
+ for Way in Ways:
+  Count = 0
+  for Relation in OSM.RelationsForWay(Way['id']):
+   if Relation['tags'].get('official_ref', "") in Relations:
+    Count += 1
+  if Count > 1:
+   Result.append(f"way знаходзяцца ў некалькіх relation")
+   break
+ return Result
+
+
 def GetCheckTagsInWay(Tag, Ways):
  Result = []
  Tags = {
@@ -470,13 +484,14 @@ def GetCheckRef(Relation, Relations):
  return Result
 
 
-def GetCheckOSM(Relation):
+def GetCheckOSM(Relation, Relations):
  Result = []
  Ways = GetWays(Relation)
  Result += GetCheckWays(Relation)
  Result += GetCheckFixme(Ways)
  Result += GetCheckHighway(Ways)
  Result += GetCheckDouble(Ways)
+ Result += GetCheckDoubleRelation(Ways, Relations)
  #
  Ways = GetWays(Relation, Exclude=["link"])
  Result += GetCheckTagsInWay(Relation['tags'], Ways)
