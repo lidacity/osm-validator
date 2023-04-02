@@ -1,6 +1,9 @@
-beautifulsoup4==4.11.2
-GitPython==3.1.31
-Jinja2==3.1.2
-loguru==0.6.0
-haversine==2.8.0
-requests_oauthlib==1.3.1
+beautifulsoup4
+GitPython
+Jinja2
+loguru
+haversine
+requests
+requests_oauthlib
+osmiter
+python-dateutil

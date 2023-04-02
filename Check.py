@@ -469,7 +469,7 @@ def GetHaversine(Ways):
 #
 
 
-def GetCheck(Class, Key, Value, Type, Tag):
+def GetCheck1(Class, Key, Value, Type, Tag):
  Result = []
  Result += GetRef(Key)
  Result += GetRelation(Type)
@@ -487,7 +487,7 @@ def GetCheck(Class, Key, Value, Type, Tag):
  return Result
 
 
-def GetCheckRef(Relation, Relations):
+def GetCheck2(Relation, Relations):
  Result = []
  Result += GetBadRefInRelation(Relation)
  Result += GetRefInRelation(Relation, Relations)

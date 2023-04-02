@@ -64,8 +64,8 @@ def GetLine(Class, Key, Value, Relations):
   if Ru:
    Result['Ru'] = Ru
   Result['Error'] = []
-  Result['Error'] += Check.GetCheck(Class, Key, Value, Type, Tag)
-  Result['Error'] += Check.GetCheckRef(Relation, Relations)
+  Result['Error'] += Check.GetCheck1(Class, Key, Value, Type, Tag)
+  Result['Error'] += Check.GetCheck2(Relation, Relations)
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
   Result['Color'] = "#d6e090"
