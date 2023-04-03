@@ -5,5 +5,5 @@ loguru
 haversine
 requests
 requests_oauthlib
-osmiter
 python-dateutil
+osmiter

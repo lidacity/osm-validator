@@ -12,6 +12,9 @@ from OsmApi import OsmApi, CacheIterator
 import Check
 
 
+Path = os.path.dirname(os.path.abspath(__file__))
+
+
 def Load(FileName):
  Result = {}
  for Line in open(FileName, mode="r", encoding="utf-8"):
@@ -104,7 +107,7 @@ def GetOSM(Class, Relations, FileName):
  logger.info(f"Parse relation {Class}")
  Result = []
  #
- FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", FileName)
+ FileName = os.path.join(Path, "docs", FileName)
  CSV = Load(FileName)
  #
  Result += [ GetLine(Class, Key, Value, Relations) for Key, Value in CSV.items() ] 

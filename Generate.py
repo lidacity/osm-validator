@@ -15,8 +15,13 @@ sys.stdin.reconfigure(encoding='utf-8')
 sys.stdout.reconfigure(encoding='utf-8')
 
 
-logger.add(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".log", "osm.log"))
+Path = os.path.dirname(os.path.abspath(__file__))
+logger.add(os.path.join(Path, ".log", "osm.log"))
 logger.info("Start")
+
+Directory = os.path.join(Path, ".data")
+if not os.path.exists(Directory):
+ os.makedirs(Directory)
 
 Context = {}
 Context['PravoError'], Context['Pravo'] = GetPravo()

@@ -18,7 +18,8 @@ URLs = {
  'Могилёвская область': "https://pravo.by/document/?guid=3961&p0=R920m0104900",
 }
 
-FileName = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", "pravo.json")
+Path = os.path.dirname(os.path.abspath(__file__))
+FileName = os.path.join(Path, ".data", "pravo.json")
 
 
 def GetMain(Soup):
@@ -83,7 +84,7 @@ def Main():
  logger.info("Start Pravo")
  Pravo = DownloadPravo()
  with open(FileName, 'w', encoding="utf-8") as File:
-  json.dump(Pravo, File, ensure_ascii=False, indent=4)
+  json.dump(Pravo, File, ensure_ascii=False, indent=2)
  logger.info("Done Pravo")
 
 
