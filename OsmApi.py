@@ -1,51 +1,68 @@
 #https://wiki.openstreetmap.org/wiki/API_v0.6
 #https://josm.openstreetmap.de/wiki/Ru%3AHelp/RemoteControlCommands
 
+import sys
 import json
 import requests
+from requests_oauthlib import OAuth1Session
 from requests_oauthlib import OAuth2Session
 
 
 class OsmApi:
- def __init__(self,  Auth=None, CreatedBy="OsmApi/1.0", API="https://www.openstreetmap.org/api/0.6", Referer=None):
+ def __init__(self,  Auth=None, CreatedBy="OsmApi/1.0", API="https://api.openstreetmap.org/api/0.6", Referer=None):
   self.API = API.strip('/')
   self.Headers = {'user-agent': CreatedBy}
   if Referer:
    self.Headers['referer'] = Referer
   #
   if Auth:
-   if Auth['Type'] == "OAuth2":
-    #OAuth2 = {'client_id': "<client_id>", 'client_secret': "<client_secret>", 'scope': ["read_prefs", "write_notes", ...], 'redirect_uri': "<redirect_uri>"}
-    #Register an application with application's name, redirect URIs and scope(s).
-    #Then, receive client ID and client secret.
-    #Typically, these settings are saved on the client application.
-    #AuthURL = "https://www.openstreetmap.org/oauth2/authorize"
-    #AccessTokenURL = "https://www.openstreetmap.org/oauth2/token"
-    #When users login from the application, they must first log in to OSM
-    #to authenticate their identity by calling the Auth URL and the client
-    #application redirects to <REDIRECT_URI>?code=AUTHORIZATION_CODE
-    #where the application receives authorization code,
-    #(<REDIRECT_URI> is specified during the client application registration)
-    self.Requests = OAuth2Session(Auth['client_id'], scope=Auth['scope'], redirect_uri=Auth['redirect_uri'])
-    RedirectURL, state = self.Requests.authorization_url(Auth['AuthURL'])
-    print('Please go here and authorize,', RedirectURL)
-    #An access token is requested by the client application from the
-    #Access Token URL by passing the authorization code along with
-    #authentication details, including the client secret.
-    RedirectResponse = input('Paste the full redirect URL here:')
-    #If the authorization is valid, the OSM API will send the access token
-    #to the application as a response. The response will look something
-    #like this {"access_token":"<ACCESS_TOKEN>","token_type":"Bearer","scope":"read_prefs write_api","created_at":1646669786}
-    token = self.Requests.fetch_token(Auth['AccessTokenURL'], client_secret=Auth['client_secret'], authorization_response=RedirectResponse)
-    #Now the application is authorized.
-    #It may use the token to access OSM APIs, limited to the scope of access,
-    #until the token expires or is revoked.
-   elif Auth['Type'] == "HTTPBasic":
-    #HTTPBasic = (UserName, Password)
-    #https://api.openstreetmap.org/
-    self.Requests = requests.Session()
-    self.Requests.auth = (Auth['UserName'], Auth['Password'])
-    self.Auth = self.Requests.post(Auth['AuthURL'])
+   match Auth['Type']:
+    case "OAuth1":
+     #OAuth1 = {'client_key': "<client_key>", 'client_secret': "<client_secret>", }
+     self.Requests = OAuth1Session(Auth['client_key'], client_secret=Auth['client_secret'])
+     FetchResponse = self.Requests.fetch_request_token(Auth['RequestTokenURL'])
+     ResourceOwnerKey = FetchResponse.get('oauth_token')
+     ResourceOwnerSecret = FetchResponse.get('oauth_token_secret')
+     AuthorizationURL = self.Requests.authorization_url(Auth['AuthorizeURL'])
+     print("Please go here and authorize,", AuthorizationURL)
+     RedirectResponse = input('Paste the full redirect URL here: ')
+     OAuthResponse = self.Requests.parse_authorization_response(RedirectResponse)
+     Verifier = OAuthResponse.get('oauth_token') #oauth_verifier
+     self.Requests = OAuth1Session(Auth['client_key'], client_secret=Auth['client_secret'], resource_owner_key=ResourceOwnerKey, resource_owner_secret=ResourceOwnerSecret, verifier=Verifier)
+     OAuthTokens = self.Requests.fetch_access_token(Auth['AccessTokenURL'])
+     ResourceOwnerKey = OAuthTokens.get('oauth_token')
+     ResourceOwnerSecret = OAuthTokens.get('oauth_token_secret')
+     self.Requests = OAuth1Session(Auth['client_key'], client_secret=Auth['client_secret'], resource_owner_key=ResourceOwnerKey, resource_owner_secret=ResourceOwnerSecret)
+    case "OAuth2":
+     #OAuth2 = {'client_id': "<client_id>", 'client_secret': "<client_secret>", 'scope': ["read_prefs", "write_notes", ...], 'redirect_uri': "<redirect_uri>", }
+     self.Requests = OAuth2Session(Auth['client_id'], scope=Auth['scope'], redirect_uri=Auth['redirect_uri'])
+     RedirectURL, state = self.Requests.authorization_url(Auth['AuthURL'])
+     print("Please go here and authorize,", RedirectURL)
+     RedirectResponse = input('Paste the full redirect URL here:')
+     token = self.Requests.fetch_token(Auth['AccessTokenURL'], client_secret=Auth['client_secret'], authorization_response=RedirectResponse)
+    case "HTTPBasic":
+     #HTTPBasic = {'UserName': "<username>", 'Password': "<password>", )
+     self.Requests = requests.Session()
+     self.Requests.auth = (Auth['UserName'], Auth['Password'])
+     self.Auth = self.Requests.post(Auth['AuthURL'])
+    case "PasswordFile":
+     #PasswordFile = {'FileName': "<filename>", <<'UserName': "<username>">>, )
+     if 'UserName' in Auth:
+      UserName = Auth['UserName']
+     else:
+      with open(Auth['FileName'], "r") as File:
+       PassLine = next(File).strip()
+      UserName = PassLine.split(":")[0].strip()
+     for Line in open(Auth['FileName'], "r"):
+      Line = Line.strip().split(":", 1)
+      if Line[0] == UserName:
+       Password = Line[1]
+       break
+     else:
+      Password = ""
+     self.Requests = requests.Session()
+     self.Requests.auth = (UserName, Password)
+     self.Auth = self.Requests.post(Auth['AuthURL'])
   else:
    self.Requests = requests.Session()
 
