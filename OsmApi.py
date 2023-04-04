@@ -1,7 +1,6 @@
 #https://wiki.openstreetmap.org/wiki/API_v0.6
 #https://josm.openstreetmap.de/wiki/Ru%3AHelp/RemoteControlCommands
 
-import sys
 import json
 import requests
 from requests_oauthlib import OAuth1Session
