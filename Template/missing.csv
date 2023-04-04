@@ -1,0 +1,20 @@
+{%- for Item in Missing['Relations'] -%}
+relation;{{Item['Key']}};r{{Item['ID']}};;{{Item['Be']}};{{Item['Ru']}};не прывязаны
+{% endfor -%}
+
+{% for Key, Item in Missing['Ways'].items() -%}
+{%- set List = "w" + Item | join(",w") -%}
+way;{{Key | replace(";", ",") }};
+{%- if Key in Missing['RelationsForWays'] -%}
+r{{Missing['RelationsForWays'][Key]['ID']}};
+{%- else -%}
+;
+{%- endif -%}
+{{List}};
+{%- if Key in Missing['RelationsForWays'] -%}
+{{Missing['RelationsForWays'][Key]['Be']}};{{Missing['RelationsForWays'][Key]['Ru']}};
+{%- else -%}
+;;
+{%- endif -%}
+не прывязаны
+{% endfor %}

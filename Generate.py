@@ -8,8 +8,10 @@ from loguru import logger
 
 from Pravo import GetPravo
 from OSM import ReadOSM, GetOSM
+from CheckPBF import CheckPBF
 from Jinja import Generate
 from Git import GitPush
+
 
 sys.stdin.reconfigure(encoding='utf-8')
 sys.stdout.reconfigure(encoding='utf-8')
@@ -31,8 +33,9 @@ Context['Highway'] = {
  'P': { 'Desc': "Рэспубліканскія аўтамабільныя дарогі", 'List': GetOSM("Р", Relations, "P.csv"), },
  'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", Relations, "H.csv"), },
 }
+Context['Missing'] = CheckPBF()
 Context['DateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-FileNames = ["index.html", "relation.html", "error.html", "index.csv", "relation.csv", "error.csv", ]
+FileNames = ["index.html", "relation.html", "error.html", "missing.html", "index.csv", "relation.csv", "error.csv", "missing.csv", ]
 for FileName in FileNames:
  Generate(FileName, Context)
 
