@@ -26,14 +26,14 @@ if not os.path.exists(Directory):
  os.makedirs(Directory)
 
 Context = {}
+Context['Missing'], Place = CheckPBF()
 Context['PravoError'], Context['Pravo'] = GetPravo()
 Relations = ReadOSM("М", 1246287) | ReadOSM("Р", 1246288) | ReadOSM("Н", 1246286)
 Context['Highway'] = {
- 'M': { 'Desc': "Магістральныя аўтамабільныя дарогі", 'List': GetOSM("М", Relations, "M.csv"), },
- 'P': { 'Desc': "Рэспубліканскія аўтамабільныя дарогі", 'List': GetOSM("Р", Relations, "P.csv"), },
- 'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", Relations, "H.csv"), },
+ 'M': { 'Desc': "Магістральныя аўтамабільныя дарогі", 'List': GetOSM("М", Relations, "M.csv", Place), },
+ 'P': { 'Desc': "Рэспубліканскія аўтамабільныя дарогі", 'List': GetOSM("Р", Relations, "P.csv", Place), },
+ 'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", Relations, "H.csv", Place), },
 }
-Context['Missing'] = CheckPBF()
 Context['DateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 FileNames = ["index.html", "relation.html", "error.html", "missing.html", "index.csv", "relation.csv", "error.csv", "missing.csv", ]
 for FileName in FileNames:

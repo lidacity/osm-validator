@@ -52,7 +52,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <li><b>у 'name&lt;:lang&gt;' не вызначаны 'ref'</b> - адсутнічае аўтамабільная дарога 'ref' з найменнем name&lt;:lang&gt;</li>
    <li><b>"{Ref}" не адпавядае найменню ў 'name&lt;lang&gt;'</b> - "{Ref}" у 'name&lt;:lang&gt;' не адпавядае найменню, якое вызначана раней ў спісе аўтамабільных дарог</li>
    <li><b>у 'name&lt;:lang&gt;' не вызначаны "{Ref}"</b> - адсутнічае аўтамабільная дарога "{Ref}" з найменнем name&lt;:lang&gt;</li>
-   <li><b>у relation прысутнічае ня толькі way</b> - У relation магчыма прысутнічаюць непатрэбныя node ці relation</li>
+   <li><b>у relation прысутнічае ня толькі way</b> - у relation магчыма прысутнічаюць непатрэбныя node ці relation</li>
    <li><b>'fixme' у way</b> - трэба ўдакладніць, бо прысутнічае 'fixme' у way</li>
    <li><b>памылковы 'highway'="{Highway}" на way</b> - на way азначаны тып "{Highway}", які не прапануецца для сеткі аўтамабільных дарог</li>
    <li><b>пусты 'highway' на way</b> - на way наогул не адзначана аніякага тыпу 'highway'</li>
@@ -62,6 +62,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <li><b>замкнутая ў пятлю ці перакрыжаваная</b> - аўтамабільная дарога сама сабе перасякае, альбо перакрыжаваная, магчыма не хапае 'role'="link" у relation</li>
    <li><b>way не паслядоўныя</b> - way у relation аўтамабільнай дарогі размешчаныя не паслядоўна</li>
    <li><b>way занадта разарваны</b> - ланцужкі way у relation размешчаныя занадта далёка паміж сабою</li>
+   <li><b>не супадаюць населеныя пункты у name:be і name:ru</b> - населеныя пункты не адпавядаюць паміж найменнямі ў name:be і name:ru</li>
    <li><b>не прывязаны</b> - дарогі, якія не прывязаныя да аўтамабільных дарог</li>
   </ul>
  </details>

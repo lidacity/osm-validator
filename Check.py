@@ -470,6 +470,28 @@ def GetHaversine(Ways):
 #
 
 
+#Words = re.compile(r"\b\w+\b")
+Words = re.compile(r"\b[А-ЯЁЎІ]\w+ [А-ЯЁЎІ]\w+\b|\b\[А-ЯЁЎІ]w+[ -]\d+\b|\b[А-ЯЁЎІ]\w+\b")
+
+
+def GetCheckPlace(Tag, Place):
+ Result = []
+ Be, Ru = Tag.get('name:be', ""), Tag.get('name:ru', "")
+ Bes, Rus = Words.findall(Be), Words.findall(Ru)
+ for Ru in Rus:
+  if Ru in Place and not Result:
+   for Name in Place[Ru]:
+    if Name in Bes:
+     break
+   else:
+    Result.append(f"не супадаюць населеныя пункты у name:be і name:ru")
+ return Result
+
+
+#
+
+
+
 def GetCheck1(Class, Key, Value, Type, Tag):
  Result = []
  Result += GetRef(Key)
@@ -505,4 +527,10 @@ def GetCheck2(Relation, Relations):
  Result += GetCheckCross(Ways)
  Result += GetIsland(Ways)
  Result += GetHaversine(Ways)
+ return Result
+
+
+def GetCheck3(Tag, Place):
+ Result = []
+ Result += GetCheckPlace(Tag, Place)
  return Result

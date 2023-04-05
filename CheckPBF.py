@@ -75,22 +75,38 @@ def GetOfficialRef(Tag):
  return Tag.get('official_ref', "невядома")
 
 
+def GetNames(Tag, Lang):
+ Names = ";".join([Tag.get(f'name:{Lang}', ""), Tag.get(f'alt_name:{Lang}', "")])
+ return [Name.strip() for Name in Names.split(";") if Name]
+
+
 def Load(FileName):
  logger.info("Load PBF")
  Ways, Relations, RelationIDs = [], [], []
+ Place = {}
  for Feature in iter_from_osm(FileName):
+  Tag = Feature.get('tag', {})
+  if Feature['type'] == "node":
+   if Tag.get('place', "") in ["city", "town", "village", "hamlet", "neighbourhood", "locality"]:
+    Bes, Rus = GetNames(Tag, 'be'), GetNames(Tag, 'ru')
+    if Bes and Rus:
+     for Ru in Rus:
+      if Ru in Place:
+       for Be in Bes:
+        Place[Ru].add(Be)
+      else:
+       Place[Ru] = set(Bes)
+  #
   if Feature['type'] == "way":
-   Tag = Feature['tag']
    if ('highway' in Tag or 'ferry' in Tag) and 'ref' in Tag:
     Ways.append(Feature)
   #
   if Feature['type'] == "relation":
    if Feature['id'] in [1246287, 1246288, 1246286]:
     RelationIDs += list(GetList(Feature))
-   Tag = Feature['tag']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
     Relations.append(Feature)
- return Ways, Relations, RelationIDs
+ return Ways, Relations, RelationIDs, Place
 
 
 def GetMissingRelation(Relations, RelationIDs):
@@ -138,20 +154,21 @@ def GetRelation(Ways, Ok):
 def CheckPBF():
  Result = {}
  Download(URL, FileName)
- Ways, Relations, RelationIDs = Load(FileName)
+ Ways, Relations, RelationIDs, Place = Load(FileName)
  ResultRelation, WayIDs, OkRelation = GetMissingRelation(Relations, RelationIDs)
  Result['Relations'] = ResultRelation
  Result['Ways'] = GetMissingWay(Ways, WayIDs)
  Result['RelationsForWays'] = GetRelation(Result['Ways'], OkRelation)
- return Result
+ return Result, Place
 
 
 
 if __name__ == "__main__":
  logger.add(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".log", "osm.log"))
  logger.info("Start PBF")
- PBF = CheckPBF()
+ PBF, Place = CheckPBF()
  #print(PBF)
+ #print(Place)
  Context = {}
  Context['Missing'] = PBF
  Generate("missing.html", Context)
