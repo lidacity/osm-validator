@@ -55,7 +55,7 @@ def GetLine(Class, Key, Value, Relations, Place):
  Result['Key'] = Key
  Relation = Relations.get(Key, {})
  if Relation:
-#  logger.info(f"parse relation {Relation['id']}")
+  logger.info(f"parse relation {Relation['id']}")
   Type = Relation['type']
   Result['Type'] = Type
   Result['ID'] = Relation['id']

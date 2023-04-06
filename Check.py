@@ -6,7 +6,7 @@ from haversine import haversine
 
 from OsmApi import OsmApi, CacheIterator, ArrayCacheIterator
 
-re._MAXCACHE = 3000
+re._MAXCACHE = 4096
 
 #
 
@@ -246,6 +246,33 @@ def GetRefInRelation(Relation, Relations):
         break
     else:
      Result.append(f"у '{TagName}' не вызначаны \"{Ref}\"")
+ return Result
+
+
+def GetAllNodes(Relation):
+ Result = []
+ for Type, Member in CacheIterator(256, Relation['members'], Type=["way"], Role=[]):
+  for ID in Member['nodes']:
+   Result.append(ID)
+ return Result
+
+
+def GetTouch(Relation, Relations):
+ Result = []
+ Tag = Relation['tags']
+ Roads = GetList(Tag['name:ru'], 'ok')
+ if Roads:
+  Nodes = GetAllNodes(Relation)
+  for Ref in Roads:
+   if Ref in Relations:
+    TouchNodes = GetAllNodes(Relations[Ref])
+    Touch = list(set(Nodes) & set(TouchNodes))
+    if not Touch:
+     Result.append(f"не дакранаецца да \"{Ref}\"")
+     break
+   else:
+    Result.append(f"не знойдзены \"{Ref}\"")
+    break
  return Result
 
 
@@ -514,6 +541,7 @@ def GetCheck2(Relation, Relations):
  Result = []
  Result += GetBadRefInRelation(Relation)
  Result += GetRefInRelation(Relation, Relations)
+ Result += GetTouch(Relation, Relations)
  #
  Ways = GetWays(Relation)
  Result += GetCheckWays(Relation)
