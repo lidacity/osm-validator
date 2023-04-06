@@ -84,7 +84,7 @@ def Main():
  logger.info("Start Pravo")
  Pravo = DownloadPravo()
  with open(FileName, 'w', encoding="utf-8") as File:
-  json.dump(Pravo, File, ensure_ascii=False, indent=2)
+  json.dump(Pravo, File, ensure_ascii=False, indent=1)
  logger.info("Done Pravo")
 
 

@@ -6,7 +6,7 @@ from haversine import haversine
 
 from OsmApi import OsmApi, CacheIterator, ArrayCacheIterator
 
-re._MAXCACHE = 4096
+re._MAXCACHE = 3000
 
 #
 
