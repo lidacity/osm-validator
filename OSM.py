@@ -17,6 +17,7 @@ Path = os.path.dirname(os.path.abspath(__file__))
 
 def Load(FileName):
  Result = {}
+ FileName = os.path.join(Path, "docs", FileName)
  for Line in open(FileName, mode="r", encoding="utf-8"):
   S = Line.strip().split(";")
   Tag, Desc = S[0], S[1]
@@ -50,7 +51,7 @@ def GetErrorLine(Key, Relation):
  return Result
 
 
-def GetLine(Class, Key, Value, Relations, Place):
+def GetLine(Class, Key, Value, Relations, Place, Highways):
  Result = {}
  Result['Key'] = Key
  Relation = Relations.get(Key, {})
@@ -69,7 +70,8 @@ def GetLine(Class, Key, Value, Relations, Place):
   Result['Error'] = []
   Result['Error'] += Check.GetCheck1(Class, Key, Value, Type, Tag)
   Result['Error'] += Check.GetCheck2(Relation, Relations)
-  Result['Error'] += Check.GetCheck3(Tag, Place)
+  Result['Error'] += Check.GetCheck3(Relation, Relations, Highways)
+  Result['Error'] += Check.GetCheck4(Tag, Place)
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
   Result['Color'] = "#d6e090"
@@ -102,13 +104,13 @@ def GetNotFound(Class, Relation, CSV):
  return { Key: Value for Key, Value in Result.items() if Value['class'] == Class }
 
 
-def GetOSM(Class, Relations, FileName, Place):
+def GetOSM(Class, Relations, FileName, Place, Highways):
  logger.info(f"Parse relation {Class}")
  Result = []
  #
  FileName = os.path.join(Path, "docs", FileName)
  CSV = Load(FileName)
  #
- Result += [ GetLine(Class, Key, Value, Relations, Place) for Key, Value in CSV.items() ] 
+ Result += [ GetLine(Class, Key, Value, Relations, Place, Highways) for Key, Value in CSV.items() ] 
  Result += [ GetErrorLine(Key, Relation) for Key, Relation in GetNotFound(Class, Relations, CSV).items()]
  return Result
