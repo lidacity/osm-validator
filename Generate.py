@@ -7,8 +7,7 @@ import datetime
 from loguru import logger
 
 from Pravo import GetPravo
-from OSM import Load, ReadOSM, GetOSM
-from CheckPBF import CheckPBF
+from OSM import Load, ReadOSM, GetOSM, GetPlace, GetMissing
 from Jinja import Generate
 from Git import GitPush
 
@@ -26,15 +25,16 @@ if not os.path.exists(Directory):
  os.makedirs(Directory)
 
 Context = {}
-Context['Missing'], Place = CheckPBF()
 Context['PravoError'], Context['Pravo'] = GetPravo()
 Highways = Load("M.csv") | Load("P.csv") | Load("H.csv")
 Relations = ReadOSM("М", 1246287) | ReadOSM("Р", 1246288) | ReadOSM("Н", 1246286)
+Place = GetPlace()
 Context['Highway'] = {
  'M': { 'Desc': "Магістральныя аўтамабільныя дарогі", 'List': GetOSM("М", Relations, "M.csv", Place, Highways), },
  'P': { 'Desc': "Рэспубліканскія аўтамабільныя дарогі", 'List': GetOSM("Р", Relations, "P.csv", Place, Highways), },
  'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", Relations, "H.csv", Place, Highways), },
 }
+Context['Missing'] = GetMissing()
 Context['DateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 FileNames = ["index.html", "relation.html", "error.html", "missing.html", "index.csv", "relation.csv", "error.csv", "missing.csv", ]
 for FileName in FileNames:
