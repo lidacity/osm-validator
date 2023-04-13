@@ -85,7 +85,7 @@ def CheckRu(Tag, Name):
 
 def CheckOfficialName(Tag):
  Result = []
- for TagName in ['official_name', 'official_name:be', 'official_name:ru', 'description', 'description:be', 'description:ru']:
+ for TagName in ['official_name', 'official_name:be', 'official_name:ru', 'description', 'description:be', 'description:ru', 'source:ref:date', ]:
   if TagName in Tag:
    Result.append(f"непатрэбны '{TagName}'")
  if 'fixme' in Tag:
@@ -210,6 +210,22 @@ def CheckBadRefInRelation(Relation):
  return Result
 
 
+def CheckDouble(Relation):
+ Result = []
+ if Relation['double']:
+  Result.append(f"існуе дублікат 'ref'")
+ return Result
+
+
+def CheckWays(Relation):
+ Result = []
+ for Member in Relation['members']:
+  if Member['type'] != "way":
+   Result.append(f"у relation прысутнічае ня толькі way")
+   break
+ return Result
+
+
 def CheckRefInRelation(Relation, Relations):
  Result = []
  Tag = Relation['tags']
@@ -232,6 +248,158 @@ def CheckRefInRelation(Relation, Relations):
     else:
      Result.append(f"у '{TagName}' не вызначаны \"{Ref}\"")
  return Result
+
+
+def CheckTouch(Relation, Relations, Highways):
+ Result = []
+ Tag = Relation['tags']
+ Name = Tag['name:ru']
+ for Ref in GetList(Name, 'ok'):
+  if Ref in Highways:
+   Name = Name.replace(f"{Ref} {Highways[Ref]}", f"{Ref}")
+ Roads = GetList(Name, 'ok')
+ if Roads:
+  Nodes = GetAllNodes(Relation)
+  for Ref in Roads:
+   if Ref in Relations:
+    TouchNodes = GetAllNodes(Relations[Ref])
+    Touch = list(set(Nodes) & set(TouchNodes))
+    if not Touch:
+     Result.append(f"не дакранаецца да \"{Ref}\"")
+     break
+   else:
+    Result.append(f"не знойдзены \"{Ref}\"")
+    break
+ return Result
+
+
+#Words = re.compile(r"\b\w+\b")
+Words = re.compile(r"\b[А-ЯЁЎІ]\w+ [А-ЯЁЎІ]\w+\b|\b\[А-ЯЁЎІ]w+[ -]\d+\b|\b[А-ЯЁЎІ]\w+\b")
+
+
+def CheckPlace(Tag, Place):
+ Result = []
+ Be, Ru = Tag.get('name:be', ""), Tag.get('name:ru', "")
+ Bes, Rus = Words.findall(Be), Words.findall(Ru)
+ for Ru in Rus:
+  if Ru in Place and not Result:
+   for Name in Place[Ru]:
+    if Name in Bes:
+     break
+   else:
+    Result.append(f"не супадаюць населеныя пункты у name:be і name:ru")
+ return Result
+
+
+def CheckTagsInWay(Tag, Ways):
+ Result = []
+ Tags = {
+  'ref': 'ref',
+  'official_name': 'name',
+  'official_name:be': 'name:be',
+  'official_name:ru': 'name:ru',
+  }
+ for TagWay, TagRelation in Tags.items():
+  for Way in Ways:
+   if Tag.get(TagRelation, None) != Way['tags'].get(TagWay, None) is not None:
+    Result.append(f"не супадае '{TagRelation}' у relation і '{TagWay}' яе ways")
+    break
+ return Result
+
+
+def CheckFixme(Ways):
+ Result = []
+ for Way in Ways:
+  if "fixme" in Way['tags']:
+   Result.append(f"'fixme' у way")
+   break
+ return Result
+
+
+def CheckHighway(Ways):
+ Result = []
+ Highways = ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", ]
+ for Way in Ways:
+  Tag = Way['tags']
+  if 'highway' in Tag:
+   if Tag['highway'] not in Highways:
+    Result.append(f"памылковы 'highway'=\"{Tag['highway']}\" на way")
+    break
+ for Way in Ways:
+  Tag = Way['tags']
+  if not('highway' in Tag or 'ferry' in Tag):
+   Result.append(f"пусты 'highway' на way")
+   break
+ return Result
+
+
+def CheckDouble(Ways):
+ Result = []
+ c = Counter([Way['id'] for Way in Ways])
+ if max(c.values()) > 1:
+  Result.append(f"падвоеныя way")
+ return Result
+
+
+def CheckDoubleRelation(Ways, Relations):
+ Result = []
+ for Way in Ways:
+  Count = 0
+  for Relation in OSM.RelationsForWay(Way['id']):
+   if Relation['tags'].get('official_ref', "") in Relations:
+    Count += 1
+  if Count > 1:
+   Result.append(f"way знаходзяцца ў некалькіх relation")
+   break
+  if Count == 0:
+   Result.append(f"way не знаходзіцца нават у адным relation")
+ return Result
+
+
+def CheckCross(Ways):
+ Result = []
+ Limits = GetLimits(Ways)
+ Nodes = [Node for Row in Limits for Node in Row]
+ c = Counter(Nodes)
+ if max(c.values()) > 2:
+  Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
+ else:
+  Nodes = GetNodes(Ways)
+  Nodes1 = [Node for Row in Nodes for Node in Row]
+  Nodes2 = [Node for Row in Nodes for Node in Row[1:-1]]
+  c = Counter(Nodes1 + Nodes2)
+  if max(c.values()) > 2:
+   Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
+ return Result
+
+
+def CheckIsland(Ways):
+ Result = []
+ if Island(Ways) != IslandLine(Ways):
+  Result.append(f"way не паслядоўныя")
+ return Result
+
+
+def CheckHaversine(Ways):
+ Result = []
+ Coords = GetCoord(Ways)
+ #
+ Lengths = []
+ for Coord1 in Coords:
+  SubLengths = []
+  for Coord2 in Coords:
+   if Coord1 != Coord2:
+    SubLengths += [ haversine(x, y) for x in Coord1 for y in Coord2 ]
+  if SubLengths:
+   Lengths.append(min(SubLengths))
+ #
+ if Lengths:
+  if max(Lengths) > 1.0:
+   Result.append(f"way занадта разарваны")
+ return Result
+
+
+#
 
 
 def Island(Ways):
@@ -306,168 +474,6 @@ def IslandLine(Ways):
  return Result
 
 
-def CheckWays(Relation):
- Result = []
- for Member in Relation['members']:
-  if Member['type'] != "way":
-   Result.append(f"у relation прысутнічае ня толькі way")
-   break
- return Result
-
-
-def CheckFixme(Ways):
- Result = []
- for Way in Ways:
-  if "fixme" in Way['tags']:
-   Result.append(f"'fixme' у way")
-   break
- return Result
-
-
-def CheckHighway(Ways):
- Result = []
- Highways = ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", ]
- for Way in Ways:
-  Tag = Way['tags']
-  if 'highway' in Tag:
-   if Tag['highway'] not in Highways:
-    Result.append(f"памылковы 'highway'=\"{Tag['highway']}\" на way")
-    break
- for Way in Ways:
-  Tag = Way['tags']
-  if not('highway' in Tag or 'ferry' in Tag):
-   Result.append(f"пусты 'highway' на way")
-   break
- return Result
-
-
-def CheckDouble(Ways):
- Result = []
- c = Counter([Way['id'] for Way in Ways])
- if max(c.values()) > 1:
-  Result.append(f"падвоеныя way")
- return Result
-
-
-def CheckDoubleRelation(Ways, Relations):
- Result = []
- for Way in Ways:
-  Count = 0
-  for Relation in OSM.RelationsForWay(Way['id']):
-   if Relation['tags'].get('official_ref', "") in Relations:
-    Count += 1
-  if Count > 1:
-   Result.append(f"way знаходзяцца ў некалькіх relation")
-   break
-  if Count == 0:
-   Result.append(f"way не знаходзіцца нават у адным relation")
- return Result
-
-
-def CheckTagsInWay(Tag, Ways):
- Result = []
- Tags = {
-  'ref': 'ref',
-  'official_name': 'name',
-  'official_name:be': 'name:be',
-  'official_name:ru': 'name:ru',
-  }
- for TagWay, TagRelation in Tags.items():
-  for Way in Ways:
-   if Tag.get(TagRelation, None) != Way['tags'].get(TagWay, None) is not None:
-    Result.append(f"не супадае '{TagRelation}' у relation і '{TagWay}' яе ways")
-    break
- return Result
-
-
-def CheckCross(Ways):
- Result = []
- Limits = GetLimits(Ways)
- Nodes = [Node for Row in Limits for Node in Row]
- c = Counter(Nodes)
- if max(c.values()) > 2:
-  Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
- else:
-  Nodes = GetNodes(Ways)
-  Nodes1 = [Node for Row in Nodes for Node in Row]
-  Nodes2 = [Node for Row in Nodes for Node in Row[1:-1]]
-  c = Counter(Nodes1 + Nodes2)
-  if max(c.values()) > 2:
-   Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
- return Result
-
-
-def CheckIsland(Ways):
- Result = []
- if Island(Ways) != IslandLine(Ways):
-  Result.append(f"way не паслядоўныя")
- return Result
-
-
-def CheckHaversine(Ways):
- Result = []
- Coords = GetCoord(Ways)
- #
- Lengths = []
- for Coord1 in Coords:
-  SubLengths = []
-  for Coord2 in Coords:
-   if Coord1 != Coord2:
-    SubLengths += [ haversine(x, y) for x in Coord1 for y in Coord2 ]
-  if SubLengths:
-   Lengths.append(min(SubLengths))
- #
- if Lengths:
-  if max(Lengths) > 1.0:
-   Result.append(f"way занадта разарваны")
- return Result
-
-
-def CheckTouch(Relation, Relations, Highways):
- Result = []
- Tag = Relation['tags']
- Name = Tag['name:ru']
- for Ref in GetList(Name, 'ok'):
-  if Ref in Highways:
-   Name = Name.replace(f"{Ref} {Highways[Ref]}", f"{Ref}")
- Roads = GetList(Name, 'ok')
- if Roads:
-  Nodes = GetAllNodes(Relation)
-  for Ref in Roads:
-   if Ref in Relations:
-    TouchNodes = GetAllNodes(Relations[Ref])
-    Touch = list(set(Nodes) & set(TouchNodes))
-    if not Touch:
-     Result.append(f"не дакранаецца да \"{Ref}\"")
-     break
-   else:
-    Result.append(f"не знойдзены \"{Ref}\"")
-    break
- return Result
-
-
-#Words = re.compile(r"\b\w+\b")
-Words = re.compile(r"\b[А-ЯЁЎІ]\w+ [А-ЯЁЎІ]\w+\b|\b\[А-ЯЁЎІ]w+[ -]\d+\b|\b[А-ЯЁЎІ]\w+\b")
-
-
-def CheckPlace(Tag, Place):
- Result = []
- Be, Ru = Tag.get('name:be', ""), Tag.get('name:ru', "")
- Bes, Rus = Words.findall(Be), Words.findall(Ru)
- for Ru in Rus:
-  if Ru in Place and not Result:
-   for Name in Place[Ru]:
-    if Name in Bes:
-     break
-   else:
-    Result.append(f"не супадаюць населеныя пункты у name:be і name:ru")
- return Result
-
-
-
-#
-
-
 def GetAllNodes(Relation):
  Result = []
  List = [ Member['ref'] for Member in Relation['members'] if Member['type'] == "way" ]
@@ -497,13 +503,12 @@ def GetCoord(Ways):
  return [ [ Result[ID] for ID in Row ] for Row in Nodes ]
 
 
-
-
-
-
 def GetNames(Tag, Lang):
  Names = ";".join([Tag.get(f'name:{Lang}', ""), Tag.get(f'alt_name:{Lang}', "")])
  return [Name.strip() for Name in Names.split(";") if Name]
+
+
+#
 
 
 def GetPlace():
@@ -522,10 +527,6 @@ def GetPlace():
      else:
       Place[Ru] = set(Bes)
  return Place
-
-
-
-
 
 
 def GetNormalizeRef(Ref):
@@ -562,7 +563,6 @@ def LoadRelations():
   Tag = Relation['tags']
   if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
    Result[ID] = { 'official_ref': Tag.get('official_ref', "невядома"), 'ref': Tag.get('ref', ""), 'be': Tag.get('name:be', ""), 'ru': Tag.get('name:ru', ""), 'members': Relation['members'] }
- print(Result)
  return Result
 
 
@@ -614,7 +614,6 @@ def GetMissingWay(Ways, WaysID):
     Result[Ref].append(ID)
    else:
     Result[Ref] = [ID]
- print(Result)
  return Result
 
 
@@ -625,7 +624,6 @@ def GetRelationsForWays(MissingWays, RelationOk):
   if Ref not in Result:
    if Ref in RelationOk.keys():
     Result[Ref] = RelationOk[Ref]
- print(Result)
  return Result
 
 
@@ -647,17 +645,7 @@ def GetMissing():
  return Result
 
 
-
-
-
-
-
-
-
-
-
-
-
+#
 
 
 def Load(FileName):
@@ -696,12 +684,15 @@ def GetErrorLine(Key, Relation):
  return Result
 
 
+CountParse = 0
+
+
 def GetLine(Class, Key, Value, Relations, Place, Highways):
  Result = {}
  Result['Key'] = Key
  Relation = Relations.get(Key, {})
  if Relation:
-  logger.info(f"parse relation {Relation['id']}")
+  #logger.info(f"parse relation {Relation['id']}")
   Type = Relation['type']
   Result['Type'] = Type
   Result['ID'] = Relation['id']
@@ -728,20 +719,21 @@ def GetLine(Class, Key, Value, Relations, Place, Highways):
   Result['Error'] += CheckImpossible(Tag)
   Result['Error'] += CheckEqRef(Tag)
   Result['Error'] += CheckBadRefInRelation(Relation)
+  Result['Error'] += CheckDouble(Relation)
+  Result['Error'] += CheckWays(Relation)
   Result['Error'] += CheckRefInRelation(Relation, Relations)
   #
   Result['Error'] += CheckTouch(Relation, Relations, Highways)
   Result['Error'] += CheckPlace(Tag, Place)
   #
   Ways = GetWays(Relation)
-  Result['Error'] += CheckWays(Relation)
+  Result['Error'] += CheckTagsInWay(Tag, Ways)
   Result['Error'] += CheckFixme(Ways)
   Result['Error'] += CheckHighway(Ways)
   Result['Error'] += CheckDouble(Ways)
   Result['Error'] += CheckDoubleRelation(Ways, Relations)
   #
-  Ways = GetWays(Relation, Role=["", "route", "forward", "backward"])
-  Result['Error'] += CheckTagsInWay(Tag, Ways)
+  Ways = GetWays(Relation, Role=["", "route", "forward"]) #"backward"
   Result['Error'] += CheckCross(Ways)
   Result['Error'] += CheckIsland(Ways)
   Result['Error'] += CheckHaversine(Ways)
@@ -751,6 +743,11 @@ def GetLine(Class, Key, Value, Relations, Place, Highways):
   Result['Color'] = "#d6e090"
   Result['Ru'] = Value
   Result['Relation'] = ["relation адсутнічае"]
+ #
+ global CountParse
+ CountParse += 1
+ if CountParse % 1000 == 0:
+  logger.info(f"parse relation #{CountParse}")
  return Result
 
 
@@ -774,6 +771,7 @@ def ReadOSM(Class, R):
     logger.error(f"Unknown type = \"{Member['type']}\"")
   Item['class'] = Class
   Ref = GetRef(Item['tags'])
+  Item['double'] = Ref in Result
   Result[Ref] = Item
  #
  return Result
@@ -794,3 +792,7 @@ def GetOSM(Class, Relations, FileName, Place, Highways):
  Result += [ GetLine(Class, Key, Value, Relations, Place, Highways) for Key, Value in CSV.items() ] 
  Result += [ GetErrorLine(Key, Relation) for Key, Relation in GetNotFound(Class, Relations, CSV).items()]
  return Result
+
+
+def GetDateTime():
+ return OSM.GetDateTime()

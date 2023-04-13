@@ -2,12 +2,12 @@
 
 import os
 import sys
-import datetime
+from datetime import datetime
 
 from loguru import logger
 
 from Pravo import GetPravo
-from OSM import Load, ReadOSM, GetOSM, GetPlace, GetMissing
+from OSM import Load, ReadOSM, GetOSM, GetPlace, GetMissing, GetDateTime
 from Jinja import Generate
 from Git import GitPush
 
@@ -35,12 +35,13 @@ Context['Highway'] = {
  'H': { 'Desc': "Мясцовыя аўтамабільныя дарогі", 'List': GetOSM("Н", Relations, "H.csv", Place, Highways), },
 }
 Context['Missing'] = GetMissing()
-Context['DateTime'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+Context['DateTime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+Context['PBFDateTime'] = GetDateTime()
 FileNames = ["index.html", "relation.html", "error.html", "missing.html", "index.csv", "relation.csv", "error.csv", "missing.csv", ]
 for FileName in FileNames:
  Generate(FileName, Context)
 
-Diff = GitPush(f"autogenerate {datetime.datetime.now().strftime('%Y-%m-%d')}")
+Diff = GitPush(f"autogenerate {datetime.now().strftime('%Y-%m-%d')}")
 if Diff: 
  logger.info(f"git push complete:\n{Diff}")
 else:

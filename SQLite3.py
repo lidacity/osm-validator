@@ -21,6 +21,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 class OsmPbf:
  def __init__(self, URL="https://download.geofabrik.de/europe/belarus-latest.osm.pbf", Download=True):
   #URL = "http://osmosis.svimik.com/latest/BY.osm.pbf"
+  self.DateTime = datetime.now()
   PBF = self.GetFileName(URL)
   FileName = self.ChangeExt(PBF, ".db")
   if Download and self.Download(URL, PBF):
@@ -44,6 +45,10 @@ class OsmPbf:
 
 
 
+ def GetDateTime(self):
+  return self.DateTime
+
+
  def GetFileName(self, URL):
   _, FileName = os.path.split(URL)
   Path = os.path.dirname(os.path.abspath(__file__))
@@ -60,10 +65,10 @@ class OsmPbf:
   UserAgent = {"User-agent": "https://osm-validator.lidacity.by/"}
   Requests = requests.head(URL, headers=UserAgent)
   #print(Requests.headers)
-  DateTimeURL = parsedate(Requests.headers['Last-Modified'])
+  self.DateTime = parsedate(Requests.headers['Last-Modified'])
   #
   if os.path.isfile(FileName):
-   Result = datetime.fromtimestamp(os.path.getmtime(FileName)).astimezone() < DateTimeURL
+   Result = datetime.fromtimestamp(os.path.getmtime(FileName)).astimezone() < self.DateTime
    if Result:
     os.remove(FileName)
   else:
