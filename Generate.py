@@ -7,7 +7,7 @@ from datetime import datetime
 from loguru import logger
 
 from Pravo import GetPravo
-from OSM import Load, ReadOSM, GetOSM, GetPlace, GetMissing, GetDateTime
+from OSM import LoadDesc, ReadOSM, GetOSM, GetPlace, GetMissing, GetDateTime
 from Jinja import Generate
 from Git import GitPush
 
@@ -26,7 +26,7 @@ if not os.path.exists(Directory):
 
 Context = {}
 Context['PravoError'], Context['Pravo'] = GetPravo()
-Highways = Load("M.csv") | Load("P.csv") | Load("H.csv")
+Highways = LoadDesc("M.csv") | LoadDesc("P.csv") | LoadDesc("H.csv")
 Relations = ReadOSM("М", 1246287) | ReadOSM("Р", 1246288) | ReadOSM("Н", 1246286)
 Place = GetPlace()
 Context['Highway'] = {

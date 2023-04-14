@@ -210,7 +210,7 @@ def CheckBadRefInRelation(Relation):
  return Result
 
 
-def CheckDouble(Relation):
+def CheckDoubleRef(Relation):
  Result = []
  if Relation['double']:
   Result.append(f"існуе дублікат 'ref'")
@@ -255,8 +255,9 @@ def CheckTouch(Relation, Relations, Highways):
  Tag = Relation['tags']
  Name = Tag['name:ru']
  for Ref in GetList(Name, 'ok'):
-  if Ref in Highways:
-   Name = Name.replace(f"{Ref} {Highways[Ref]}", f"{Ref}")
+  Highway = Highways[Ref]
+  if Ref in Highway['Desc']:
+   Name = Name.replace(f"{Ref} {Highway['Desc']}", f"{Ref}")
  Roads = GetList(Name, 'ok')
  if Roads:
   Nodes = GetAllNodes(Relation)
@@ -288,6 +289,20 @@ def CheckPlace(Tag, Place):
      break
    else:
     Result.append(f"не супадаюць населеныя пункты у name:be і name:ru")
+ return Result
+
+
+def CheckLaw(Tag, Highways):
+ Result = []
+ if 'official_ref' in Tag:
+  Ref = Tag['official_ref']
+  if Ref in Highways:
+   Highway = Highways[Ref]
+   if 'source:ref' in Tag:
+    if Tag['source:ref'] != Highway['Law']:
+     Result.append(f"неправільная крыніца \"{Highway['Law']}\" наймення")
+   else:
+    Result.append(f"адсутнічае крыніца \"{Highway['Law']}\" наймення")
  return Result
 
 
@@ -333,7 +348,7 @@ def CheckHighway(Ways):
  return Result
 
 
-def CheckDouble(Ways):
+def CheckDoubleWay(Ways):
  Result = []
  c = Counter([Way['id'] for Way in Ways])
  if max(c.values()) > 1:
@@ -356,19 +371,23 @@ def CheckDoubleRelation(Ways, Relations):
  return Result
 
 
+def Max(Values):
+ return max(Values) if Values else 0
+
+
 def CheckCross(Ways):
  Result = []
  Limits = GetLimits(Ways)
  Nodes = [Node for Row in Limits for Node in Row]
  c = Counter(Nodes)
- if max(c.values()) > 2:
+ if Max(c.values()) > 2:
   Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
  else:
   Nodes = GetNodes(Ways)
   Nodes1 = [Node for Row in Nodes for Node in Row]
   Nodes2 = [Node for Row in Nodes for Node in Row[1:-1]]
   c = Counter(Nodes1 + Nodes2)
-  if max(c.values()) > 2:
+  if Max(c.values()) > 2:
    Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
  return Result
 
@@ -648,13 +667,12 @@ def GetMissing():
 #
 
 
-def Load(FileName):
+def LoadDesc(FileName):
  Result = {}
  FileName = os.path.join(Path, "docs", FileName)
  for Line in open(FileName, mode="r", encoding="utf-8"):
-  S = Line.strip().split(";")
-  Tag, Desc = S[0], S[1]
-  Result[Tag] = Desc
+  Tag, Desc, Law = Line.strip().split(";")
+  Result[Tag] = { 'Desc': Desc, 'Law': Law }
  return Result
 
 
@@ -711,7 +729,7 @@ def GetLine(Class, Key, Value, Relations, Place, Highways):
   Result['Error'] += CheckTag(Tag, Class)
   Result['Error'] += CheckClass(Tag, Class)
   Result['Error'] += CheckBe(Tag)
-  Result['Error'] += CheckRu(Tag, Value)
+  Result['Error'] += CheckRu(Tag, Value['Desc'])
   Result['Error'] += CheckOfficialName(Tag)
   Result['Error'] += CheckWrong(Tag)
   Result['Error'] += CheckPair(Tag)
@@ -719,18 +737,19 @@ def GetLine(Class, Key, Value, Relations, Place, Highways):
   Result['Error'] += CheckImpossible(Tag)
   Result['Error'] += CheckEqRef(Tag)
   Result['Error'] += CheckBadRefInRelation(Relation)
-  Result['Error'] += CheckDouble(Relation)
+  Result['Error'] += CheckDoubleRef(Relation)
   Result['Error'] += CheckWays(Relation)
   Result['Error'] += CheckRefInRelation(Relation, Relations)
   #
   Result['Error'] += CheckTouch(Relation, Relations, Highways)
   Result['Error'] += CheckPlace(Tag, Place)
+  Result['Error'] += CheckLaw(Tag, Highways)
   #
   Ways = GetWays(Relation)
   Result['Error'] += CheckTagsInWay(Tag, Ways)
   Result['Error'] += CheckFixme(Ways)
   Result['Error'] += CheckHighway(Ways)
-  Result['Error'] += CheckDouble(Ways)
+  Result['Error'] += CheckDoubleWay(Ways)
   Result['Error'] += CheckDoubleRelation(Ways, Relations)
   #
   Ways = GetWays(Relation, Role=["", "route", "forward"]) #"backward"
@@ -741,7 +760,7 @@ def GetLine(Class, Key, Value, Relations, Place, Highways):
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
   Result['Color'] = "#d6e090"
-  Result['Ru'] = Value
+  Result['Ru'] = Value['Desc']
   Result['Relation'] = ["relation адсутнічае"]
  #
  global CountParse
@@ -787,10 +806,13 @@ def GetOSM(Class, Relations, FileName, Place, Highways):
  Result = []
  #
  FileName = os.path.join(Path, "docs", FileName)
- CSV = Load(FileName)
+ Desc = LoadDesc(FileName)
  #
- Result += [ GetLine(Class, Key, Value, Relations, Place, Highways) for Key, Value in CSV.items() ] 
- Result += [ GetErrorLine(Key, Relation) for Key, Relation in GetNotFound(Class, Relations, CSV).items()]
+ global CountParse
+ CountParse = 0
+ Result += [ GetLine(Class, Key, Value, Relations, Place, Highways) for Key, Value in Desc.items() ] 
+ Result += [ GetErrorLine(Key, Relation) for Key, Relation in GetNotFound(Class, Relations, Desc).items()]
+ logger.info(f"count parse relation {CountParse}")
  return Result
 
 
