@@ -6,19 +6,19 @@ from datetime import datetime
 
 from loguru import logger
 
+sys.stdin.reconfigure(encoding="utf-8")
+sys.stdout.reconfigure(encoding="utf-8")
+
+Path = os.path.dirname(os.path.abspath(__file__))
+logger.add(os.path.join(Path, ".log", "osm.log"))
+logger.info("Start")
+
+
 from Pravo import GetPravo
 from OSM import LoadDesc, ReadOSM, GetOSM, GetPlace, GetMissing, GetDateTime
 from Jinja import Generate
 from Git import GitPush
 
-
-sys.stdin.reconfigure(encoding='utf-8')
-sys.stdout.reconfigure(encoding='utf-8')
-
-
-Path = os.path.dirname(os.path.abspath(__file__))
-logger.add(os.path.join(Path, ".log", "osm.log"))
-logger.info("Start")
 
 Directory = os.path.join(Path, ".data")
 if not os.path.exists(Directory):
