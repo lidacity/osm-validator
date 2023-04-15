@@ -371,23 +371,19 @@ def CheckDoubleRelation(Ways, Relations):
  return Result
 
 
-def Max(Values):
- return max(Values) if Values else 0
-
-
 def CheckCross(Ways):
  Result = []
  Limits = GetLimits(Ways)
  Nodes = [Node for Row in Limits for Node in Row]
  c = Counter(Nodes)
- if Max(c.values()) > 2:
+ if max(c.values()) > 2:
   Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
  else:
   Nodes = GetNodes(Ways)
   Nodes1 = [Node for Row in Nodes for Node in Row]
   Nodes2 = [Node for Row in Nodes for Node in Row[1:-1]]
   c = Counter(Nodes1 + Nodes2)
-  if Max(c.values()) > 2:
+  if max(c.values()) > 2:
    Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
  return Result
 
@@ -746,16 +742,18 @@ def GetLine(Class, Key, Value, Relations, Place, Highways):
   Result['Error'] += CheckLaw(Tag, Highways)
   #
   Ways = GetWays(Relation)
-  Result['Error'] += CheckTagsInWay(Tag, Ways)
-  Result['Error'] += CheckFixme(Ways)
-  Result['Error'] += CheckHighway(Ways)
-  Result['Error'] += CheckDoubleWay(Ways)
-  Result['Error'] += CheckDoubleRelation(Ways, Relations)
+  if Ways:
+   Result['Error'] += CheckTagsInWay(Tag, Ways)
+   Result['Error'] += CheckFixme(Ways)
+   Result['Error'] += CheckHighway(Ways)
+   Result['Error'] += CheckDoubleWay(Ways)
+   Result['Error'] += CheckDoubleRelation(Ways, Relations)
   #
   Ways = GetWays(Relation, Role=["", "route", "forward"]) #"backward"
-  Result['Error'] += CheckCross(Ways)
-  Result['Error'] += CheckIsland(Ways)
-  Result['Error'] += CheckHaversine(Ways)
+  if Ways:
+   Result['Error'] += CheckCross(Ways)
+   Result['Error'] += CheckIsland(Ways)
+   Result['Error'] += CheckHaversine(Ways)
   #
   Result['Color'] = "#ffc0c0" if Result['Error'] else "#bbffbb"
  else:
