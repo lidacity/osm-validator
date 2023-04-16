@@ -558,7 +558,7 @@ def GetNormalizeRef(Ref):
 
 
 def LoadWays():
- logger.info("missing: load ways")
+ #logger.info("missing: load ways")
  Result = {}
  for ID, _ in OSM.ExecuteSql("SELECT way_id, value FROM way_tags WHERE key = 'ref';"):
   Way = OSM.ReadWay(ID)
@@ -571,7 +571,7 @@ def LoadWays():
 
 
 def LoadRelations():
- logger.info("missing: load relations")
+ #logger.info("missing: load relations")
  Result = {}
  for ID, _ in OSM.ExecuteSql("SELECT relation_id, value FROM relation_tags WHERE key = 'route';"):
   Relation = OSM.ReadRelation(ID)
@@ -582,7 +582,7 @@ def LoadRelations():
 
 
 def LoadRelationsID():
- logger.info("missing: load relations id")
+ #logger.info("missing: load relations id")
  Result = []
  for ID in [1246287, 1246288, 1246286]:
   for _, Ref, _ in OSM.ExecuteSql("SELECT type, ref, role FROM relation_members WHERE relation_id = ? AND type = 'relation' ORDER BY member_order;", Params=[ID]):
@@ -591,7 +591,7 @@ def LoadRelationsID():
 
 
 def GetWaysID(Relations, RelationsID):
- logger.info("missing: get ways id")
+ #logger.info("missing: get ways id")
  Result = []
  for ID, Relation in Relations.items():
   if ID in RelationsID:
@@ -600,7 +600,7 @@ def GetWaysID(Relations, RelationsID):
 
 
 def GetRelationOk(Relations, RelationsID):
- logger.info("missing: get relation ok")
+ #logger.info("missing: get relation ok")
  Result = {}
  for ID, Relation in Relations.items():
   if ID in RelationsID:
@@ -611,7 +611,7 @@ def GetRelationOk(Relations, RelationsID):
 
 
 def GetMissingRelation(Relations, RelationsID):
- logger.info("missing: missing relation")
+ #logger.info("missing: missing relation")
  Result = []
  for ID, Relation in Relations.items():
   if ID not in RelationsID:
@@ -621,7 +621,7 @@ def GetMissingRelation(Relations, RelationsID):
 
 
 def GetMissingWay(Ways, WaysID):
- logger.info("missing: missing way")
+ #logger.info("missing: missing way")
  Result = {}
  for ID, Ref in Ways.items():
   if ID not in WaysID:
@@ -633,7 +633,7 @@ def GetMissingWay(Ways, WaysID):
 
 
 def GetRelationsForWays(MissingWays, RelationOk):
- logger.info("missing: missing relation for ways")
+ #logger.info("missing: missing relation for ways")
  Result = {}
  for Ref in MissingWays:
   if Ref not in Result:
@@ -643,7 +643,7 @@ def GetRelationsForWays(MissingWays, RelationOk):
 
 
 def GetMissing():
- logger.info("missing")
+ logger.info("Missing")
  Result = {}
  Ways = LoadWays()
  Relations = LoadRelations()
@@ -656,7 +656,7 @@ def GetMissing():
  Result['Relations'] = MissingRelations
  Result['Ways'] = MissingWays
  Result['RelationsForWays'] = MissingRelationsForWays
- logger.info("done")
+ #logger.info("done")
  return Result
 
 
