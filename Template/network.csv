@@ -1,0 +1,9 @@
+{%- for Desc, Value in Network.items() -%}
+{%- for Item in Value -%}
+{{Desc}};
+{%- for Ref, ID in Item.items() -%}{{Ref}}, {%- endfor -%}
+;
+{%- for Ref, ID in Item.items() -%}r{{ID}},{%- endfor -%}
+;не злучаны з сеткай
+{% endfor -%}
+{%- endfor %}

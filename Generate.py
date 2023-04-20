@@ -22,27 +22,41 @@ if not os.path.exists(Directory):
  os.makedirs(Directory)
 
 Check = {
- 'M': { 'Cyr': "М", 'Lat': "M", 'ID': 1246287, 'FileName': "M.csv", 'Desc': "Магістральныя аўтамабільныя дарогі" },
- 'P': { 'Cyr': "Р", 'Lat': "P", 'ID': 1246288, 'FileName': "P.csv", 'Desc': "Рэспубліканскія аўтамабільныя дарогі" },
- 'H': { 'Cyr': "Н", 'Lat': "H", 'ID': 1246286, 'FileName': "H.csv", 'Desc': "Мясцовыя аўтамабільныя дарогі" },
+ 'M': { 'Cyr': "М", 'Lat': "M", 'ID': 1246287, 'FileName': "M.csv", 'Main': True, 'Desc': "Магістральныя аўтамабільныя дарогі" },
+ 'P': { 'Cyr': "Р", 'Lat': "P", 'ID': 1246288, 'FileName': "P.csv", 'Main': True, 'Desc': "Рэспубліканскія аўтамабільныя дарогі" },
+ 'H': { 'Cyr': "Н", 'Lat': "H", 'ID': 1246286, 'FileName': "H.csv", 'Main': False, 'Desc': "Мясцовыя аўтамабільныя дарогі" },
 }
 
-List = ["index.html", "relation.html", "error.html", "missing.html", "index.csv", "relation.csv", "error.csv", "missing.csv"]
+List = ["index", "highway", "relation", "separated", "network", "missing"]
 
 Validator = Validator()
 Context = {}
+
+#Context['PravoError'], Context['Pravo'] = False, []
+#Context['Highway'] = {}
+#Context['Separated'] = []
+#Context['Missing'] = { 'Relations': [], 'Ways': {}, 'RelationsForWays': {} }
+#Context['Network'] = {}
+#Context['PBFDateTime'] = Validator.GetDateTime()
+#Context['DateTime'] = Validator.GetNow()
+
 Context['PravoError'], Context['Pravo'] = GetPravo()
 Context['Highway'] = Validator.GetHighway(Check)
+Context['Separated'] = Validator.GetSeparated(Check)
 Context['Missing'] = Validator.GetMissing()
+Network = Validator.GetNetwork(Check, False)
+NetworkFull = Validator.GetNetwork(Check, True)
+Context['Network'] = { 'Рэспубліканскія аўтамабільныя дарогі': Network, 'Мясцовыя аўтамабільныя дарогі': NetworkFull }
 Context['PBFDateTime'] = Validator.GetDateTime()
 Context['DateTime'] = Validator.GetNow()
+
 Validator.Generate(List, Context)
 
 Diff = Validator.GitPush(f"autogenerate {datetime.now().strftime('%Y-%m-%d')}")
-#if Diff: 
-# logger.info(f"git push complete:\n{Diff}")
-#else: 
-# logger.error(f"Git error")
+if Diff: 
+ pass #logger.info(f"git push complete:\n{Diff}")
+else: 
+ logger.error(f"Git error")
 
 logger.info("Done")
 

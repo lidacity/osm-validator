@@ -1,0 +1,35 @@
+{% block Network -%}
+<hr />
+<h2>Разарваная сетка аўтамабільных дарог</h2>
+<div id='Network'>
+{%- for Desc, Value in Network.items() %}
+ <h3>{{Desc}}</h3>
+ <table>
+  <thead>
+   <tr valign='top'>
+    <th>osm</th>
+    <th>josm</th>
+    <th>памылкі</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Item in Value %}
+   <tr bgcolor='#ff9090' valign='top'>
+    <td>
+{%- for Ref, ID in Item.items() %}
+     <a target='_blank' href='https://openstreetmap.org/relation/{{ID}}'>{{Ref}}</a>,&nbsp;
+{%- endfor %}
+    </td>
+    <td>
+{%- for Ref, ID in Item.items() %}
+     <a target='_josm' href='josm://relation/{{ID}}' onclick='return josm("r{{ID}}");'>{{Ref}}</a>,&nbsp;
+{%- endfor %}
+    </td>
+    <td><nobr>не злучаны з сеткай</nobr></td>
+   </tr>
+{%- endfor %}
+  </tbody>
+ </table>
+{%- endfor -%}
+</div>
+{%- endblock %}

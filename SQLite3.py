@@ -24,18 +24,20 @@ class OsmPbf:
   self.DateTime = datetime.now()
   PBF = self.GetFileName(URL)
   FileName = self.ChangeExt(PBF, ".db")
-  if Download and self.Download(URL, PBF):
-   if os.path.isfile(FileName):
-    os.remove(FileName)
-   self.DB = sqlite3.connect(FileName)
-   self.DB.text_factory = str
-   #self.DB.execute('pragma foreign_keys=on') # Makes inserts slower, so comment it:
-   logger.info("Start create .db")
-   self.CreateSchema()
-   self.Convert(PBF)
-   self.CreateIndex()
-   logger.info(".db is created")
-   self.DB.close()
+  if Download:
+   if self.Download(URL, PBF):
+    if os.path.isfile(FileName):
+     os.remove(FileName)
+   if not os.path.isfile(FileName):
+    self.DB = sqlite3.connect(FileName)
+    self.DB.text_factory = str
+    #self.DB.execute('pragma foreign_keys=on') # Makes inserts slower, so comment it:
+    logger.info("Start create .db")
+    self.CreateSchema()
+    self.Convert(PBF)
+    self.CreateIndex()
+    logger.info(".db is created")
+    self.DB.close()
   #
   self.DB = sqlite3.connect(FileName)
 

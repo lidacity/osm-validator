@@ -29,15 +29,18 @@ class Validator:
 
  #https://atufashireen.medium.com/creating-templates-with-jinja-in-python-3ff3b87d6740
  def Generate(self, List, Context):
-  logger.info(f"Generate {FileName}")
+  logger.info(f"Generate")
   Loader = FileSystemLoader("Template")
   Env = Environment(loader=Loader)
-  for FileName in List:
-   Template = Env.get_template(FileName)
-   Render = Template.render(Context)
-   FullName = os.path.join(self.Path, "docs", FileName)
-   with open(FullName, mode="w", encoding="utf-8") as File:
-    File.write(Render)
+  for Name in List:
+   for Ext in [".html", ".csv"]:
+    FileName = f"{Name}{Ext}"
+    if os.path.isfile(os.path.join(self.Path, "Template", FileName)):
+     Template = Env.get_template(FileName)
+     Render = Template.render(Context)
+     FullName = os.path.join(self.Path, "docs", FileName)
+     with open(FullName, mode="w", encoding="utf-8") as File:
+      File.write(Render)
 
 
  #https://behai-nguyen.github.io/2022/06/25/synology-dsm-python.html
@@ -254,7 +257,8 @@ class Validator:
 
  def CheckDoubleRef(self, Relation):
   Result = []
-  if Relation['double']:
+  Custom = Relation['custom']
+  if Custom['double']:
    Result.append(f"існуе дублікат 'ref'")
   return Result
 
@@ -295,24 +299,24 @@ class Validator:
  def CheckTouch(self, Relation, Relations, Highways):
   Result = []
   Tag = Relation['tags']
-  Name = Tag['name:ru']
-  for Ref in self.GetList(Name, 'ok'):
-   Highway = Highways[Ref]
-   if Ref in Highway['Desc']:
-    Name = Name.replace(f"{Ref} {Highway['Desc']}", f"{Ref}")
-  Roads = self.GetList(Name, 'ok')
-  if Roads:
-   Nodes = self.GetAllNodes(Relation)
-   for Ref in Roads:
-    if Ref in Relations:
-     TouchNodes = self.GetAllNodes(Relations[Ref])
-     Touch = list(set(Nodes) & set(TouchNodes))
-     if not Touch:
-      Result.append(f"не дакранаецца да \"{Ref}\"")
+  if 'name:ru' in Tag:
+   Name = Tag['name:ru']
+   for Ref in self.GetList(Name, 'ok'):
+    Highway = Highways[Ref]
+    if Ref in Highway['Desc']:
+     Name = Name.replace(f"{Ref} {Highway['Desc']}", f"{Ref}")
+   Roads = self.GetList(Name, 'ok')
+   if Roads:
+    Nodes = set(self.GetAllNodes(Relation))
+    for Ref in Roads:
+     if Ref in Relations:
+      Touch = set(self.GetAllNodes(Relations[Ref]))
+      if not Nodes & Touch:
+       Result.append(f"не дакранаецца да \"{Ref}\"")
+       break
+     else:
+      Result.append(f"не знойдзены \"{Ref}\"")
       break
-    else:
-     Result.append(f"не знойдзены \"{Ref}\"")
-     break
   return Result
 
 
@@ -553,6 +557,10 @@ class Validator:
   return [ [Node for Node in Way['nodes']] for Way in Ways ]
 
 
+ def GetListNodes(self, Ways):
+  return [ Node for Way in Ways for Node in Way['nodes'] ]
+
+
  def GetCoord(self, Ways):
   Nodes = self.IslandLine(Ways)
   List = [ID for Row in Nodes for ID in Row]
@@ -569,7 +577,7 @@ class Validator:
 
 
  def GetPlace(self):
-  logger.info("Place")
+  logger.info("read place")
   Place = {}
   for ID, Value in self.OSM.ExecuteSql("SELECT node_id, value FROM node_tags WHERE key = 'place';"):
    if Value in ["city", "town", "village", "hamlet", "neighbourhood", "locality"]:
@@ -703,7 +711,52 @@ class Validator:
   return Result
 
 
- #
+ def AtoI(self, Text):
+  return int(Text) if Text.isdigit() else Text
+
+
+ Sorted = re.compile("(\d+)")
+
+
+ def NaturalKeys(self, text):
+  return [ self.AtoI(c) for c in self.Sorted.split(text) ]
+
+
+ def GetNetwork(self, Parse, All):
+  logger.info("Network")
+  Relations = {}
+  for _, Value in Parse.items():
+   Class, ID, Main = Value['Cyr'], Value['ID'], Value['Main']
+   if Main or All:
+    Relations |= self.ReadOSM(Class, ID)
+  #
+  Nodes, IDs = {}, {}
+  for Ref, Relation in Relations.items():
+   Ways = self.GetWays(Relation)
+   Nodes[Ref] = set(self.GetListNodes(Ways))
+   IDs[Ref] = Relation['id']
+  #
+  logger.info("parse network")
+  Island = []
+  while Nodes:
+   for Ref, Node in Nodes.items():
+    for Item in Island:
+     if Item['Nodes'] & Node:
+      Item['Ref'].append(Ref)
+      Item['Nodes'] |= Node
+      del Nodes[Ref]
+      break
+    else:
+     continue
+    break
+   else:
+    Item = { 'Ref': [Ref], 'Nodes': Node } 
+    Island.append(Item)
+    del Nodes[Ref]
+  #
+  Result = [ { Ref: IDs[Ref] for Ref in sorted(Item['Ref'], key=self.NaturalKeys) } for Item in Island ]
+  Result.sort(reverse=True, key=len)
+  return Result[1:]
 
 
  def LoadDesc(self, FileName):
@@ -719,7 +772,35 @@ class Validator:
   return Tag.get('official_ref', f"error-{random.randint(0, 9999)}")
 
 
- def GetErrorLine(self, Relation):
+ def ReadOSM(self, Class, R):
+  logger.info(f"read relation {R}")
+  Result, List = {}, {}
+  #
+  Relation = self.OSM.ReadRelation(R)
+  for Member in Relation['members']:
+   match Member['type']:
+    case "node":
+     Item = self.OSM.ReadNode(Member['ref'])
+    case "way":
+     Item = self.OSM.ReadWay(Member['ref'])
+    case "relation":
+     Item = self.OSM.ReadRelation(Member['ref'])
+    case _:
+     logger.error(f"Unknown type = \"{Member['type']}\"")
+   #
+   Ref = self.GetRef(Item['tags'])
+   Custom = { 'class': Class, 'double': Ref in Result }
+   Item['custom'] = Custom
+   #
+   Result[Ref] = Item
+  #
+  return Result
+
+
+ #
+
+
+ def GetErrorLine(self, Key, Relation):
   Result = {}
   Result['Key'] = Key
   Result['Color'] = "#ff9090"
@@ -734,11 +815,29 @@ class Validator:
   if Ru:
    Result['Ru'] = Ru
   #
-  Result['Relation'] = []
-  Result['Relation'] += self.CheckRef(Key)
-  Result['Relation'] += self.CheckRelation(Type)
-  Result['Relation'] += ["'ref' адсутнічае ў Законе"]
+  Result['Error'] = []
+  Result['Error'] += self.CheckRef(Key)
+  Result['Error'] += self.CheckRelation(Type)
+  Result['Error'] += ["'ref' адсутнічае ў Законе"]
   return Result
+
+
+ def GetSeparated(self, Parse):
+  logger.info("Separated")
+  Relations = {}
+  for _, Value in Parse.items():
+   Class, ID = Value['Cyr'], Value['ID']
+   Relations |= self.ReadOSM(Class, ID)
+  #
+  Highways = {}
+  for _, Value in Parse.items():
+   FileName = Value['FileName']
+   Highways |= self.LoadDesc(FileName)
+  #
+  return [ self.GetErrorLine(Key, Relations[Key]) for Key in Relations.keys() - Highways.keys() ]
+
+
+ #
 
 
  def GetLine(self, Class, Key, Value, Relations, Place, Highways):
@@ -807,52 +906,16 @@ class Validator:
   return Result
 
 
- #
-
-
- def ReadOSM(self, Class, R):
-  logger.info(f"Read relation {R}")
-  Result, List = {}, {}
-  #
-  Relation = self.OSM.ReadRelation(R)
-  for Member in Relation['members']:
-   match Member['type']:
-    case "node":
-     Item = self.OSM.ReadNode(Member['ref'])
-    case "way":
-     Item = self.OSM.ReadWay(Member['ref'])
-    case "relation":
-     Item = self.OSM.ReadRelation(Member['ref'])
-    case _:
-     logger.error(f"Unknown type = \"{Member['type']}\"")
-   Item['class'] = Class
-   Ref = self.GetRef(Item['tags'])
-   Item['double'] = Ref in Result
-   Result[Ref] = Item
-  #
-  return Result
-
-
- def GetNotFound(self, Class, Relation, CSV):
-  Result = { i: Relation[i] for i in Relation.keys() - CSV.keys() }
-  return { Key: Value for Key, Value in Result.items() if Value['class'] == Class }
-
-
- def GetOSM(self, Class, FileName, Relations, Place, Highways):
-  logger.info(f"Parse relation {Class}")
-  Result = []
-  #
-  FileName = os.path.join(self.Path, "docs", FileName)
-  Desc = self.LoadDesc(FileName)
-  #
+ def GetOSM(self, Class, Desc, Relations, Place, Highways):
+  logger.info(f"parse relations {Class}")
   self.CountParse = 0
-  Result += [ self.GetLine(Class, Key, Value, Relations, Place, Highways) for Key, Value in Desc.items() ] 
-  Result += [ self.GetErrorLine(Key, Relation) for Key, Relation in self.GetNotFound(Class, Relations, Desc).items()]
+  Result = [ self.GetLine(Class, Key, Value, Relations, Place, Highways) for Key, Value in Desc.items() ] 
   logger.info(f"count parse relation {self.CountParse}")
   return Result
 
 
  def GetHighway(self, Parse):
+  logger.info("Highway")
   Relations = {}
   for _, Value in Parse.items():
    Class, ID = Value['Cyr'], Value['ID']
@@ -867,9 +930,11 @@ class Validator:
   #
   Result = {}
   for Key, Value in Parse.items():
-   Class, Desc, FileName = Value['Cyr'], Value['Desc'], Value['FileName']
-   Item = self.GetOSM(Class, FileName, Relations, Place, Highways)
-   Result[Key] = { 'Desc': Desc, 'List': Item }
+   Class, Description, FileName = Value['Cyr'], Value['Desc'], Value['FileName']
+   FileName = os.path.join(self.Path, "docs", FileName)
+   Desc = self.LoadDesc(FileName)
+   Item = self.GetOSM(Class, Desc, Relations, Place, Highways)
+   Result[Key] = { 'Desc': Description, 'List': Item }
   return Result
 
 

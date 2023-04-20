@@ -1,10 +1,7 @@
-{% extends 'simple.html' %}
-
-
-{% block Highway %}
-{%- for Class, Road in Highway.items() %}
-<div id='{{Class}}'>
- <h3>{{Road['Desc']}}</h3>
+{% block Separated -%}
+<hr />
+<h2>Памылковыя аўтамабільныя дарогі</h2>
+<div id='Separated'>
  <table>
   <thead>
    <tr valign='top'>
@@ -15,8 +12,7 @@
    </tr>
   </thead>
   <tbody>
-{%- for Item in Road['List'] %}
-{%- if Item['Error'] %}
+{%- for Item in Separated %}
    <tr bgcolor='{{Item['Color']}}' valign='top'>
 {%- if Item['Key'][:6] == "error-" %}
     <td>&nbsp;</td>
@@ -31,10 +27,8 @@
     <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
     <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
    </tr>
-{%- endif %}
 {%- endfor %}
   </tbody>
  </table>
 </div>
-{% endfor %}
-{% endblock %}
+{%- endblock %}

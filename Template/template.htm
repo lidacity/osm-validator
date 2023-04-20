@@ -76,15 +76,18 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
   <summary>Спрошчаныя справаздачы</summary>
   <ul>URL:
    <li><a href='http://osm-validator.lidacity.by/index.html'>гэтая старонка, поўны спіс</a></li>
+   <li><a href='http://osm-validator.lidacity.by/highway.html'>спіс аўтамабільных дарог</a></li>
    <li><a href='http://osm-validator.lidacity.by/relation.html'>спіс аўтамабільных дарог, якія адсутнічаюць у osm</a></li>
-   <li><a href='http://osm-validator.lidacity.by/error.html'>спіс аўтамабільных дарог з памылкамі ў osm</a></li>
+   <li><a href='http://osm-validator.lidacity.by/separated.html'>спіс аўтамабільных дарог з памылкамі ў osm</a></li>
+   <li><a href='http://osm-validator.lidacity.by/network.html'>спіс аўтамабільных дарог, якія не злучаныя ў агульную сетку аўтамабільных дарог</a></li>
    <li><a href='http://osm-validator.lidacity.by/missing.html'>спіс дарог, якія не прывязаныя да аўтамабільных дарог</a></li>
   </ul>
   <ul>CSV:
-   <li><a href='http://osm-validator.lidacity.by/index.csv'>агульны спіс аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/highway.csv'>спіс аўтамабільных дарог</a></li>
    <li><a href='http://osm-validator.lidacity.by/relation.csv'>спіс аўтамабільных дарог, якія адсутнічаюць у osm</a></li>
-   <li><a href='http://osm-validator.lidacity.by/error.csv'>спіс аўтамабільных дарог з памылкамі ў osm</a></li>
-   <li><a href='http://osm-validator.lidacity.by/error.html'>спіс дарог, якія не прывязаныя да аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/separated.csv'>спіс аўтамабільных дарог з памылкамі ў osm</a></li>
+   <li><a href='http://osm-validator.lidacity.by/network.csv'>спіс аўтамабільных дарог, якія не злучаныя ў агульную сетку аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/missing.csv'>спіс дарог, якія не прывязаныя да аўтамабільных дарог</a></li>
   </ul>
   <ul>Найменне з заканадаўства ў CSV:
    <li><a href='http://osm-validator.lidacity.by/M.csv'>магістральные аўтамабільныя дарогі</a></li>
@@ -94,13 +97,13 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
  </details>
 </div>
 
-<hr />
-<h2>Аўтамабільныя дарогі</h2>
-{% block Highway%}{% endblock %}
+{% block Highway -%}{%- endblock %}
 
-<hr />
-<h2>Прапушчаныя аўтамабільныя дарогі</h2>
-{% block Missing%}{% endblock %}
+{% block Separated -%}{%- endblock %}
+
+{% block Network -%}{%- endblock %}
+
+{% block Missing -%}{%- endblock %}
 
 <br /><hr />
 <p>

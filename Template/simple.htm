@@ -14,17 +14,19 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
 
 <h1>Республіка Беларусь</h1>
 
-<hr />
-<h2>Аўтамабільныя дарогі</h2>
-{% block Highway%}{% endblock %}
+{% block Highway -%}{%- endblock %}
 
-<hr />
-<h2>Прапушчаныя аўтамабільныя дарогі</h2>
-{% block Missing%}{% endblock %}
+{% block Relation -%}{%- endblock %}
+
+{% block Separated -%}{%- endblock %}
+
+{% block Network -%}{%- endblock %}
+
+{% block Missing -%}{%- endblock %}
 
 <br /><hr />
 <p>
- <font size='-1'>Cтаронка створаная {{DateTime}}</font>
+ <font size='-1'>Cтаронка створаная {{DateTime}} і змяшчае ўсе дадзеныя OSM за перыяд да {{PBFDateTime}}</font>
  <br />
  <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
 </p>

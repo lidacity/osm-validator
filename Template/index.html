@@ -1,7 +1,7 @@
-{% extends 'template.html' %}
+{% extends 'template.htm' %}
 
 
-{% block Law %}
+{% block Law -%}
 {%- if PravoError -%}
   <details open>
 {%- else -%}
@@ -38,117 +38,25 @@
    <hr width='50%' align='left'>
 {%- endfor %}
   </details>
-{% endblock %}
+{%- endblock %}
 
 
-{% block Highway %}
-{%- for Class, Road in Highway.items() %}
-<div id='{{Class}}'>
- <h3>{{Road['Desc']}}</h3>
- <table>
-  <thead>
-   <tr valign='top'>
-    <th>індэкс</th>
-    <th>сувязь</th>
-    <th>найменне</th>
-    <th>памылкі</th>
-   </tr>
-  </thead>
-  <tbody>
-{%- for Item in Road['List'] %}
-   <tr bgcolor='{{Item['Color']}}' valign='top'>
-{%- if Item['Key'][:6] == "error-" %}
-    <td>&nbsp;</td>
-{%- else %}
-    <td><nobr>{{Item['Key']}}</nobr></td>
-{%- endif %}
-{%- if Item['ID'] %}
-    <td><a target='_blank' href='https://openstreetmap.org/{{Item['Type']}}/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='josm://{{Item['Type']}}/{{Item['ID']}}' onclick='return josm("{{Item['Type'][0]}}{{Item['ID']}}");'>josm</a></td>
-{%- else %}
-    <td>&nbsp;</td>
-{%- endif %}
-{%- if Item['Relation'] is defined %}
-    <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
-    <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>
-{%- else %}
-    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
-    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
-{%- endif %}
-   </tr>
-{%- endfor %}
-  </tbody>
- </table>
-</div>
-{% endfor %}
-{% endblock %}
+
+{% block Highway -%}
+{%- include 'highway.htm' -%}
+{%- endblock %}
 
 
-{% block Missing %}
-<div id='Relation'>
- <h3>Невядомыя relation</h3>
- <table>
-  <thead>
-   <tr valign='top'>
-    <th>індэкс</th>
-    <th>сувязь</th>
-    <th>найменне</th>
-    <th>памылкі</th>
-   </tr>
-  </thead>
-  <tbody>
-{%- for Item in Missing['Relations'] %}
-   <tr bgcolor='#ff9090' valign='top'>
-    <td><nobr>{{Item['Key']}}</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='josm://relation/{{Item['ID']}}' onclick='return josm("r{{Item['ID']}}");'>josm</a></td>
-    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
-    <td><nobr>не прывязаны</nobr></td>
-   </tr>
-{%- endfor %}
-  </tbody>
- </table>
-</div>
+{% block Separated -%}
+{%- include 'separated.htm' -%}
+{%- endblock %}
 
-<div id='Way'>
- <h3>Невядомыя way</h3>
- <table>
-  <thead>
-   <tr valign='top'>
-    <th>індэкс</th>
-    <th colspan='2'>сувязь</th>
-    <th>найменне</th>
-    <th>памылкі</th>
-   </tr>
-  </thead>
-  <tbody>
-{%- for Key, Item in Missing['Ways'].items() -%}
-{%- set List = "w" + Item | join(",w") %}
-   <tr bgcolor='#ff9090' valign='top'>
-{%- set Span = Item | length %}
-    <td rowspan='{{Span}}'><nobr>{{Key}}
-{%- if Key in Missing['RelationsForWays'] -%}
-{%- set ID = Missing['RelationsForWays'][Key]['ID'] -%}
-<br /><a target='_blank' href='https://openstreetmap.org/relation/{{ID}}'>osm</a><br /><a target='_josm' href='josm://relation/{{ID}}' onclick='return josm("r{{ID}}");'>josm</a>
-{%- endif %}</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/way/{{Item[0]}}'>osm</a></td>
-    <td rowspan='{{Span}}'><a target='_josm' href='josm://ways/{{List}}' onclick='return josm("{{List}}");'>josm</a></td>
-{%- if Key in Missing['RelationsForWays'] -%}
-{%- set Be = Missing['RelationsForWays'][Key]['Be'] -%}
-{%- set Ru = Missing['RelationsForWays'][Key]['Ru'] %}
-    <td rowspan='{{Span}}'>{{Be}}<br /><font color='gray'>{{Ru}}</font></td>
-{%- else %}
-    <td rowspan='{{Span}}'>&nbsp;</td>
-{%- endif %}
-    <td rowspan='{{Span}}'><nobr>не прывязаны</nobr></td>
-   </tr>
-{%- for ID in Item -%}
-{% if not loop.first %}
-   <tr bgcolor='#ff9090' valign='top'>
-    <td><a target='_blank' href='https://openstreetmap.org/way/{{ID}}'>osm</a></td>
-   </tr>
-{%- endif -%}
-{%- endfor -%}
-{%- endfor %}
-  </tbody>
- </table>
-</div>
-{% endblock %}
+
+{% block Missing -%}
+{%- include 'missing.htm' -%}
+{%- endblock %}
+
+
+{% block Network -%}
+{%- include 'network.htm' -%}
+{%- endblock %}
