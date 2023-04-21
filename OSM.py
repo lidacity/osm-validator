@@ -48,7 +48,7 @@ class Validator:
  def GitPush(self, Message):
   logger.info("Git Push")
   try:
-   repo = git.Repo(self, PathName)
+   repo = git.Repo(self.Path)
    repo.git.add("docs")
    #repo.git.add(update=True)
    repo.index.commit(Message)
