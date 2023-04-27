@@ -320,8 +320,7 @@ class Validator:
   return Result
 
 
- #Words = re.compile(r"\b\w+\b")
- Words = re.compile(r"\b[А-ЯЁЎІ]\w+ [А-ЯЁЎІ]\w+\b|\b\[А-ЯЁЎІ]w+[ -]\d+\b|\b[А-ЯЁЎІ]\w+\b")
+ Words = re.compile(r"\b[А-ЯЁЎІ]\w+[ -][А-ЯЁЎІ]\w+\b|\b[А-ЯЁЎІ]\w+[ -]\d+\b|\b[А-ЯЁЎІ]\w+\b")
 
 
  def CheckPlace(self, Tag, Place):
@@ -334,7 +333,7 @@ class Validator:
      if Name in Bes:
       break
     else:
-     Result.append(f"не супадаюць населеныя пункты у name:be і name:ru")
+     Result.append(f"не супадаюць населеныя пункты у 'name:be' і 'name:ru'")
   return Result
 
 
