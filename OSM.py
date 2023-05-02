@@ -320,7 +320,7 @@ class Validator:
   return Result
 
 
- Words = re.compile(r"\b[А-ЯЁЎІ][\w']+[ -][А-ЯЁЎІ][\w+']\b|\b[А-ЯЁЎІ][\w']+[ -]\d+\b|\b[А-ЯЁЎІ][\w']+\b")
+ Words = re.compile(r"\b[А-ЯЁЎІ][\w']+[ -][А-ЯЁЎІ][\w']+\b|\b[А-ЯЁЎІ][\w']+[ -]\d+\b|\b[А-ЯЁЎІ][\w']+\b")
  #\b[А-ЯЁЎІ][\w']+[ -][А-ЯЁЎІ][\w+']\b = Мар'іна Горка | Буда-Кашалёва
  #\b[А-ЯЁЎІ][\w']+[ -]\d+\b =  Бучамля 1 | Вулька-1
  #\b[А-ЯЁЎІ][\w']+\b = Ліда
@@ -356,8 +356,12 @@ class Validator:
 
  def CheckTagsInWay(self, Tag, Ways):
   Result = []
+  for Way in Ways:
+   if Tag.get('ref', "") != Way['tags'].get('ref', None):
+    Result.append(f"не супадае 'ref' у relation і 'ref' яе ways")
+    break
+  #
   Tags = {
-   'ref': 'ref',
    'official_name': 'name',
    'official_name:be': 'name:be',
    'official_name:ru': 'name:ru',
