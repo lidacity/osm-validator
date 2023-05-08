@@ -461,7 +461,7 @@ class Validator:
     Lengths.append(min(SubLengths))
   #
   if Lengths:
-   if max(Lengths) > 1.0:
+   if max(Lengths) > 3:
     Result.append(f"way занадта разарваны")
   return Result
 
