@@ -423,6 +423,29 @@ class Validator:
   return Result
 
 
+ def CheckCoordPlace(self, Tag, Ways, Coords, Highways):
+  Result = []
+  Name = Tag.get('name:be', "")
+  for Ref in self.GetList(Name, 'ok'):
+   Highway = Highways.get(Ref, "")
+   Name = Name.replace(f"{Ref} {Highway}", f"{Ref}")
+  Names = self.Words.findall(Name)
+  List = set(self.GetListNodes(Ways))
+  CoordsWays = [ (Node['lat'], Node['lon']) for Node in self.OSM.ReadNodes(List) ]
+  for Name in Names:
+   if Name in Coords and not Result:
+    Ok = False
+    for Coord1 in Coords[Name]:
+     if not Ok:
+      for Coord2 in CoordsWays:
+       if haversine(Coord1, Coord2) < 10:
+        Ok = True
+        break
+    if not Ok:
+     Result.append(f"не праходзіць побач з \"{Name}\"")
+  return Result
+
+
  def CheckCross(self, Ways):
   Result = []
   Limits = self.GetLimits(Ways)
@@ -461,7 +484,7 @@ class Validator:
     Lengths.append(min(SubLengths))
   #
   if Lengths:
-   if max(Lengths) > 3:
+   if max(Lengths) > 1.0:
     Result.append(f"way занадта разарваны")
   return Result
 
@@ -584,7 +607,7 @@ class Validator:
 
  def GetPlace(self):
   logger.info("read place")
-  Place = {}
+  Result = {}
   for ID, Value in self.OSM.ExecuteSql("SELECT node_id, value FROM node_tags WHERE key = 'place';"):
    if Value in ["city", "town", "village", "hamlet", "neighbourhood", "locality"]:
     Node = self.OSM.ReadNode(ID)
@@ -592,12 +615,43 @@ class Validator:
     Bes, Rus = self.GetNames(Tag, 'be'), self.GetNames(Tag, 'ru')
     if Bes and Rus:
      for Ru in Rus:
-      if Ru in Place:
+      if Ru in Result:
        for Be in Bes:
-        Place[Ru].add(Be)
+        Result[Ru].add(Be)
       else:
-       Place[Ru] = set(Bes)
-  return Place
+       Result[Ru] = set(Bes)
+  return Result
+
+
+ def GetCoordPlace(self):
+  logger.info("read coord place")
+  Result = {}
+  for ID, Value in self.OSM.ExecuteSql("SELECT node_id, value FROM node_tags WHERE key = 'place';"):
+   if Value in ["city", "town", "village", "hamlet", "neighbourhood", "locality"]:
+    Node = self.OSM.ReadNode(ID)
+    Coord = (Node['lat'], Node['lon'])
+    Tag = Node['tags']
+    Bes = self.GetNames(Tag, 'be')
+    if Bes:
+     for Be in Bes:
+      if Be not in Result:
+       Result[Be] = set()
+      Result[Be].add(Coord)
+  return Result
+
+
+ def GetHighways(self, Name='name:be'):
+  logger.info("read highways description")
+  Result = {}
+  for ID, Value in self.OSM.ExecuteSql("SELECT relation_id, value FROM relation_tags WHERE key = 'type';"):
+   if Value == "route":
+    Relation = self.OSM.ReadRelation(ID)
+    Tag = Relation['tags']
+    if Tag.get('route', "") == "road":
+     if 'official_ref' in Tag:
+      Ref = Tag['official_ref']
+      Result[Ref] = Tag.get(Name, "")
+  return Result
 
 
  def GetNormalizeRef(self, Ref):
@@ -779,7 +833,7 @@ class Validator:
 
 
  def ReadOSM(self, Class, R):
-  logger.info(f"read relation {R}")
+  #logger.info(f"read relation {R}")
   Result, List = {}, {}
   #
   Relation = self.OSM.ReadRelation(R)
@@ -846,7 +900,7 @@ class Validator:
  #
 
 
- def GetLine(self, Class, Key, Value, Relations, Place, Highways):
+ def GetLine(self, Class, Key, Value, Relations, Place, Coords, Highways, HighwaysBe):
   Result = {}
   Result['Key'] = Key
   Relation = Relations.get(Key, {})
@@ -893,6 +947,7 @@ class Validator:
     Result['Error'] += self.CheckHighway(Ways)
     Result['Error'] += self.CheckDoubleWay(Ways)
     Result['Error'] += self.CheckDoubleRelation(Ways, Relations)
+    Result['Error'] += self.CheckCoordPlace(Tag, Ways, Coords, HighwaysBe)
    #
    Ways = self.GetWays(Relation, Role=["", "route", "forward"]) #"backward"
    if Ways:
@@ -912,10 +967,10 @@ class Validator:
   return Result
 
 
- def GetOSM(self, Class, Desc, Relations, Place, Highways):
+ def GetOSM(self, Class, Desc, Relations, Place, Coords, Highways, HighwaysBe):
   logger.info(f"parse relations {Class}")
   self.CountParse = 0
-  Result = [ self.GetLine(Class, Key, Value, Relations, Place, Highways) for Key, Value in Desc.items() ] 
+  Result = [ self.GetLine(Class, Key, Value, Relations, Place, Coords, Highways, HighwaysBe) for Key, Value in Desc.items() ] 
   logger.info(f"count parse relation {self.CountParse}")
   return Result
 
@@ -928,6 +983,8 @@ class Validator:
    Relations |= self.ReadOSM(Class, ID)
   #
   Place = self.GetPlace()
+  Coords = self.GetCoordPlace()
+  HighwaysBe = self.GetHighways()
   #
   Highways = {}
   for _, Value in Parse.items():
@@ -939,7 +996,7 @@ class Validator:
    Class, Description, FileName = Value['Cyr'], Value['Desc'], Value['FileName']
    FileName = os.path.join(self.Path, "docs", FileName)
    Desc = self.LoadDesc(FileName)
-   Item = self.GetOSM(Class, Desc, Relations, Place, Highways)
+   Item = self.GetOSM(Class, Desc, Relations, Place, Coords, Highways, HighwaysBe)
    Result[Key] = { 'Desc': Description, 'List': Item }
   return Result
 
