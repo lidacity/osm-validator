@@ -110,8 +110,8 @@ class Validator:
 
  def CheckBe(self, Tag):
   Result = []
-  Name = Tag.get('name', None)
-  Be = Tag.get('name:be', None)
+  Name = self.GetName(Tag, 'name')
+  Be = self.GetName(Tag, 'name:be')
   if Name != Be:
    Result.append(f"'name:be' не роўны 'name'")
   return Result
@@ -119,8 +119,8 @@ class Validator:
 
  def CheckRu(self, Tag, Name):
   Result = []
-  Ru = Tag.get('name:ru', "")
-  if Name[:254] != Ru[:254]:
+  Ru = self.GetName(Tag, 'name:ru')
+  if Name != Ru:
    Result.append(f"'name:ru' не супадае з Законам")
   return Result
 
@@ -189,9 +189,9 @@ class Validator:
 
  def CheckLength(self, Tag):
   Result = []
-  Be = len(Tag.get('name:be', ""))
-  Ru = len(Tag.get('name:ru', ""))
-  if abs(Be - Ru) > 18:
+  Be = self.GetName(Tag, 'name:be')
+  Ru = self.GetName(Tag, 'name:ru')
+  if abs(len(Be) - len(Ru)) > 18:
    Result.append(f"розніца паміж даўжынёй 'name:be' і 'name:ru'")
   return Result
 
@@ -328,7 +328,7 @@ class Validator:
 
  def CheckPlace(self, Tag, Place):
   Result = []
-  Be, Ru = Tag.get('name:be', ""), Tag.get('name:ru', "")
+  Be, Ru = self.GetName(Tag, 'name:be'), self.GetName(Tag, 'name:ru')
   Bes, Rus = self.Words.findall(Be), self.Words.findall(Ru)
   for Ru in Rus:
    if Ru in Place and not Result:
@@ -425,7 +425,7 @@ class Validator:
 
  def CheckCoordPlace(self, Tag, Ways, Coords, Highways):
   Result = []
-  Name = Tag.get('name:be', "")
+  Name = self.GetName(Tag, 'name:be')
   for Ref in self.GetList(Name, 'ok'):
    Highway = Highways.get(Ref, "")
    Name = Name.replace(f"{Ref} {Highway}", f"{Ref}")
@@ -602,6 +602,15 @@ class Validator:
   return [Name.strip() for Name in Names.split(";") if Name]
 
 
+ def GetName(self, Tag, Name, Default=""):
+  Result = Tag.get(Name, Default)
+  i = 2
+  while f"{Name}#i" in Tag:
+   Result += Tag[f"{Name}#i"]
+   i += 1
+  return Result.replace("…", "")
+
+
  #
 
 
@@ -640,20 +649,6 @@ class Validator:
   return Result
 
 
- def GetHighways(self, Name='name:be'):
-  logger.info("read highways description")
-  Result = {}
-  for ID, Value in self.OSM.ExecuteSql("SELECT relation_id, value FROM relation_tags WHERE key = 'type';"):
-   if Value == "route":
-    Relation = self.OSM.ReadRelation(ID)
-    Tag = Relation['tags']
-    if Tag.get('route', "") == "road":
-     if 'official_ref' in Tag:
-      Ref = Tag['official_ref']
-      Result[Ref] = Tag.get(Name, "")
-  return Result
-
-
  def GetNormalizeRef(self, Ref):
   Result = Ref
   if Result[0:1] in "МРН" and Result[1:2] in "0123456789":
@@ -666,6 +661,19 @@ class Validator:
      return Result.replace("Н", "Н-")
     case _:
      return None
+
+
+ def GetHighways(self, Name='name:be'):
+  logger.info("read highways description")
+  Result = {}
+  for ID, _ in self.OSM.ExecuteSql("SELECT relation_id, value FROM relation_tags WHERE key = 'route';"):
+   Relation = self.OSM.ReadRelation(ID)
+   Tag = Relation['tags']
+   if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
+    if 'official_ref' in Tag:
+     Ref = Tag['official_ref']
+     Result[Ref] = self.GetName(Tag, Name)
+  return Result
 
 
  def LoadWays(self):
@@ -688,7 +696,7 @@ class Validator:
    Relation = self.OSM.ReadRelation(ID)
    Tag = Relation['tags']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
-    Result[ID] = { 'official_ref': Tag.get('official_ref', "невядома"), 'ref': Tag.get('ref', ""), 'be': Tag.get('name:be', ""), 'ru': Tag.get('name:ru', ""), 'members': Relation['members'] }
+    Result[ID] = { 'official_ref': Tag.get('official_ref', "невядома"), 'ref': Tag.get('ref', ""), 'be': self.GetName(Tag, 'name:be'), 'ru': self.GetName(Tag, 'name:ru'), 'members': Relation['members'] }
   return Result
 
 
@@ -868,10 +876,10 @@ class Validator:
   Type = Relation['type']
   Result['Type'] = Type
   Result['ID'] = Relation.get('id', None)
-  Be = Tag.get('name', "")
+  Be = self.GetName(Tag, 'name')
   if Be:
    Result['Be'] = Be
-  Ru = Tag.get('name:ru', "")
+  Ru = self.GetName(Tag, 'name:ru')
   if Ru:
    Result['Ru'] = Ru
   #
@@ -910,10 +918,10 @@ class Validator:
    Result['Type'] = Type
    Result['ID'] = Relation['id']
    Tag = Relation['tags']
-   Be = Tag.get('name', "")
+   Be = self.GetName(Tag, 'name')
    if Be:
     Result['Be'] = Be
-   Ru = Tag.get('name:ru', "")
+   Ru = self.GetName(Tag, 'name:ru')
    if Ru:
     Result['Ru'] = Ru
    #
