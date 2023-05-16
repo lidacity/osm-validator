@@ -1,7 +1,10 @@
 {% block Missing -%}
+
+{%- if Missing['Relations'] or Missing['Ways'] %}
 <hr />
 <h2>Прапушчаныя аўтамабільныя дарогі</h2>
 
+{%- if Missing['Relations'] %}
 <div id='Relation'>
  <h3>Невядомыя relation</h3>
  <table>
@@ -25,7 +28,9 @@
   </tbody>
  </table>
 </div>
+{%- endif %}
 
+{%- if Missing['Ways'] %}
 <div id='Way'>
  <h3>Невядомыя way</h3>
  <table>
@@ -69,4 +74,9 @@
   </tbody>
  </table>
 </div>
+{%- endif %}
+{%- else %}
+<!-- Missing усё добра -->
+{%- endif %}
+
 {%- endblock %}

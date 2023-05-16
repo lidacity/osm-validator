@@ -1,4 +1,6 @@
 {% block Separated -%}
+
+{%- if Separated %}
 <hr />
 <h2>Памылковыя аўтамабільныя дарогі</h2>
 <div id='Separated'>
@@ -31,4 +33,8 @@
   </tbody>
  </table>
 </div>
+{%- else %}
+<!-- Separated усё добра -->
+{%- endif %}
+
 {%- endblock %}

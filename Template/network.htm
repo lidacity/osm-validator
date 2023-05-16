@@ -1,4 +1,6 @@
 {% block Network -%}
+
+{%- if Network %}
 <hr />
 <h2>Разарваная сетка аўтамабільных дарог</h2>
 <div id='Network'>
@@ -32,4 +34,8 @@
  </table>
 {%- endfor -%}
 </div>
+{%- else %}
+<!-- Network усё добра -->
+{%- endif %}
+
 {%- endblock %}

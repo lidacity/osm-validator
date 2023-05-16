@@ -1,4 +1,6 @@
 {% block Relation -%}
+
+{%- if Highway %}
 <hr />
 <h2>Не створаныя аўтамабільныя дарогі</h2>
 {%- for Class, Road in Highway.items() %}
@@ -28,4 +30,8 @@
  </table>
 </div>
 {%- endfor %}
+{%- else %}
+<!-- Relation усё добра -->
+{%- endif %}
+
 {%- endblock %}

@@ -1,4 +1,6 @@
 {% block Highway -%}
+
+{%- if Highway %}
 <hr />
 <h2>Аўтамабільныя дарогі</h2>
 {%- for Class, Road in Highway.items() %}
@@ -39,4 +41,8 @@
  </table>
 </div>
 {%- endfor %}
+{%- else %}
+<!-- Highway усё добра -->
+{%- endif %}
+
 {%- endblock %}
