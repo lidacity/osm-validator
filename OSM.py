@@ -110,8 +110,8 @@ class Validator:
 
  def CheckBe(self, Tag):
   Result = []
-  Name = self.GetName(Tag, 'name')
-  Be = self.GetName(Tag, 'name:be')
+  Name = self.JoinName(Tag, 'name')
+  Be = self.JoinName(Tag, 'name:be')
   if Name != Be:
    Result.append(f"'name:be' не роўны 'name'")
   return Result
@@ -119,7 +119,7 @@ class Validator:
 
  def CheckRu(self, Tag, Name):
   Result = []
-  Ru = self.GetName(Tag, 'name:ru')
+  Ru = self.JoinName(Tag, 'name:ru')
   if Name != Ru:
    Result.append(f"'name:ru' не супадае з Законам")
   return Result
@@ -189,8 +189,8 @@ class Validator:
 
  def CheckLength(self, Tag):
   Result = []
-  Be = self.GetName(Tag, 'name:be')
-  Ru = self.GetName(Tag, 'name:ru')
+  Be = self.JoinName(Tag, 'name:be')
+  Ru = self.JoinName(Tag, 'name:ru')
   if abs(len(Be) - len(Ru)) > 18:
    Result.append(f"розніца паміж даўжынёй 'name:be' і 'name:ru'")
   return Result
@@ -328,7 +328,7 @@ class Validator:
 
  def CheckPlace(self, Tag, Place):
   Result = []
-  Be, Ru = self.GetName(Tag, 'name:be'), self.GetName(Tag, 'name:ru')
+  Be, Ru = self.JoinName(Tag, 'name:be'), self.JoinName(Tag, 'name:ru')
   Bes, Rus = self.Words.findall(Be), self.Words.findall(Ru)
   for Ru in Rus:
    if Ru in Place and not Result:
@@ -425,7 +425,7 @@ class Validator:
 
  def CheckCoordPlace(self, Tag, Ways, Coords, Highways):
   Result = []
-  Name = self.GetName(Tag, 'name:be')
+  Name = self.JoinName(Tag, 'name:be')
   for Ref in self.GetList(Name, 'ok'):
    Highway = Highways.get(Ref, "")
    Name = Name.replace(f"{Ref} {Highway}", f"{Ref}")
@@ -602,13 +602,35 @@ class Validator:
   return [Name.strip() for Name in Names.split(";") if Name]
 
 
- def GetName(self, Tag, Name, Default=""):
+ def SplitName(self, S, Name='name'):
+  Result = {}
+  #
+  while len(S) > 0:
+   Count = 253 if Result else 254
+   T = S[:Count]
+   if Result:
+    T = f"…{T}"
+   if len(T) == 254:
+    T = f"{T}…"
+   S = S[Count:]
+   #
+   if Result:
+    Index = len(Result) + 1
+    Key = f"{Name}#{Index}"
+   else:
+    Key = f"{Name}"
+   # 
+   Result[Key] = T
+  return Result 
+
+
+ def JoinName(self, Tag, Name="name", Default=""):
   Result = Tag.get(Name, Default)
   i = 2
-  while f"{Name}#i" in Tag:
-   Result += Tag[f"{Name}#i"]
+  while f"{Name}#{i}" in Tag:
+   Result += Tag[f"{Name}#{i}"]
    i += 1
-  return Result.replace("…", "")
+  return Result.replace("……", "")
 
 
  #
@@ -672,7 +694,7 @@ class Validator:
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
     if 'official_ref' in Tag:
      Ref = Tag['official_ref']
-     Result[Ref] = self.GetName(Tag, Name)
+     Result[Ref] = self.JoinName(Tag, Name)
   return Result
 
 
@@ -696,7 +718,7 @@ class Validator:
    Relation = self.OSM.ReadRelation(ID)
    Tag = Relation['tags']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
-    Result[ID] = { 'official_ref': Tag.get('official_ref', "невядома"), 'ref': Tag.get('ref', ""), 'be': self.GetName(Tag, 'name:be'), 'ru': self.GetName(Tag, 'name:ru'), 'members': Relation['members'] }
+    Result[ID] = { 'official_ref': Tag.get('official_ref', "невядома"), 'ref': Tag.get('ref', ""), 'be': self.JoinName(Tag, 'name:be'), 'ru': self.JoinName(Tag, 'name:ru'), 'members': Relation['members'] }
   return Result
 
 
@@ -876,10 +898,10 @@ class Validator:
   Type = Relation['type']
   Result['Type'] = Type
   Result['ID'] = Relation.get('id', None)
-  Be = self.GetName(Tag, 'name')
+  Be = self.JoinName(Tag, 'name')
   if Be:
    Result['Be'] = Be
-  Ru = self.GetName(Tag, 'name:ru')
+  Ru = self.JoinName(Tag, 'name:ru')
   if Ru:
    Result['Ru'] = Ru
   #
@@ -918,10 +940,10 @@ class Validator:
    Result['Type'] = Type
    Result['ID'] = Relation['id']
    Tag = Relation['tags']
-   Be = self.GetName(Tag, 'name')
+   Be = self.JoinName(Tag, 'name')
    if Be:
     Result['Be'] = Be
-   Ru = self.GetName(Tag, 'name:ru')
+   Ru = self.JoinName(Tag, 'name:ru')
    if Ru:
     Result['Ru'] = Ru
    #
