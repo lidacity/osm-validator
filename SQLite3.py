@@ -178,7 +178,7 @@ class OsmPbf:
    Relation = {'type': "relation", 'id': RelationID[0], }
    Cursor.execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", RelationID)
    Relation['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", RelationID)
+   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", [RelationID])
    Relation['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in Cursor.fetchall() ]
    Result.append(Relation)
   return Result
@@ -239,7 +239,7 @@ class OsmPbf:
    Relation = {'type': "relation", 'id': RelationID[0], }
    Cursor.execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", RelationID)
    Relation['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", RelationID)
+   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", [RelationID])
    Relation['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in Cursor.fetchall() ]
    Result.append(Relation)
   return Result
@@ -286,7 +286,7 @@ class OsmPbf:
    Relation = {'type': "relation", 'id': RelationID[0], }
    Cursor.execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", RelationID)
    Relation['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", RelationID)
+   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", [RelationID])
    Relation['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in Cursor.fetchall() ]
    Result.append(Relation)
   return Result
@@ -301,3 +301,20 @@ class OsmPbf:
   Cursor = self.DB.cursor()
   Cursor.execute(SQL, Params)
   return Cursor.fetchall()
+
+
+ def GetNodeKey(self, Key):
+  return self.ExecuteSql("SELECT node_id, key, value FROM node_tags WHERE key = ?;", Params=[Key])
+
+
+ def GetWayKey(self, Key):
+  return self.ExecuteSql("SELECT way_id, key, value FROM way_tags WHERE key = ?;", Params=[Key])
+
+
+ def GetRelationKey(self, Key):
+  return self.ExecuteSql("SELECT relation_id, key, value FROM relation_tags WHERE key = ?;", Params=[Key])
+
+
+ def GetRelationMembers(self, ID):
+  return self.ExecuteSql("SELECT type, ref, role FROM relation_members WHERE relation_id = ? AND type = 'relation' ORDER BY member_order;", Params=[ID])
+

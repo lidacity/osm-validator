@@ -639,7 +639,7 @@ class Validator:
  def GetPlace(self):
   logger.info("read place")
   Result = {}
-  for ID, Value in self.OSM.ExecuteSql("SELECT node_id, value FROM node_tags WHERE key = 'place';"):
+  for ID, _, Value in self.OSM.GetNodeKey('place'):
    if Value in ["city", "town", "village", "hamlet", "neighbourhood", "locality"]:
     Node = self.OSM.ReadNode(ID)
     Tag = Node['tags']
@@ -657,7 +657,7 @@ class Validator:
  def GetCoordPlace(self):
   logger.info("read coord place")
   Result = {}
-  for ID, Value in self.OSM.ExecuteSql("SELECT node_id, value FROM node_tags WHERE key = 'place';"):
+  for ID, _, Value in self.OSM.GetNodeKey('place'):
    if Value in ["city", "town", "village", "hamlet", "neighbourhood", "locality"]:
     Node = self.OSM.ReadNode(ID)
     Coord = (Node['lat'], Node['lon'])
@@ -688,7 +688,7 @@ class Validator:
  def GetHighways(self, Name='name:be'):
   logger.info("read highways description")
   Result = {}
-  for ID, _ in self.OSM.ExecuteSql("SELECT relation_id, value FROM relation_tags WHERE key = 'route';"):
+  for ID, _, _ in self.OSM.GetRelationKey('route'):
    Relation = self.OSM.ReadRelation(ID)
    Tag = Relation['tags']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
@@ -701,7 +701,7 @@ class Validator:
  def LoadWays(self):
   #logger.info("missing: load ways")
   Result = {}
-  for ID, _ in self.OSM.ExecuteSql("SELECT way_id, value FROM way_tags WHERE key = 'ref';"):
+  for ID, _, _ in self.OSM.GetWayKey('ref'):
    Way = self.OSM.ReadWay(ID)
    Tag = Way['tags']
    if ('highway' in Tag or 'ferry' in Tag) and 'ref' in Tag:
@@ -714,7 +714,7 @@ class Validator:
  def LoadRelations(self):
   #logger.info("missing: load relations")
   Result = {}
-  for ID, _ in self.OSM.ExecuteSql("SELECT relation_id, value FROM relation_tags WHERE key = 'route';"):
+  for ID, _, _ in self.OSM.GetRelationKey('route'):
    Relation = self.OSM.ReadRelation(ID)
    Tag = Relation['tags']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
@@ -722,11 +722,11 @@ class Validator:
   return Result
 
 
- def LoadRelationsID(self):
+ def LoadRelationsID(self, List):
   #logger.info("missing: load relations id")
   Result = []
-  for ID in [1246287, 1246288, 1246286]:
-   for _, Ref, _ in self.OSM.ExecuteSql("SELECT type, ref, role FROM relation_members WHERE relation_id = ? AND type = 'relation' ORDER BY member_order;", Params=[ID]):
+  for ID in List:
+   for _, Ref, _ in self.OSM.GetRelationMembers(ID):
     Result.append(Ref)
   return Result
 
@@ -783,12 +783,12 @@ class Validator:
   return Result
 
 
- def GetMissing(self):
+ def GetMissing(self, List):
   logger.info("Missing")
   Result = {}
   Ways = self.LoadWays()
   Relations = self.LoadRelations()
-  RelationsID = self.LoadRelationsID()
+  RelationsID = self.LoadRelationsID(List)
   WaysID = self.GetWaysID(Relations, RelationsID)
   RelationOk = self.GetRelationOk(Relations, RelationsID)
   MissingRelations = self.GetMissingRelation(Relations, RelationsID)
