@@ -2,10 +2,7 @@
 {%- for Item in Road['List'] -%}
 {%- if Item['Key'][:6] != "error-" -%}{{Item['Key']}}{%- endif -%};
 {%- if Item['ID'] -%}{{Item['Type'][0]}}{{Item['ID']}}{%- endif -%};
-{%- if Item['Relation'] is defined -%}
-;{{Item['Ru']}};{{"|".join(Item['Relation'])}}
-{%- else -%}
-{{Item['Be']}};{{Item['Ru']}};{{"|".join(Item['Error'])}}
-{%- endif %}
+{%- if Item['ID'] -%}{{Item['Be']}}{%- endif -%};{{Item['Ru']}};
+{{- "|".join(Item['Error']) }}
 {% endfor %}
 {%- endfor %}

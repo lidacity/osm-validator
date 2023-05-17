@@ -34,6 +34,7 @@ Context = {}
 
 #Context['PravoError'], Context['Pravo'] = False, []
 #Context['Highway'] = {}
+#Context['Relation'] = {}
 #Context['Separated'] = []
 #Context['Missing'] = { 'Relations': [], 'Ways': {}, 'RelationsForWays': {} }
 #Context['Network'] = {}
@@ -41,7 +42,9 @@ Context = {}
 #Context['DateTime'] = Validator.GetNow()
 
 Context['PravoError'], Context['Pravo'] = GetPravo()
-Context['Highway'] = Validator.GetHighway(Check)
+Highway = Validator.GetHighway(Check)
+Context['Highway'] = Highway
+Context['Relation'] = Validator.GetRelation(Highway)
 Context['Separated'] = Validator.GetSeparated(Check)
 Context['Missing'] = Validator.GetMissing()
 Network = Validator.GetNetwork(Check, False)

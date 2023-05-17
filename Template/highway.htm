@@ -25,16 +25,12 @@
 {%- endif %}
 {%- if Item['ID'] %}
     <td><a target='_blank' href='https://openstreetmap.org/{{Item['Type']}}/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='josm://{{Item['Type']}}/{{Item['ID']}}' onclick='return josm("{{Item['Type'][0]}}{{Item['ID']}}");'>josm</a></td>
+    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
 {%- else %}
     <td>&nbsp;</td>
-{%- endif %}
-{%- if Item['Relation'] is defined %}
     <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
-    <td><nobr>{{"<br />".join(Item['Relation'])}}</nobr></td>
-{%- else %}
-    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
-    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
 {%- endif %}
+    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
    </tr>
 {%- endfor %}
   </tbody>

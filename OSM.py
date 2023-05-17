@@ -989,7 +989,7 @@ class Validator:
   else:
    Result['Color'] = "#d6e090"
    Result['Ru'] = Value['Desc']
-   Result['Relation'] = ["relation адсутнічае"]
+   Result['Error'] = ["relation адсутнічае"]
   #
   self.CountParse += 1
   if self.CountParse % 1000 == 0:
@@ -1028,6 +1028,18 @@ class Validator:
    Desc = self.LoadDesc(FileName)
    Item = self.GetOSM(Class, Desc, Relations, Place, Coords, Highways, HighwaysBe)
    Result[Key] = { 'Desc': Description, 'List': Item }
+  return Result
+
+
+ def GetRelation(self, Highway):
+  Result = {}
+  for Class, Roads in Highway.items():
+   Item = []
+   for Road in Roads['List']:
+    if 'ID' not in Road and Road['Key'][:6] != "error-":
+     Item.append(Road)
+   if Item:
+    Result[Class] = { 'Desc': Roads['Desc'], 'List': Item }
   return Result
 
 

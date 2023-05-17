@@ -1,7 +1,5 @@
-{%- for Class, Road in Highway.items() -%}
+{%- for Class, Road in Relation.items() -%}
 {%- for Item in Road['List'] -%}
-{%- if Item['Relation'] is defined and Item['Key'][:6] != "error-" -%}
-{{Item['Key']}};;{{Item['Ru']}};{{"|".join(Item['Relation'])}}
-{% endif -%}
-{%- endfor -%}
+{{Item['Key']}};;{{Item['Ru']}};{{"|".join(Item['Error'])}}
+{% endfor -%}
 {%- endfor %}
