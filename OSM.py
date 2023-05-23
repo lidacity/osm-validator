@@ -152,7 +152,7 @@ class Validator:
   Result = []
   for TagName in ['name:be', 'name:ru']:
    if TagName in Tag:
-    S = Tag[TagName]
+    S = self.JoinName(Tag, TagName)
     for Key, Value in self.Replace.items():
      S = S.replace(Key, Value)
     for _, Value in self.Wrong.items():
@@ -175,7 +175,7 @@ class Validator:
   for TagName in ['name:be', 'name:ru']:
    if TagName in Tag:
     Split = self.Pair['Split']
-    Check = "".join(Split(Tag[TagName]))
+    Check = "".join(Split(self.JoinName(Tag, TagName)))
     if Check:
      S = ""
      while Check != S:
@@ -209,7 +209,7 @@ class Validator:
   Result = []
   for TagName in ['name:ru', 'name:be']:
    if TagName in Tag:
-    Line = Tag[TagName].lower()
+    Line = self.JoinName(Tag, TagName).lower()
     Imp = self.Impossible[TagName](Line)
     if Imp:
      Result.append(f"у '{TagName}' немагчымае спалучэнне \"{Imp[0]}\"")
@@ -238,7 +238,7 @@ class Validator:
   Refs = { 'name:be': [], 'name:ru': [] }
   for TagName in ['name:be', 'name:ru']:
    if TagName in Tag:
-    for Ref in self.GetList(Tag[TagName], 'ok'):
+    for Ref in self.GetList(self.JoinName(Tag, TagName), 'ok'):
      Refs[TagName].append(Ref)
   if Counter(Refs['name:be']) != Counter(Refs['name:ru']):
    Result.append(f"у 'name:be' і 'name:ru' не аднолькавыя 'ref'")
@@ -250,7 +250,7 @@ class Validator:
   Tag = Relation['tags']
   for TagName in ['name:be', 'name:ru']:
    if TagName in Tag:
-    if self.GetList(Tag[TagName], 'bad'):
+    if self.GetList(self.JoinName(Tag, TagName), 'bad'):
      Result.append(f"у '{TagName}' не вызначаны 'ref'")
   return Result
 
@@ -277,18 +277,18 @@ class Validator:
   Tag = Relation['tags']
   for TagName in ['name:be', 'name:ru']:
    if TagName in Tag:
-    for Ref in self.GetList(Tag[TagName], 'ok'):
+    for Ref in self.GetList(self.JoinName(Tag, TagName), 'ok'):
      if Ref in Relations:
-      for Index in self.GetIndex(Tag[TagName], Ref):
+      for Index in self.GetIndex(self.JoinName(Tag, TagName), Ref):
        Tag2 = Relations[Ref]['tags'] # з агульнага спісу аўтадарог
        if TagName in Tag2:
         I = Index + len(Ref) + 1
         S2 = Tag2[TagName] # з агульнага спісу аўтадарог
         S = Tag[TagName][I:I+len(S2)]
-        Len = len(S2) - (1 if S2[-1:] == "…" else 0)
+        Len = len(S2)# - (1 if S2[-1:] == "…" else 0)
         if Len == 0:
          Len = len(S2)
-        if S2[:Len] != S[:Len] and not self.ExcludeRef(Tag[TagName], I):
+        if S2[:Len] != S[:Len] and not self.ExcludeRef(self.JoinName(Tag, TagName), I):
          Result.append(f"\"{Ref}\" не адпавядае найменню ў '{TagName}'")
          break
      else:
