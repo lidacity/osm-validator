@@ -288,7 +288,7 @@ class Validator:
         Len = len(S2)# - (1 if S2[-1:] == "…" else 0)
         if Len == 0:
          Len = len(S2)
-        if S2[:Len] != S[:Len] and not self.ExcludeRef(self.JoinName(Tag, TagName), I):
+        if S2[:Len] != S[:Len] and not self.ExcludeRef(self.JoinName(Tag, TagName), I) and S[:2] not in ["от", "ад"]:
          Result.append(f"\"{Ref}\" не адпавядае найменню ў '{TagName}'")
          break
      else:
@@ -405,6 +405,27 @@ class Validator:
   c = Counter([Way['id'] for Way in Ways])
   if max(c.values()) > 1:
    Result.append(f"падвоеныя way")
+  return Result
+
+
+WayNameBe = ["праспект", "вуліца", "завулак", "плошча", "бульвар", "шаша", "тракт", "алея", "тупік", "сквер", "парк", "праезд", "уезд", "раз'езд", "спуск", "набярэжная", "кальцо", "мікрараён", "квартал", "тэрыторыя", "МКАД", "МКАД-2", "мост", "пуцеправод"]
+WayNameRu = ["проспект", "улица", "переулок", "площадь", "бульвар", "шоссе", "тракт", "аллея", "тупик", "сквер", "парк", "проезд", "въезд", "разъезд", "спуск", "набережная", "кольцо", "микрорайон", "квартал", "территория", "МКАД", "МКАД-2", "мост", "путепровод"]
+ WayName = {
+  'name': set(WayNameBe),
+  'name:be': set(WayNameBe),
+  'name:ru': set(WayNameRu),
+ }
+
+
+ def CheckName(self, Ways):
+  Result = []
+  for Way in Ways:
+   Tag = Way['tags']
+   for TagName in ['name', 'name:be', 'name:ru']:
+    Name = self.JoinName(Tag, TagName)
+    if Name and not set(Name.split()) & self.WayName[TagName]:
+     Result.append(f"way змяшчае недапушчальны '{TagName}'")
+     return Result
   return Result
 
 
@@ -976,6 +997,7 @@ class Validator:
     Result['Error'] += self.CheckFixme(Ways)
     Result['Error'] += self.CheckHighway(Ways)
     Result['Error'] += self.CheckDoubleWay(Ways)
+    Result['Error'] += self.CheckName(Ways)
     Result['Error'] += self.CheckDoubleRelation(Ways, Relations)
     Result['Error'] += self.CheckCoordPlace(Tag, Ways, Coords, HighwaysBe)
    #
