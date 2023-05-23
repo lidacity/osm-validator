@@ -1,0 +1,44 @@
+{% block Error -%}
+
+{%- if Error %}
+<hr />
+<h2>Аўтамабільныя дарогі</h2>
+{%- for Class, Road in Error.items() %}
+<div id='{{Class}}'>
+ <h3>{{Road['Desc']}}</h3>
+ <table>
+  <thead>
+   <tr valign='top'>
+    <th>індэкс</th>
+    <th>сувязь</th>
+    <th>найменне</th>
+    <th>памылкі</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Item in Road['List'] %}
+   <tr bgcolor='{{Item['Color']}}' valign='top'>
+{%- if Item['Key'][:6] == "error-" %}
+    <td>&nbsp;</td>
+{%- else %}
+    <td><nobr>{{Item['Key']}}</nobr></td>
+{%- endif %}
+{%- if Item['ID'] %}
+    <td><a target='_blank' href='https://openstreetmap.org/{{Item['Type']}}/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='josm://{{Item['Type']}}/{{Item['ID']}}' onclick='return josm("{{Item['Type'][0]}}{{Item['ID']}}");'>josm</a></td>
+    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
+{%- else %}
+    <td>&nbsp;</td>
+    <td><font color='gray'><i>{{Item['Ru']}}<i></font></td>
+{%- endif %}
+    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
+   </tr>
+{%- endfor %}
+  </tbody>
+ </table>
+</div>
+{%- endfor %}
+{%- else %}
+<!-- Error усё добра -->
+{%- endif %}
+
+{%- endblock %}

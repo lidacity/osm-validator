@@ -27,7 +27,7 @@ Check = {
  'H': { 'Cyr': "Н", 'Lat': "H", 'ID': 1246286, 'FileName': "H.csv", 'Main': False, 'Desc': "Мясцовыя аўтамабільныя дарогі" },
 }
 
-List = ["index", "highway", "relation", "separated", "network", "missing"]
+List = ["index", "highway", "error", "relation", "separated", "network", "missing"]
 
 Validator = Validator()
 Context = {}
@@ -44,6 +44,7 @@ Context = {}
 Context['PravoError'], Context['Pravo'] = GetPravo()
 Highway = Validator.GetHighway(Check)
 Context['Highway'] = Highway
+Context['Error'] = Validator.GetError(Highway)
 Context['Relation'] = Validator.GetRelation(Highway)
 Context['Separated'] = Validator.GetSeparated(Check)
 Context['Missing'] = Validator.GetMissing([Item['ID'] for _, Item in Check.items()])

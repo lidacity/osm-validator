@@ -1026,20 +1026,33 @@ class Validator:
    Class, Description, FileName = Value['Cyr'], Value['Desc'], Value['FileName']
    FileName = os.path.join(self.Path, "docs", FileName)
    Desc = self.LoadDesc(FileName)
-   Item = self.GetOSM(Class, Desc, Relations, Place, Coords, Highways, HighwaysBe)
-   Result[Key] = { 'Desc': Description, 'List': Item }
+   Items = self.GetOSM(Class, Desc, Relations, Place, Coords, Highways, HighwaysBe)
+   Result[Key] = { 'Desc': Description, 'List': Items }
+  return Result
+
+
+ def GetError(self, Highway):
+  logger.info("Error highway")
+  Result = {}
+  for Class, Roads in Highway.items():
+   Items = []
+   for Road in Roads['List']:
+    if 'ID' in Road and Road['Error']:
+     Items.append(Road)
+   if Items:
+    Result[Class] = { 'Desc': Roads['Desc'], 'List': Items }
   return Result
 
 
  def GetRelation(self, Highway):
   Result = {}
   for Class, Roads in Highway.items():
-   Item = []
+   Items = []
    for Road in Roads['List']:
     if 'ID' not in Road and Road['Key'][:6] != "error-":
-     Item.append(Road)
-   if Item:
-    Result[Class] = { 'Desc': Roads['Desc'], 'List': Item }
+     Items.append(Road)
+   if Items:
+    Result[Class] = { 'Desc': Roads['Desc'], 'List': Items }
   return Result
 
 
