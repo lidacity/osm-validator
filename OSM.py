@@ -90,7 +90,7 @@ class Validator:
    if TagName not in Tag:
     Result.append(f"не знойдзены '{TagName}'")
    elif Value is not None:
-    if Tag[TagName] != Value:
+    if self.JoinName(Tag, TagName) != Value:
      Result.append(f"'{TagName}' не роўны \"{Value}\"")
   return Result
 
@@ -283,12 +283,12 @@ class Validator:
        Tag2 = Relations[Ref]['tags'] # з агульнага спісу аўтадарог
        if TagName in Tag2:
         I = Index + len(Ref) + 1
-        S2 = Tag2[TagName] # з агульнага спісу аўтадарог
-        S = Tag[TagName][I:I+len(S2)]
+        S2 = self.JoinName(Tag2, TagName) # з агульнага спісу аўтадарог
+        S = self.JoinName(Tag, TagName)[I:I+len(S2)]
         Len = len(S2)# - (1 if S2[-1:] == "…" else 0)
         if Len == 0:
          Len = len(S2)
-        if S2[:Len] != S[:Len] and not self.ExcludeRef(self.JoinName(Tag, TagName), I) and S[:2] not in ["от", "ад"]:
+        if S2[:Len] != S[:Len] and not self.ExcludeRef(self.JoinName(Tag, TagName), I) and S[:3] not in ["от ", "ад "]:
          Result.append(f"\"{Ref}\" не адпавядае найменню ў '{TagName}'")
          break
      else:
@@ -300,7 +300,7 @@ class Validator:
   Result = []
   Tag = Relation['tags']
   if 'name:ru' in Tag:
-   Name = Tag['name:ru']
+   Name = self.JoinName(Tag, 'name:ru')
    for Ref in self.GetList(Name, 'ok'):
     Highway = Highways[Ref]
     if Ref in Highway['Desc']:
@@ -735,7 +735,7 @@ class Validator:
      return None
 
 
- def GetHighways(self, Name='name:be'):
+ def GetHighways(self, TagName='name:be'):
   logger.info("read highways description")
   Result = {}
   for ID, _, _ in self.OSM.GetRelationKey('route'):
@@ -744,7 +744,7 @@ class Validator:
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
     if 'official_ref' in Tag:
      Ref = Tag['official_ref']
-     Result[Ref] = self.JoinName(Tag, Name)
+     Result[Ref] = self.JoinName(Tag, TagName)
   return Result
 
 
