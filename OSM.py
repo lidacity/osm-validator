@@ -408,8 +408,8 @@ class Validator:
   return Result
 
 
- WayNameBe = ["праспект", "вуліца", "завулак", "плошча", "бульвар", "шаша", "тракт", "алея", "тупік", "сквер", "парк", "праезд", "уезд", "раз'езд", "спуск", "набярэжная", "кальцо", "мікрараён", "квартал", "тэрыторыя", "МКАД", "МКАД-2", "мост", "пуцеправод"]
- WayNameRu = ["проспект", "улица", "переулок", "площадь", "бульвар", "шоссе", "тракт", "аллея", "тупик", "сквер", "парк", "проезд", "въезд", "разъезд", "спуск", "набережная", "кольцо", "микрорайон", "квартал", "территория", "МКАД", "МКАД-2", "мост", "путепровод"]
+ WayNameBe = ["праспект", "вуліца", "завулак", "плошча", "бульвар", "шаша", "тракт", "алея", "тупік", "сквер", "парк", "праезд", "уезд", "раз'езд", "спуск", "набярэжная", "кальцо", "мікрараён", "квартал", "тэрыторыя", "МКАД", "МКАД-2", "мост", "пуцеправод", "Каралеўская дарога"]
+ WayNameRu = ["проспект", "улица", "переулок", "площадь", "бульвар", "шоссе", "тракт", "аллея", "тупик", "сквер", "парк", "проезд", "въезд", "разъезд", "спуск", "набережная", "кольцо", "микрорайон", "квартал", "территория", "МКАД", "МКАД-2", "мост", "путепровод", "Королевская дорога"]
  WayName = {
   'name': set(WayNameBe),
   'name:be': set(WayNameBe),
@@ -619,7 +619,7 @@ class Validator:
 
 
  def GetNames(self, Tag, Lang):
-  Names = ";".join([Tag.get(f'name:{Lang}', ""), Tag.get(f'alt_name:{Lang}', "")])
+  Names = ";".join([ Tag.get(f'{Name}:{Lang}', "") for Name in ['name', 'alt_name', 'short_name'] ])
   return [Name.strip() for Name in Names.split(";") if Name]
 
 
@@ -657,38 +657,67 @@ class Validator:
  #
 
 
+ KeyPlace = {
+  'place': ["city", "town", "village", "hamlet", "neighbourhood", "locality"],
+  'natural': ["water"],
+  'waterway': ["river"],
+  'office': ["government"],
+ }
+
+
  def GetPlace(self):
   logger.info("read place")
   Result = {}
-  for ID, _, Value in self.OSM.GetNodeKey('place'):
-   if Value in ["city", "town", "village", "hamlet", "neighbourhood", "locality"]:
-    Node = self.OSM.ReadNode(ID)
-    Tag = Node['tags']
-    Bes, Rus = self.GetNames(Tag, 'be'), self.GetNames(Tag, 'ru')
-    if Bes and Rus:
-     for Ru in Rus:
-      if Ru in Result:
-       for Be in Bes:
-        Result[Ru].add(Be)
-      else:
-       Result[Ru] = set(Bes)
+  #
+  Places = []
+  for Key, Values in self.KeyPlace.items():
+   for ID, _, Value in self.OSM.GetNodeKey(Key):
+    if Value in Values:
+     Node = self.OSM.ReadNode(ID)
+     Places.append(Node['tags'])
+   for ID, _, Value in self.OSM.GetWayKey(Key):
+    if Value in Values:
+     Way = self.OSM.ReadWay(ID)
+     Places.append(Way['tags'])
+#  print(len(Places))
+  #
+  for Tag in Places:
+   Bes, Rus = self.GetNames(Tag, 'be'), self.GetNames(Tag, 'ru')
+   if Bes and Rus:
+    for Ru in Rus:
+     if Ru in Result:
+      for Be in Bes:
+       Result[Ru].add(Be)
+     else:
+      Result[Ru] = set(Bes)
   return Result
 
 
  def GetCoordPlace(self):
   logger.info("read coord place")
   Result = {}
-  for ID, _, Value in self.OSM.GetNodeKey('place'):
-   if Value in ["city", "town", "village", "hamlet", "neighbourhood", "locality"]:
-    Node = self.OSM.ReadNode(ID)
-    Coord = (Node['lat'], Node['lon'])
-    Tag = Node['tags']
-    Bes = self.GetNames(Tag, 'be')
-    if Bes:
-     for Be in Bes:
-      if Be not in Result:
-       Result[Be] = set()
-      Result[Be].add(Coord)
+  #
+  Places = []
+  for Key, Values in self.KeyPlace.items():
+   for ID, _, Value in self.OSM.GetNodeKey(Key):
+    if Value in Values:
+     Node = self.OSM.ReadNode(ID)
+     Coord = (Node['lat'], Node['lon'])
+     Places.append((Coord, Node['tags']))
+   for ID, _, Value in self.OSM.GetWayKey(Key):
+    if Value in Values:
+     Way = self.OSM.ReadWay(ID)
+     for Node in self.OSM.ReadNodes(Way['nodes']):
+      Coord = (Node['lat'], Node['lon'])
+      Places.append((Coord, Way['tags']))
+  #
+  for Coord, Tag in Places:
+   Bes = self.GetNames(Tag, 'be')
+   if Bes:
+    for Be in Bes:
+     if Be not in Result:
+      Result[Be] = set()
+     Result[Be].add(Coord)
   return Result
 
 
