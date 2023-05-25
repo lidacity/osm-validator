@@ -18,9 +18,9 @@ from SQLite3 import OsmPbf
 
 
 class Validator:
- def __init__(self):
+ def __init__(self, Download=True):
   self.Path = os.path.dirname(os.path.abspath(__file__))
-  self.OSM = OsmPbf()
+  self.OSM = OsmPbf(Download=Download)
   self.CountParse = 0
 
 
@@ -137,11 +137,11 @@ class Validator:
 
  Wrong = {
   'Latin': {'re': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары"},
-  'Number': {'re': re.compile("[a-zA-Zа-яА-ЯёЁ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁ]").search, 'Desc': "няправільныя лічбы"},
+  'Number': {'re': re.compile("[a-zA-Zа-яА-ЯёЁўЎіІʼ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁЁўЎіІʼ]").search, 'Desc': "няправільныя лічбы"},
   'Hyphen': {'re': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок"},
   'Bracket': {'re': re.compile("[^ \"(]\(|\)[^ …\")]").search, 'Desc': "неправільныя дужкі"},
-  'Special': {'re': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\"))).search, 'Desc': "спецыяльныя знакі"},
-  'Abbreviations': {'re': re.compile("|".join([re.escape(s) for s in ["’", "—", "а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", "вул.", "ул.", ]])).search, 'Desc': "недапушчальны скарот"},
+  'Special': {'re': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\'’—"))).search, 'Desc': "спецыяльныя знакі"},
+  'Abbreviations': {'re': re.compile("|".join([re.escape(s) for s in ["а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", "вул.", "ул.", ]])).search, 'Desc': "недапушчальны скарот"},
  }
 
 
@@ -320,7 +320,7 @@ class Validator:
   return Result
 
 
- Words = re.compile(r"\b[А-ЯЁЎІ][\w']+[ -][А-ЯЁЎІ][\w']+\b|\b[А-ЯЁЎІ][\w']+[ -]\d+\b|\b[А-ЯЁЎІ][\w']+\b")
+ Words = re.compile(r"\b[А-ЯЁЎІʼ][\w']+[ -][А-ЯЁЎІʼ][\w']+\b|\b[А-ЯЁЎІʼ][\w']+[ -]\d+\b|\b[А-ЯЁЎІʼ][\w']+\b")
  #\b[А-ЯЁЎІ][\w']+[ -][А-ЯЁЎІ][\w+']\b = Мар'іна Горка | Буда-Кашалёва
  #\b[А-ЯЁЎІ][\w']+[ -]\d+\b =  Бучамля 1 | Вулька-1
  #\b[А-ЯЁЎІ][\w']+\b = Ліда
@@ -624,6 +624,11 @@ class Validator:
 
 
  def SplitName(self, S, Name='name'):
+  Name = Name.split(":")
+  if len(Name) == 1:
+   Name.append('')
+  else:
+   Name[1] = ':' + Name[1]
   Result = {}
   #
   while len(S) > 0:
@@ -637,19 +642,24 @@ class Validator:
    #
    if Result:
     Index = len(Result) + 1
-    Key = f"{Name}#{Index}"
+    Key = f"{Name[0]}#{Index}{Name[1]}"
    else:
-    Key = f"{Name}"
+    Key = f"{Name[0]}"
    # 
    Result[Key] = T
   return Result 
 
 
- def JoinName(self, Tag, Name="name", Default=""):
-  Result = Tag.get(Name, Default)
+ def JoinName(self, Tag, Name='name', Default=""):
+  Name = Name.split(":")
+  if len(Name) == 1:
+   Name.append('')
+  else:
+   Name[1] = ':' + Name[1]
+  Result = Tag.get(Name[0], Default)
   i = 2
-  while f"{Name}#{i}" in Tag:
-   Result += Tag[f"{Name}#{i}"]
+  while f"{Name[0]}#{i}{Name[1]}" in Tag:
+   Result += Tag[f"{Name[0]}#{i}{Name[1]}"]
    i += 1
   return Result.replace("……", "")
 
@@ -658,10 +668,12 @@ class Validator:
 
 
  KeyPlace = {
-  'place': ["city", "town", "village", "hamlet", "neighbourhood", "locality"],
+  'place': ["city", "town", "village", "hamlet", "isolated_dwelling", "suburb", "neighbourhood", "locality"],
   'natural': ["water"],
   'waterway': ["river"],
   'office': ["government"],
+  'railway': ["station"],
+  'historic': ["memorial"],
  }
 
 
