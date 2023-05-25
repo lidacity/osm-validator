@@ -137,7 +137,7 @@ class Validator:
 
  Wrong = {
   'Latin': {'re': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары"},
-  'Number': {'re': re.compile("[a-zA-Zа-яА-ЯёЁўЎіІʼ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁЁўЎіІʼ]").search, 'Desc': "няправільныя лічбы"},
+  'Number': {'re': re.compile("[a-zA-Zа-яА-ЯёЁўЎіІʼ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁўЎіІʼ]").search, 'Desc': "няправільныя лічбы"},
   'Hyphen': {'re': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок"},
   'Bracket': {'re': re.compile("[^ \"(]\(|\)[^ …\")]").search, 'Desc': "неправільныя дужкі"},
   'Special': {'re': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\'’—"))).search, 'Desc': "спецыяльныя знакі"},
@@ -623,12 +623,14 @@ class Validator:
   return [Name.strip() for Name in Names.split(";") if Name]
 
 
+ def GetNameLang(self, Name):
+  S = Name + ':'
+  Result = S.split(":")
+  return Result[:2]
+
+
  def SplitName(self, S, Name='name'):
-  Name = Name.split(":")
-  if len(Name) == 1:
-   Name.append('')
-  else:
-   Name[1] = ':' + Name[1]
+  Name, Lang = self.GetNameLang(Name)
   Result = {}
   #
   while len(S) > 0:
@@ -642,24 +644,20 @@ class Validator:
    #
    if Result:
     Index = len(Result) + 1
-    Key = f"{Name[0]}#{Index}{Name[1]}"
+    Key = f"{Name}#{Index}:{Lang}"
    else:
-    Key = f"{Name[0]}"
+    Key = f"{Name}"
    # 
    Result[Key] = T
-  return Result 
+  return Result
 
 
  def JoinName(self, Tag, Name='name', Default=""):
-  Name = Name.split(":")
-  if len(Name) == 1:
-   Name.append('')
-  else:
-   Name[1] = ':' + Name[1]
-  Result = Tag.get(Name[0], Default)
+  Name, Lang = self.GetNameLang(Name)
+  Result = Tag.get(Name, Default)
   i = 2
-  while f"{Name[0]}#{i}{Name[1]}" in Tag:
-   Result += Tag[f"{Name[0]}#{i}{Name[1]}"]
+  while f"{Name}#{i}:{Lang}" in Tag:
+   Result += Tag[f"{Name}#{i}:{Lang}"]
    i += 1
   return Result.replace("……", "")
 
