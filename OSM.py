@@ -672,6 +672,8 @@ class Validator:
   'office': ["government"],
   'railway': ["station"],
   'historic': ["memorial"],
+  'amenity': ["school"],
+  'landuse': ["allotments"],
  }
 
 
