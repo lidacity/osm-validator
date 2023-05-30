@@ -288,7 +288,7 @@ class Validator:
         Len = len(S2)# - (1 if S2[-1:] == "…" else 0)
         if Len == 0:
          Len = len(S2)
-        if S2[:Len] != S[:Len] and not self.ExcludeRef(self.JoinName(Tag, TagName), I) and S[:3] not in ["от ", "ад "]:
+        if S2[:Len] != S[:Len] and not self.ExcludeRef(self.JoinName(Tag, TagName), I) and S[:2] not in ["от", "ад"]:
          Result.append(f"\"{Ref}\" не адпавядае найменню ў '{TagName}'")
          break
      else:
@@ -623,14 +623,14 @@ class Validator:
   return [Name.strip() for Name in Names.split(";") if Name]
 
 
- def GetNameLang(self, Name):
-  S = Name + ':'
+ def GetNameLang(self, TagName):
+  S = TagName + ':'
   Result = S.split(":")
   return Result[:2]
 
 
- def SplitName(self, S, Name='name'):
-  Name, Lang = self.GetNameLang(Name)
+ def SplitName(self, S, TagName='name'):
+  Name, Lang = self.GetNameLang(TagName)
   Result = {}
   #
   while len(S) > 0:
@@ -652,9 +652,9 @@ class Validator:
   return Result
 
 
- def JoinName(self, Tag, Name='name', Default=""):
-  Name, Lang = self.GetNameLang(Name)
-  Result = Tag.get(Name, Default)
+ def JoinName(self, Tag, TagName='name', Default=""):
+  Name, Lang = self.GetNameLang(TagName)
+  Result = Tag.get(TagName, Default)
   i = 2
   while f"{Name}#{i}:{Lang}" in Tag:
    Result += Tag[f"{Name}#{i}:{Lang}"]
