@@ -225,7 +225,7 @@ class Validator:
 
 
  def GetIndex(self, Name, Ref):
-  return [Index.start() for Index in re.finditer(Ref, Name)]
+  return [Index.start() for Index in re.finditer(f"{Ref}[^/]", Name)]
 
 
  def ExcludeRef(self, Name, Index):
@@ -320,16 +320,17 @@ class Validator:
   return Result
 
 
- Words = re.compile(r"\b[А-ЯЁЎІʼ][\w']+[ -][А-ЯЁЎІʼ][\w']+\b|\b[А-ЯЁЎІʼ][\w']+[ -]\d+\b|\b[А-ЯЁЎІʼ][\w']+\b")
- #\b[А-ЯЁЎІ][\w']+[ -][А-ЯЁЎІ][\w+']\b = Мар'іна Горка | Буда-Кашалёва
- #\b[А-ЯЁЎІ][\w']+[ -]\d+\b =  Бучамля 1 | Вулька-1
- #\b[А-ЯЁЎІ][\w']+\b = Ліда
+ Words = re.compile(r"\b[А-ЯЁЎІ][\wʼ]+[ -][А-ЯЁЎІ][\wʼ]+\b|\b[А-ЯЁЎІ][\wʼ]+[ -]\d+\b|\b[А-ЯЁЎІ][\wʼ]+\b|«\b[А-ЯЁЎІ][\wʼ -]+\b»")
+ #\b[А-ЯЁЎІ][\wʼ]+[ -][А-ЯЁЎІ][\w+ʼ]\b = Марʼіна Горка | Буда-Кашалёва
+ #\b[А-ЯЁЎІ][\wʼ]+[ -]\d+\b =  Бучамля 1 | Вулька-1
+ #\b[А-ЯЁЎІ][\wʼ]+\b = Ліда
+ #«\b[А-ЯЁЎІ][\wʼ -]+\b» = Сасновая балка
 
 
  def CheckPlace(self, Tag, Place):
   Result = []
   Be, Ru = self.JoinName(Tag, 'name:be'), self.JoinName(Tag, 'name:ru')
-  Bes, Rus = self.Words.findall(Be), self.Words.findall(Ru)
+  Bes, Rus = [Item.strip("«»") for Item in self.Words.findall(Be)], [Item.strip("«»") for Item in self.Words.findall(Ru)]
   for Ru in Rus:
    if Ru in Place and not Result:
     for Name in Place[Ru]:
@@ -450,7 +451,7 @@ class Validator:
   for Ref in self.GetList(Name, 'ok'):
    Highway = Highways.get(Ref, "")
    Name = Name.replace(f"{Ref} {Highway}", f"{Ref}")
-  Names = self.Words.findall(Name)
+  Names = [Item.strip("«»") for Item in self.Words.findall(Name)]
   List = set(self.GetListNodes(Ways))
   CoordsWays = [ (Node['lat'], Node['lon']) for Node in self.OSM.ReadNodes(List) ]
   for Name in Names:
@@ -673,7 +674,8 @@ class Validator:
   'railway': ["station", "halt"],
   'historic': ["memorial"],
   'amenity': ["school"],
-  'landuse': ["allotments"],
+  'landuse': ["allotments", "quarry"],
+  'leisure': ["resort"],
  }
 
 
