@@ -11,53 +11,19 @@ re._MAXCACHE = 4096
 
 from loguru import logger
 from haversine import haversine
-from jinja2 import Environment, FileSystemLoader
-import git
 
 from SQLite3 import OsmPbf
 
 
-class Validator:
+class RouteValidator:
  def __init__(self, Download=True):
   self.Path = os.path.dirname(os.path.abspath(__file__))
   self.OSM = OsmPbf(Download=Download)
   self.CountParse = 0
 
-
- #
-
-
- #https://atufashireen.medium.com/creating-templates-with-jinja-in-python-3ff3b87d6740
- def Generate(self, List, Context):
-  logger.info(f"Generate")
-  Loader = FileSystemLoader("Template")
-  Env = Environment(loader=Loader)
-  for Name in List:
-   for Ext in [".html", ".csv"]:
-    FileName = f"{Name}{Ext}"
-    if os.path.isfile(os.path.join(self.Path, "Template", FileName)):
-     Template = Env.get_template(FileName)
-     Render = Template.render(Context)
-     FullName = os.path.join(self.Path, "docs", FileName)
-     with open(FullName, mode="w", encoding="utf-8") as File:
-      File.write(Render)
-
-
- #https://behai-nguyen.github.io/2022/06/25/synology-dsm-python.html
- #https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
- def GitPush(self, Message):
-  logger.info("Git Push")
-  try:
-   repo = git.Repo(self.Path)
-   repo.git.add("docs")
-   #repo.git.add(update=True)
-   repo.index.commit(Message)
-   origin = repo.remote(name='origin')
-   origin.push()
-   return repo.git.diff('HEAD~1')
-  except:
-   logger.error('Some error occured while pushing the code')
-   return None
+ 
+ def __del__(self):
+  self.OSM.Close()
 
 
  #
@@ -674,7 +640,7 @@ class Validator:
   'railway': ["station", "halt"],
   'historic': ["memorial"],
   'amenity': ["school"],
-  'landuse': ["allotments", "quarry"],
+  'landuse': ["allotments", "quarry", "residential"],
   'leisure': ["resort"],
  }
 
@@ -1113,5 +1079,29 @@ class Validator:
   return self.OSM.GetDateTime()
 
 
- def GetNow(self):
-  return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# -=-=-=-=-=-
+
+
+def Generate(Check, Network):
+ Route = RouteValidator()
+ Result = {}
+ #Result['PravoError'], Result['Pravo'] = False, []
+ #Result['Highway'] = {}
+ #Result['Error'] = {}
+ #Result['Relation'] = {}
+ #Result['Separated'] = []
+ #Result['Missing'] = { 'Relations': [], 'Ways': {}, 'RelationsForWays': {} }
+ #Result['Network'] = {}
+ #Result['PBFDateTime'] = Route.GetDateTime()
+ #Result['DateTime'] = Route.GetNow()
+ Highway = Route.GetHighway(Check)
+ Result['Highway'] = Highway
+ Result['Error'] = Route.GetError(Highway)
+ Result['Relation'] = Route.GetRelation(Highway)
+ Result['Separated'] = Route.GetSeparated(Check)
+ Result['Missing'] = Route.GetMissing([Item['ID'] for _, Item in Check.items()])
+ Result['Network'] = { Network[Bool]: Route.GetNetwork(Check, Bool) for Bool in [False, True] }
+ Result['PBFDateTime'] = Route.GetDateTime()
+ Result['DateTime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+ return Result
+
