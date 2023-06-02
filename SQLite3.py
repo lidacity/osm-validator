@@ -89,6 +89,11 @@ class OsmPbf:
   return Result
 
 
+ ##################################################
+ # Create                                         #
+ ##################################################
+
+
  def CreateSchema(self):
   logger.info("Create Schema")
   Cursor = self.DB.cursor()
@@ -162,45 +167,27 @@ class OsmPbf:
 
  def ReadNode(self, ID):
   Result = {'type': "node", 'id': ID, }
-  Cursor = self.DB.cursor()
-  Cursor.execute("SELECT lat, lon FROM nodes WHERE node_id = ?;", [ID])
-  Result['lat'], Result['lon'] = Cursor.fetchone()
-  Cursor.execute("SELECT key, value FROM node_tags WHERE node_id = ?;", [ID])
-  Result['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
+  Result['lat'], Result['lon'] = self.ExecuteOne("SELECT lat, lon FROM nodes WHERE node_id = ?;", Params=[ID])
+  Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM node_tags WHERE node_id = ?;", Params=[ID]) }
   return Result
+
+
+ def ReadNodes(self, List):
+  return [self.ReadNode(ID) for ID in List]
 
 
  def RelationsForNode(self, ID):
-  Result = []
-  Cursor = self.DB.cursor()
-  Cursor.execute("SELECT relation_id FROM relation_members WHERE ref = ? AND type = 'node' ORDER BY member_order;", [ID])
-  for RelationID in Cursor.fetchall():
-   Relation = {'type': "relation", 'id': RelationID[0], }
-   Cursor.execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", RelationID)
-   Relation['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", [RelationID])
-   Relation['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in Cursor.fetchall() ]
-   Result.append(Relation)
-  return Result
+  return [self.ReadRelation(ID) for ID, in self.Execute("SELECT relation_id FROM relation_members WHERE ref = ? AND type = 'node' ORDER BY member_order;", Params=[ID])]
+
+
+ def GetNodeKey(self, Key, Values=[]):
+  return [self.ReadNode(ID) for ID, _, Value in self.Execute("SELECT node_id, key, value FROM node_tags WHERE key = ?;", Params=[Key]) if not Values or Value in Values]
 
 
 # #Ways for node: GET /api/0.6/node/#id/ways
 # def WaysForNode(self, ID):
 #  URI = f"{self.API}/node/{ID}/ways.json"
 #  return self.GetJson(URI, Tag='elements')
-
-
- def ReadNodes(self, IDs):
-  Result = []
-  Cursor = self.DB.cursor()
-  for ID in IDs:
-   Node = {'type': "node", 'id': ID, }
-   Cursor.execute("SELECT lat, lon FROM nodes WHERE node_id = ?;", [ID])
-   Node['lat'], Node['lon'] = Cursor.fetchone()
-   Cursor.execute("SELECT key, value FROM node_tags WHERE node_id = ?;", [ID])
-   Node['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Result.append(Node)
-  return Result
 
 
  ##################################################
@@ -210,39 +197,21 @@ class OsmPbf:
 
  def ReadWay(self, ID):
   Result = {'type': "way", 'id': ID, }
-  Cursor = self.DB.cursor()
-  Cursor.execute("SELECT key, value FROM way_tags WHERE way_id = ?;", [ID])
-  Result['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-  Cursor.execute("SELECT node_id FROM way_nodes WHERE way_id = ? ORDER BY node_order;", [ID])
-  Result['nodes'] = [ Node[0] for Node in Cursor.fetchall() ]
+  Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM way_tags WHERE way_id = ?;", Params=[ID]) }
+  Result['nodes'] = [ Node[0] for Node in self.Execute("SELECT node_id FROM way_nodes WHERE way_id = ? ORDER BY node_order;", Params=[ID]) ]
   return Result
 
 
- def ReadWays(self, IDs):
-  Result = []
-  Cursor = self.DB.cursor()
-  for ID in IDs:
-   Way = {'type': "way", 'id': ID, }
-   Cursor.execute("SELECT key, value FROM way_tags WHERE way_id = ?;", [ID])
-   Way['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Cursor.execute("SELECT node_id FROM way_nodes WHERE way_id = ? ORDER BY node_order;", [ID])
-   Way['nodes'] = [ Node[0] for Node in Cursor.fetchall() ]
-   Result.append(Way)
-  return Result
+ def ReadWays(self, List):
+  return [self.ReadWay(ID) for ID in List]
 
 
  def RelationsForWay(self, ID):
-  Result = []
-  Cursor = self.DB.cursor()
-  Cursor.execute("SELECT relation_id FROM relation_members WHERE ref = ? AND type = 'way' ORDER BY member_order;", [ID])
-  for RelationID in Cursor.fetchall():
-   Relation = {'type': "relation", 'id': RelationID[0], }
-   Cursor.execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", RelationID) #менавіта так, бо ў тып у RelationID - tuple
-   Relation['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", RelationID) #менавіта так, бо ў тып у RelationID - tuple
-   Relation['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in Cursor.fetchall() ]
-   Result.append(Relation)
-  return Result
+  return [self.ReadRelation(ID) for ID, in self.Execute("SELECT relation_id FROM relation_members WHERE ref = ? AND type = 'way' ORDER BY member_order;", Params=[ID])]
+
+
+ def GetWayKey(self, Key, Values=[]):
+  return [self.ReadWay(ID) for ID, _, Value in self.Execute("SELECT way_id, key, value FROM way_tags WHERE key = ?;", Params=[Key]) if not Values or Value in Values]
 
 
 # #Full: GET /api/0.6/[way|relation]/#id/full
@@ -257,64 +226,52 @@ class OsmPbf:
 
  def ReadRelation(self, ID):
   Result = {'type': "relation", 'id': ID, }
-  Cursor = self.DB.cursor()
-  Cursor.execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", [ID])
-  Result['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-  Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", [ID])
-  Result['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in Cursor.fetchall() ]
+  Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", Params=[ID]) }
+  Result['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in self.Execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", Params=[ID]) ]
   return Result
 
 
- def ReadRelations(self, IDs):
-  Result = []
-  Cursor = self.DB.cursor()
-  for ID in IDs:
-   Relation = {'type': "relation", 'id': ID, }
-   Cursor.execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", [ID])
-   Relation['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", [ID])
-   Relation['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in Cursor.fetchall() ]
-   Result.append(Relation)
-  return Result
+ def ReadRelations(self, List):
+  return [self.ReadRelation(ID) for ID in List]
 
 
  def RelationsForRelation(self, ID):
-  Result = []
-  Cursor = self.DB.cursor()
-  Cursor.execute("SELECT relation_id FROM relation_members WHERE ref = ? AND type = 'relation' ORDER BY member_order;", [ID])
-  for RelationID in Cursor.fetchall():
-   Relation = {'type': "relation", 'id': RelationID[0], }
-   Cursor.execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", RelationID)
-   Relation['tags'] = { Key: Value for Key, Value in Cursor.fetchall() }
-   Cursor.execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", [RelationID])
-   Relation['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in Cursor.fetchall() ]
-   Result.append(Relation)
-  return Result
-  return self.RelationsForElement("relation", ID)
+  return [self.ReadRelation(ID) for ID, in self.Execute("SELECT relation_id FROM relation_members WHERE ref = ? AND type = 'relation' ORDER BY member_order;", Params=[ID])]
+
+
+ def GetRelationKey(self, Key, Values=[]):
+  return [self.ReadRelation(ID) for ID, _, Value in self.Execute("SELECT relation_id, key, value FROM relation_tags WHERE key = ?;", Params=[Key]) if not Values or Value in Values]
+
+
+ def GetRelationMembers(self, ID):
+  return self.Execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? AND type = 'relation' ORDER BY member_order;", Params=[ID])
 
 
 # def FullRelation(self, ID):
 #  return self.Full("relation", ID)
 
 
- def ExecuteSql(self, SQL, Params=[]):
+ ##################################################
+ # Feature                                        #
+ ##################################################
+
+
+ def RelationsForFeature(self, ID):
+  return [self.ReadRelation(ID) for ID, in self.Execute("SELECT relation_id FROM relation_members WHERE ref = ? ORDER BY member_order;", Params=[ID])]
+
+
+ ##################################################
+ # Misc                                           #
+ ##################################################
+
+
+ def Execute(self, SQL, Params=[]):
   Cursor = self.DB.cursor()
   Cursor.execute(SQL, Params)
   return Cursor.fetchall()
 
 
- def GetNodeKey(self, Key):
-  return self.ExecuteSql("SELECT node_id, key, value FROM node_tags WHERE key = ?;", Params=[Key])
-
-
- def GetWayKey(self, Key):
-  return self.ExecuteSql("SELECT way_id, key, value FROM way_tags WHERE key = ?;", Params=[Key])
-
-
- def GetRelationKey(self, Key):
-  return self.ExecuteSql("SELECT relation_id, key, value FROM relation_tags WHERE key = ?;", Params=[Key])
-
-
- def GetRelationMembers(self, ID):
-  return self.ExecuteSql("SELECT type, ref, role FROM relation_members WHERE relation_id = ? AND type = 'relation' ORDER BY member_order;", Params=[ID])
-
+ def ExecuteOne(self, SQL, Params=[]):
+  Cursor = self.DB.cursor()
+  Cursor.execute(SQL, Params)
+  return Cursor.fetchone()

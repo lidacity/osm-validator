@@ -683,15 +683,10 @@ class Validator:
   #
   Places = []
   for Key, Values in self.KeyPlace.items():
-   for ID, _, Value in self.OSM.GetNodeKey(Key):
-    if Value in Values:
-     Node = self.OSM.ReadNode(ID)
-     Places.append(Node['tags'])
-   for ID, _, Value in self.OSM.GetWayKey(Key):
-    if Value in Values:
-     Way = self.OSM.ReadWay(ID)
-     Places.append(Way['tags'])
-#  print(len(Places))
+   for Node in self.OSM.GetNodeKey(Key, Values=Values):
+    Places.append(Node['tags'])
+   for Way in self.OSM.GetWayKey(Key, Values=Values):
+    Places.append(Way['tags'])
   #
   for Tag in Places:
    Bes, Rus = self.GetNames(Tag, 'be'), self.GetNames(Tag, 'ru')
@@ -711,17 +706,13 @@ class Validator:
   #
   Places = []
   for Key, Values in self.KeyPlace.items():
-   for ID, _, Value in self.OSM.GetNodeKey(Key):
-    if Value in Values:
-     Node = self.OSM.ReadNode(ID)
+   for Node in self.OSM.GetNodeKey(Key, Values=Values):
+    Coord = (Node['lat'], Node['lon'])
+    Places.append((Coord, Node['tags']))
+   for Way in self.OSM.GetWayKey(Key, Values=Values):
+    for Node in self.OSM.ReadNodes(Way['nodes']):
      Coord = (Node['lat'], Node['lon'])
-     Places.append((Coord, Node['tags']))
-   for ID, _, Value in self.OSM.GetWayKey(Key):
-    if Value in Values:
-     Way = self.OSM.ReadWay(ID)
-     for Node in self.OSM.ReadNodes(Way['nodes']):
-      Coord = (Node['lat'], Node['lon'])
-      Places.append((Coord, Way['tags']))
+     Places.append((Coord, Way['tags']))
   #
   for Coord, Tag in Places:
    Bes = self.GetNames(Tag, 'be')
@@ -750,8 +741,7 @@ class Validator:
  def GetHighways(self, TagName='name:be'):
   logger.info("read highways description")
   Result = {}
-  for ID, _, _ in self.OSM.GetRelationKey('route'):
-   Relation = self.OSM.ReadRelation(ID)
+  for Relation in self.OSM.GetRelationKey('route'):
    Tag = Relation['tags']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
     if 'official_ref' in Tag:
@@ -763,9 +753,8 @@ class Validator:
  def LoadWays(self):
   #logger.info("missing: load ways")
   Result = {}
-  for ID, _, _ in self.OSM.GetWayKey('ref'):
-   Way = self.OSM.ReadWay(ID)
-   Tag = Way['tags']
+  for Way in self.OSM.GetWayKey('ref'):
+   ID, Tag = Way['id'], Way['tags']
    if ('highway' in Tag or 'ferry' in Tag) and 'ref' in Tag:
     Ref = self.GetNormalizeRef(Tag.get('ref', ""))
     if Ref:
@@ -776,9 +765,8 @@ class Validator:
  def LoadRelations(self):
   #logger.info("missing: load relations")
   Result = {}
-  for ID, _, _ in self.OSM.GetRelationKey('route'):
-   Relation = self.OSM.ReadRelation(ID)
-   Tag = Relation['tags']
+  for Relation in self.OSM.GetRelationKey('route'):
+   ID, Tag = Relation['id'], Relation['tags']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
     Result[ID] = { 'official_ref': Tag.get('official_ref', "невядома"), 'ref': Tag.get('ref', ""), 'be': self.JoinName(Tag, 'name:be'), 'ru': self.JoinName(Tag, 'name:ru'), 'members': Relation['members'] }
   return Result
