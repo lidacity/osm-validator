@@ -670,7 +670,7 @@ class Validator:
   'natural': ["water"],
   'waterway': ["river"],
   'office': ["government"],
-  'railway': ["station"],
+  'railway': ["station", "halt"],
   'historic': ["memorial"],
   'amenity': ["school"],
   'landuse': ["allotments"],
