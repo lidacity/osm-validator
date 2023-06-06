@@ -195,7 +195,7 @@ class RouteValidator:
 
 
  def ExcludeRef(self, Name, Index):
-  return Name[Index-1:].strip()[:1] in ["(", ")", ""]
+  return Name[Index-1:].strip()[:1] in ["(", ")", "", "\""]
 
 
 
@@ -292,11 +292,31 @@ class RouteValidator:
  #\b[А-ЯЁЎІ][\wʼ]+\b = Ліда
  #«\b[А-ЯЁЎІ][\wʼ -]+\b» = Сасновая балка
 
+ NormalizeWords = {
+  'name:be': [("-", " ")],
+  'name:ru': [("-", " "), ("ё", "е")],
+ }
+
+
+ def GetNormalizePlace(self, Name, Lang):
+  Result = Name.strip("«»")
+  for From, To in self.NormalizeWords[Lang]:
+   Result = Result.replace(From, To)
+  return Result
+
+
 
  def CheckPlace(self, Tag, Place):
   Result = []
-  Be, Ru = self.JoinName(Tag, 'name:be'), self.JoinName(Tag, 'name:ru')
-  Bes, Rus = [Item.strip("«»") for Item in self.Words.findall(Be)], [Item.strip("«»") for Item in self.Words.findall(Ru)]
+  #
+  Name = self.JoinName(Tag, 'name:be')
+  Be = self.GetNormalizePlace(Name, 'name:be')
+  Bes = [self.GetNormalizePlace(Item, 'name:be') for Item in self.Words.findall(Be)]
+  #
+  Name = self.JoinName(Tag, 'name:ru')
+  Ru = self.GetNormalizePlace(Name, 'name:ru')
+  Rus = [self.GetNormalizePlace(Item, 'name:ru') for Item in self.Words.findall(Ru)]
+  #
   for Ru in Rus:
    if Ru in Place and not Result:
     for Name in Place[Ru]:
@@ -587,7 +607,7 @@ class RouteValidator:
 
  def GetNames(self, Tag, Lang):
   Names = ";".join([ Tag.get(f'{Name}:{Lang}', "") for Name in ['name', 'alt_name', 'short_name'] ])
-  return [Name.strip() for Name in Names.split(";") if Name]
+  return [self.GetNormalizePlace(Name, f"name:{Lang}") for Name in Names.split(";") if Name]
 
 
  def GetNameLang(self, TagName):
@@ -611,7 +631,10 @@ class RouteValidator:
    #
    if Result:
     Index = len(Result) + 1
-    Key = f"{Name}#{Index}:{Lang}"
+    if Lang:
+     Key = f"{Name}#{Index}:{Lang}"
+    else:
+     Key = f"{Name}#{Index}"
    else:
     Key = f"{Name}"
    # 
@@ -642,6 +665,7 @@ class RouteValidator:
   'amenity': ["school"],
   'landuse': ["allotments", "quarry", "residential"],
   'leisure': ["resort"],
+  'highway': ["bus_stop"],
  }
 
 
