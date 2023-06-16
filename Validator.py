@@ -10,9 +10,8 @@ class Validator:
   self.OSM = OsmPbf(Download=Download)
   self.CountParse = 0
 
- 
+
  def __del__(self):
-  print("!")
   self.OSM.Close()
 
 
@@ -57,7 +56,6 @@ class Validator:
 
  def GetDateTime(self):
   return self.OSM.GetDateTime()
- 
 
 
  #
@@ -202,7 +200,7 @@ class Validator:
      Key = f"{Name}#{Index}"
    else:
     Key = f"{Name}"
-   # 
+   #
    Result[Key] = T
   return Result
 

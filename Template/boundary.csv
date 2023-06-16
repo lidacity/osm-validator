@@ -1,0 +1,3 @@
+{%- for Item in Boundary -%}
+{{Item['Level']}};r{{Item['ID']}};{{Item['Name']}};{{"|".join(Item['Error'])}}
+{% endfor %}

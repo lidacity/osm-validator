@@ -1,0 +1,31 @@
+{% block Boundary -%}
+
+{%- if Boundary %}
+<hr />
+<h2>Межы</h2>
+<div id='Boundary'>
+ <table>
+  <thead>
+   <tr valign='top'>
+    <th colspan='7'>найменне</th>
+    <th>сувязь</th>
+    <th>памылкі</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Item in Boundary %}
+   <tr bgcolor='{{Item['Color']}}' valign='top'>
+{%- for Index in range(Item['Level'] - 1) %}
+    <td width='25'>&nbsp;</td>
+{%- endfor %}
+    <td colspan='{{8 - Item['Level']}}'>{{Item['Name']}}</td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a>, <a target='_josm' href='josm://relation/{{Item['ID']}}' onclick='return josm("r{{Item['ID']}}");'>josm</a></td>
+    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
+   </tr>
+{%- endfor %}
+  </tbody>
+ </table>
+</div>
+{%- endif %}
+
+{%- endblock %}
