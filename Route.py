@@ -1,7 +1,6 @@
 #https://josm.openstreetmap.de/wiki/Ru%3AHelp/RemoteControlCommands
 
 import os
-import sys
 import random
 from datetime import datetime
 from collections import Counter
@@ -12,22 +11,11 @@ re._MAXCACHE = 4096
 from loguru import logger
 from haversine import haversine
 
-from SQLite3 import OsmPbf
+from Validator import Validator
 
 
-class RouteValidator:
- def __init__(self, Download=True):
-  self.Path = os.path.dirname(os.path.abspath(__file__))
-  self.OSM = OsmPbf(Download=Download)
-  self.CountParse = 0
 
- 
- def __del__(self):
-  self.OSM.Close()
-
-
- #
-
+class RouteValidator(Validator):
 
  Classes = {
   'М': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
@@ -420,7 +408,7 @@ class RouteValidator:
   Result = []
   for Way in Ways:
    Count = 0
-   for Relation in self.OSM.RelationsForWay(Way['id']):
+   for Relation in self.RelationsForWay(Way['id']):
     if Relation['tags'].get('official_ref', "") in Relations:
      Count += 1
    if Count > 1:
@@ -439,7 +427,7 @@ class RouteValidator:
    Name = Name.replace(f"{Ref} {Highway}", f"{Ref}")
   Names = [Item.strip("«»") for Item in self.Words.findall(Name)]
   List = set(self.GetListNodes(Ways))
-  CoordsWays = [ (Node['lat'], Node['lon']) for Node in self.OSM.ReadNodes(List) ]
+  CoordsWays = [ (Node['lat'], Node['lon']) for Node in self.ReadNodes(List) ]
   for Name in Names:
    if Name in Coords and not Result:
     Ok = False
@@ -497,159 +485,11 @@ class RouteValidator:
   return Result
 
 
-#
-
-
- def Island(self, Ways):
-  Limits = self.GetLimits(Ways)
-  Result = []
-  while len(Limits) > 1:
-   for Item in Limits[1:]:
-    if Limits[0][0] == Item[0]:
-     Limits[0][0] = Item[1]
-     Limits.remove(Item)
-     break
-    if Limits[0][0] == Item[1]:
-     Limits[0][0] = Item[0]
-     Limits.remove(Item)
-     break
-    if Limits[0][1] == Item[1]:
-     Limits[0][1] = Item[0]
-     Limits.remove(Item)
-     break
-    if Limits[0][1] == Item[0]:
-     Limits[0][1] = Item[1]
-     Limits.remove(Item)
-     break
-   else:
-    Result.append(Limits[0])
-    Limits.pop(0)
-  Result.append(Limits[0])
-  Limits.pop(0)
-  #
-  if len(Result) == 1:
-   if len(set(Result[0])) == 1:
-    Result = []
-  return Result
-
-
- def IslandLine(self, Ways):
-  Limits = self.GetLimits(Ways)
-  Result = []
-  Index = -1
-  while len(Limits) > 1:
-   for Item in Limits[1:]:
-    #
-    if Index == -1:
-     if Limits[0][0] in Item:
-      Index = 0
-     elif Limits[0][1] in Item:
-      Index = 1
-    #
-    if Limits[0][Index] == Item[0]:
-     Limits[0][Index] = Item[1]
-     Limits.remove(Item)
-     break
-    elif Limits[0][Index] == Item[1]:
-     Limits[0][Index] = Item[0]
-     Limits.remove(Item)
-     break
-    #
-    Result.append(Limits[0])
-    Limits.pop(0)
-    Index = -1
-   else:
-    Result.append(Limits[0])
-    Limits.pop(0)
-  #
-  if Limits:
-   Result.append(Limits[0])
-   Limits.pop(0)
-  #
-  if len(Result) == 1:
-   if len(set(Result[0])) == 1:
-    Result = []
-  return Result
-
-
- def GetAllNodes(self, Relation):
-  Result = []
-  List = [ Member['ref'] for Member in Relation['members'] if Member['type'] == "way" ]
-  Result = [ ID for Way in self.OSM.ReadWays(List) for ID in Way['nodes'] ]
-  return Result
-
-
- def GetWays(self, Relation, Role=[]):
-  Result = []
-  List = [ Member['ref'] for Member in Relation['members'] if Member['type'] == "way" and (not Role or Member['role'] in Role) ]
-  Result = self.OSM.ReadWays(List)
-  return Result
-
-
- def GetLimits(self, Ways):
-  return [ [Way['nodes'][0], Way['nodes'][-1]] for Way in Ways ]
-
-
- def GetNodes(self, Ways):
-  return [ [Node for Node in Way['nodes']] for Way in Ways ]
-
-
- def GetListNodes(self, Ways):
-  return [ Node for Way in Ways for Node in Way['nodes'] ]
-
-
- def GetCoord(self, Ways):
-  Nodes = self.IslandLine(Ways)
-  List = [ID for Row in Nodes for ID in Row]
-  Result = { Node['id']: (Node['lat'], Node['lon']) for Node in self.OSM.ReadNodes(List) }
-  return [ [ Result[ID] for ID in Row ] for Row in Nodes ]
-
+ #
 
  def GetNames(self, Tag, Lang):
   Names = ";".join([ Tag.get(f'{Name}:{Lang}', "") for Name in ['name', 'alt_name', 'short_name'] ])
   return [self.GetNormalizePlace(Name, f"name:{Lang}") for Name in Names.split(";") if Name]
-
-
- def GetNameLang(self, TagName):
-  S = TagName + ':'
-  Result = S.split(":")
-  return Result[:2]
-
-
- def SplitName(self, S, TagName='name'):
-  Name, Lang = self.GetNameLang(TagName)
-  Result = {}
-  #
-  while len(S) > 0:
-   Count = 253 if Result else 254
-   T = S[:Count]
-   if Result:
-    T = f"…{T}"
-   if len(T) == 254:
-    T = f"{T}…"
-   S = S[Count:]
-   #
-   if Result:
-    Index = len(Result) + 1
-    if Lang:
-     Key = f"{Name}#{Index}:{Lang}"
-    else:
-     Key = f"{Name}#{Index}"
-   else:
-    Key = f"{Name}"
-   # 
-   Result[Key] = T
-  return Result
-
-
- def JoinName(self, Tag, TagName='name', Default=""):
-  Name, Lang = self.GetNameLang(TagName)
-  Result = Tag.get(TagName, Default)
-  i = 2
-  while f"{Name}#{i}:{Lang}" in Tag:
-   Result += Tag[f"{Name}#{i}:{Lang}"]
-   i += 1
-  return Result.replace("……", "")
 
 
  #
@@ -675,9 +515,9 @@ class RouteValidator:
   #
   Places = []
   for Key, Values in self.KeyPlace.items():
-   for Node in self.OSM.GetNodeKey(Key, Values=Values):
+   for Node in self.GetNodeKey(Key, Values=Values):
     Places.append(Node['tags'])
-   for Way in self.OSM.GetWayKey(Key, Values=Values):
+   for Way in self.GetWayKey(Key, Values=Values):
     Places.append(Way['tags'])
   #
   for Tag in Places:
@@ -698,11 +538,11 @@ class RouteValidator:
   #
   Places = []
   for Key, Values in self.KeyPlace.items():
-   for Node in self.OSM.GetNodeKey(Key, Values=Values):
+   for Node in self.GetNodeKey(Key, Values=Values):
     Coord = (Node['lat'], Node['lon'])
     Places.append((Coord, Node['tags']))
-   for Way in self.OSM.GetWayKey(Key, Values=Values):
-    for Node in self.OSM.ReadNodes(Way['nodes']):
+   for Way in self.GetWayKey(Key, Values=Values):
+    for Node in self.ReadNodes(Way['nodes']):
      Coord = (Node['lat'], Node['lon'])
      Places.append((Coord, Way['tags']))
   #
@@ -733,7 +573,7 @@ class RouteValidator:
  def GetHighways(self, TagName='name:be'):
   logger.info("read highways description")
   Result = {}
-  for Relation in self.OSM.GetRelationKey('route'):
+  for Relation in self.GetRelationKey('route'):
    Tag = Relation['tags']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
     if 'official_ref' in Tag:
@@ -745,7 +585,7 @@ class RouteValidator:
  def LoadWays(self):
   #logger.info("missing: load ways")
   Result = {}
-  for Way in self.OSM.GetWayKey('ref'):
+  for Way in self.GetWayKey('ref'):
    ID, Tag = Way['id'], Way['tags']
    if ('highway' in Tag or 'ferry' in Tag) and 'ref' in Tag:
     Ref = self.GetNormalizeRef(Tag.get('ref', ""))
@@ -757,7 +597,7 @@ class RouteValidator:
  def LoadRelations(self):
   #logger.info("missing: load relations")
   Result = {}
-  for Relation in self.OSM.GetRelationKey('route'):
+  for Relation in self.GetRelationKey('route'):
    ID, Tag = Relation['id'], Relation['tags']
    if Tag.get('type', "") == "route" and Tag.get('route', "") == "road" and Tag.get('network', "") in ["by:national", "by:regional"]:
     Result[ID] = { 'official_ref': Tag.get('official_ref', "невядома"), 'ref': Tag.get('ref', ""), 'be': self.JoinName(Tag, 'name:be'), 'ru': self.JoinName(Tag, 'name:ru'), 'members': Relation['members'] }
@@ -768,7 +608,7 @@ class RouteValidator:
   #logger.info("missing: load relations id")
   Result = []
   for ID in List:
-   for _, Ref, _ in self.OSM.GetRelationMembers(ID):
+   for _, Ref, _ in self.GetRelationMembers(ID):
     Result.append(Ref)
   return Result
 
@@ -908,15 +748,15 @@ class RouteValidator:
   #logger.info(f"read relation {R}")
   Result, List = {}, {}
   #
-  Relation = self.OSM.ReadRelation(R)
+  Relation = self.ReadRelation(R)
   for Member in Relation['members']:
    match Member['type']:
     case "node":
-     Item = self.OSM.ReadNode(Member['ref'])
+     Item = self.ReadNode(Member['ref'])
     case "way":
-     Item = self.OSM.ReadWay(Member['ref'])
+     Item = self.ReadWay(Member['ref'])
     case "relation":
-     Item = self.OSM.ReadRelation(Member['ref'])
+     Item = self.ReadRelation(Member['ref'])
     case _:
      logger.error(f"Unknown type = \"{Member['type']}\"")
    #
@@ -1098,9 +938,6 @@ class RouteValidator:
     Result[Class] = { 'Desc': Roads['Desc'], 'List': Items }
   return Result
 
-
- def GetDateTime(self):
-  return self.OSM.GetDateTime()
 
 
 # -=-=-=-=-=-
