@@ -59,19 +59,25 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>М-5/Е 271</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/165064'>osm</a><br /><a target='_josm' href='josm://relation/165064' onclick='return josm("r165064");'>josm</a></td>
     <td>Мінск – Гомель<br /><font color='gray'>Минск – Гомель</font></td>
-    <td><nobr>не праходзіць побач з "Мінск"<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>не праходзіць побач з "Мінск"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>М-6/Е 28</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/158244'>osm</a><br /><a target='_josm' href='josm://relation/158244' onclick='return josm("r158244");'>josm</a></td>
     <td>Мінск – Гродна – мяжа Рэспублікі Польшча (Брузгі)<br /><font color='gray'>Минск – Гродно – граница Республики Польша (Брузги)</font></td>
-    <td><nobr>памылковы 'highway'="service" на way<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>'fixme' у way<br />памылковы 'highway'="service" на way<br />не праходзіць побач з "Гродна"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>М-6/П 5</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/1060331'>osm</a><br /><a target='_josm' href='josm://relation/1060331' onclick='return josm("r1060331");'>josm</a></td>
-    <td>Падʼезд да горада Гродна ад аўтамабільнай дарогі М-6/Е 28 (км 262,3)<br /><font color='gray'>Подъезд к городу Гродно от автомобильной дороги М-6/Е 28 (км 287,3)</font></td>
-    <td><nobr>не дакранаецца да "М-6/Е 28"</nobr></td>
+    <td><nobr>М-6/П 3</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/15980258'>osm</a><br /><a target='_josm' href='josm://relation/15980258' onclick='return josm("r15980258");'>josm</a></td>
+    <td>Падʼезд да аэрапорта Гродна ад аўтамабільнай дарогі М-6/Е 28<br /><font color='gray'>Подъезд к аэропорту Гродно от автомобильной дороги М-6/Е 28</font></td>
+    <td><nobr>не праходзіць побач з "Гродна"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>М-6/П 6</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/15980257'>osm</a><br /><a target='_josm' href='josm://relation/15980257' onclick='return josm("r15980257");'>josm</a></td>
+    <td>Падʼезд да мяжы Рэспублікі Польшча (Брузгі-2) ад аўтамабільнай дарогі М-6/Е 28<br /><font color='gray'>Подъезд к границе Республики Польша (Брузги-2) от автомобильной дороги М-6/Е 28</font></td>
+    <td><nobr>'fixme' у way<br />памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>М-7/Е 28</nobr></td>
@@ -177,6 +183,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/2793962'>osm</a><br /><a target='_josm' href='josm://relation/2793962' onclick='return josm("r2793962");'>josm</a></td>
     <td>Падʼезд да горада Верхнядзвінск ад аўтамабільнай дарогі Р-20<br /><font color='gray'>Подъезд к городу Верхнедвинску от автомобильной дороги Р-20</font></td>
     <td><nobr>памылковы 'highway'="construction" на way</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Р-23</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/176487'>osm</a><br /><a target='_josm' href='josm://relation/176487' onclick='return josm("r176487");'>josm</a></td>
+    <td>Мінск – Мікашэвічы<br /><font color='gray'>Минск – Микашевичи</font></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-27</nobr></td>
@@ -8789,7 +8801,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-6570</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/5864432'>osm</a><br /><a target='_josm' href='josm://relation/5864432' onclick='return josm("r5864432");'>josm</a></td>
     <td>Падʼезд да пасёлка Берагавы ад аўтамабільнай дарогі М-6/П 4 Падʼезд да горада Гродна ад аўтамабільнай дарогі М-6/Е 28 (км 262,3)<br /><font color='gray'>Подъезд к посёлку Береговой от автомобильной дороги М-6/П 4 Подъезд к городу Гродно от автомобильной дороги М-6/Е 28 (км 262,3)</font></td>
-    <td><nobr>у 'name:be' не вызначаны "М-6/П 4"<br />у 'name:ru' не вызначаны "М-6/П 4"<br />не знойдзены "М-6/П 4"<br />не праходзіць побач з "Гродна"</nobr></td>
+    <td><nobr>"М-6/П 4" не адпавядае найменню ў 'name:be'<br />не дакранаецца да "М-6/Е 28"<br />не праходзіць побач з "Гродна"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-6573</nobr></td>
@@ -8807,7 +8819,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-6593</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/5864470'>osm</a><br /><a target='_josm' href='josm://relation/5864470' onclick='return josm("r5864470");'>josm</a></td>
     <td>Падʼезд да вёскі Шчачынова ад аўтамабільнай дарогі М-6/П 4 Падʼезд да горада Гродна ад аўтамабільнай дарогі М-6/Е 28 (км 262,3)<br /><font color='gray'>Подъезд к деревне Щечиново от автомобильной дороги М-6/П 4 Подъезд к городу Гродно от автомобильной дороги М-6/Е 28 (км 262,3)</font></td>
-    <td><nobr>у 'name:be' не вызначаны "М-6/П 4"<br />у 'name:ru' не вызначаны "М-6/П 4"<br />не знойдзены "М-6/П 4"</nobr></td>
+    <td><nobr>"М-6/П 4" не адпавядае найменню ў 'name:be'<br />не дакранаецца да "М-6/П 4"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-6599</nobr></td>
@@ -9143,7 +9155,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-7281</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/12721007'>osm</a><br /><a target='_josm' href='josm://relation/12721007' onclick='return josm("r12721007");'>josm</a></td>
     <td>Падʼезд да вёскі Нямейшы ад аўтамабільнай дарогі М-6/П 5 Падʼезд да горада Гродна ад аўтамабільнай дарогі М-6/Е 28 (км 287,3)<br /><font color='gray'>Подъезд к деревне Немейши от автомобильной дороги М-6/П 5 Подъезд к городу Гродно от автомобильной дороги М-6/Е 28 (км 287,3)</font></td>
-    <td><nobr>"М-6/П 5" не адпавядае найменню ў 'name:be'<br />не дакранаецца да "М-6/Е 28"<br />не праходзіць побач з "Гродна"</nobr></td>
+    <td><nobr>не дакранаецца да "М-6/Е 28"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-7302</nobr></td>
@@ -14672,12 +14684,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-9901</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14416957'>osm</a><br /><a target='_josm' href='josm://relation/14416957' onclick='return josm("r14416957");'>josm</a></td>
-    <td>Новы Шлях – Вішнёўка – Бярозава Пасека – Грабнікі<br /><font color='gray'>Новый Путь – Вишневка – Березова Пасека – Грабники</font></td>
-    <td><nobr>існуе дублікат 'ref'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-9905</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417573'>osm</a><br /><a target='_josm' href='josm://relation/14417573' onclick='return josm("r14417573");'>josm</a></td>
     <td>Ляды – Бор – Гай<br /><font color='gray'>Ляды – Бор – Гай</font></td>
@@ -17531,7 +17537,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-20251</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/12734118'>osm</a><br /><a target='_josm' href='josm://relation/12734118' onclick='return josm("r12734118");'>josm</a></td>
     <td>Падʼезд да садаводчага таварыства урочышча Каробчыцы ад аўтамабільнай дарогі М-6/П 5 Падʼезд да горада Гродна ад аўтамабільнай дарогі М-6/Е 28 (км 287,3)<br /><font color='gray'>Подъезд к садоводческому товариществу урочища Коробчицы от автомобильной дороги М-6/П 5 Подъезд к городу Гродно от автомобильной дороги М-6/Е 28 (км 287,3)</font></td>
-    <td><nobr>"М-6/П 5" не адпавядае найменню ў 'name:be'<br />не дакранаецца да "М-6/Е 28"<br />не праходзіць побач з "Гродна"</nobr></td>
+    <td><nobr>не дакранаецца да "М-6/Е 28"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-20252</nobr></td>
@@ -18795,7 +18801,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
 
 <br /><hr />
 <p>
- <font size='-1'>Cтаронка створаная 2023-06-14 22:39:39 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-06-14 01:27:31+00:00</font>
+ <font size='-1'>Cтаронка створаная 2023-06-18 23:31:36 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-06-18 01:16:42+00:00</font>
  <br />
  <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
 </p>
