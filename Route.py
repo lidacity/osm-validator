@@ -311,7 +311,7 @@ class RouteValidator(Validator):
      if Name in Bes:
       break
     else:
-     Result.append(f"не супадаюць населеныя пункты у 'name:be' і 'name:ru'")
+     Result.append(f"не супадаюць населеныя пункты ў 'name:be' і 'name:ru'")
   return Result
 
 
