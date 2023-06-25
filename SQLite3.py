@@ -4,6 +4,7 @@
 import os
 import sys
 import sqlite3
+import hashlib
 
 import requests
 from datetime import datetime
@@ -25,7 +26,7 @@ class OsmPbf:
   PBF = self.GetFileName(URL)
   FileName = self.ChangeExt(PBF, ".db")
   if Download:
-   if self.Download(URL, PBF):
+   if self.Download(URL, PBF) and self.CheckMD5(URL, PBF):
     if os.path.isfile(FileName):
      os.remove(FileName)
    if not os.path.isfile(FileName):
@@ -87,6 +88,29 @@ class OsmPbf:
   # logger.info(f"Skip download {URL}")
   Requests.close()
   return Result
+
+
+ def md5(self, FileName):
+  Result = hashlib.md5()
+  with open(FileName, "rb") as File:
+   for Chunk in iter(lambda: File.read(4096), b""):
+    Result.update(Chunk)
+  return Result.hexdigest()
+
+
+ def CheckMD5(self, URL, FileName):
+  self.Download(URL + ".md5", FileName + ".md5")
+  logger.info(f"check md5")
+  Result = ""
+  for Line in open(FileName + ".md5", "r"):
+   MD5, Name = Line.split()
+   if Name == FileName[-len(Name):]:
+    Result = self.md5(FileName)
+    if MD5 == Result:
+     logger.info(f"md5 Ok")
+     return True
+  logger.error(f"md5 failed: \"{MD5}\" != \"{Result}\"")
+  return False
 
 
  ##################################################
