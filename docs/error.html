@@ -30,22 +30,34 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
   </thead>
   <tbody>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>М-1/Е 30</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/78041'>osm</a><br /><a target='_josm' href='josm://relation/78041' onclick='return josm("r78041");'>josm</a></td>
-    <td>Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
-    <td><nobr>памылковы 'highway'="service" на way<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>М-1/П 1</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16009902'>osm</a><br /><a target='_josm' href='josm://relation/16009902' onclick='return josm("r16009902");'>josm</a></td>
+    <td>Падʼезд да горада Дзяржынск ад аўтамабільнай дарогі М-1/Е 30<br /><font color='gray'>Подъезд к городу Дзержинску от автомобильной дороги М-1/Е 30</font></td>
+    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>М-1/П 3</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16009900'>osm</a><br /><a target='_josm' href='josm://relation/16009900' onclick='return josm("r16009900");'>josm</a></td>
+    <td>Падʼезд да аэрапорта Брэст ад аўтамабільнай дарогі М-1/Е 30<br /><font color='gray'>Подъезд к аэропорту Брест от автомобильной дороги М-1/Е 30</font></td>
+    <td><nobr>памылковы 'highway'="service" на way<br />не праходзіць побач з "Брэст"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>М-1/П 5</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16009898'>osm</a><br /><a target='_josm' href='josm://relation/16009898' onclick='return josm("r16009898");'>josm</a></td>
+    <td>Падʼезд да горада Брэст ад аўтамабільнай дарогі М-1/Е 30<br /><font color='gray'>Подъезд к городу Бресту от автомобильной дороги М-1/Е 30</font></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />way змяшчае недапушчальны 'name'</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>М-1/П 6</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16009896'>osm</a><br /><a target='_josm' href='josm://relation/16009896' onclick='return josm("r16009896");'>josm</a></td>
+    <td>Падʼезд да горада Брэст (да вуліцы Пісменніка Смірнова) ад аўтамабільнай дарогі М-1/Е 30<br /><font color='gray'>Подъезд к городу Бресту (до улицы Писателя Смирнова) от автомобильной дороги М-1/Е 30</font></td>
+    <td><nobr>'name:ru' не супадае з Законам<br />існуе дублікат 'ref'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>М-2</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/159001'>osm</a><br /><a target='_josm' href='josm://relation/159001' onclick='return josm("r159001");'>josm</a></td>
     <td>Мінск – Нацыянальны аэрапорт Мінск<br /><font color='gray'>Минск – Национальный аэропорт Минск</font></td>
-    <td><nobr>памылковы 'highway'="service" на way<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>М-3</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/164796'>osm</a><br /><a target='_josm' href='josm://relation/164796' onclick='return josm("r164796");'>josm</a></td>
-    <td>Мінск – Віцебск<br /><font color='gray'>Минск – Витебск</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>М-4</nobr></td>
@@ -240,7 +252,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Р-43</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2786094'>osm</a><br /><a target='_josm' href='josm://relation/2786094' onclick='return josm("r2786094");'>josm</a></td>
     <td>Мяжа Расійскай Федэрацыі (Звянчатка) – Крычаў – Бабруйск – Івацэвічы (да аўтамабільнай дарогі Р-2/Е 85)<br /><font color='gray'>Граница Российской Федерации (Звенчатка) – Кричев – Бобруйск – Ивацевичи (до автомобильной дороги Р-2/Е 85)</font></td>
-    <td><nobr>не праходзіць побач з "Івацэвічы"</nobr></td>
+    <td><nobr>памылковы 'highway'="construction" на way<br />не праходзіць побач з "Івацэвічы"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-52</nobr></td>
@@ -277,12 +289,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/2630828'>osm</a><br /><a target='_josm' href='josm://relation/2630828' onclick='return josm("r2630828");'>josm</a></td>
     <td>Чашнікі – Бобр – Бабруйск (праз Клічаў)<br /><font color='gray'>Чашники – Бобр – Бобруйск (через Кличев)</font></td>
     <td><nobr>не праходзіць побач з "Бабруйск"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Р-63</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/2796634'>osm</a><br /><a target='_josm' href='josm://relation/2796634' onclick='return josm("r2796634");'>josm</a></td>
-    <td>Барысаў – Вілейка – Ашмяны<br /><font color='gray'>Борисов – Вилейка – Ошмяны</font></td>
-    <td><nobr>памылковы 'highway'="construction" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-65</nobr></td>
@@ -378,7 +384,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Р-145</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2666154'>osm</a><br /><a target='_josm' href='josm://relation/2666154' onclick='return josm("r2666154");'>josm</a></td>
     <td>Гродна – Астрына – Радунь – мяжа Літоўскай Рэспублікі (Доцішкі)<br /><font color='gray'>Гродно – Острино – Радунь – граница Литовской Республики (Дотишки)</font></td>
-    <td><nobr>памылковы 'highway'="construction" на way</nobr></td>
+    <td><nobr>памылковы 'highway'="construction" на way<br />пусты 'highway' на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-146</nobr></td>
@@ -2607,7 +2613,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-847</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14398907'>osm</a><br /><a target='_josm' href='josm://relation/14398907' onclick='return josm("r14398907");'>josm</a></td>
     <td>Кустовічы (ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі) – Акцябр – Гарадзец<br /><font color='gray'>Кустовичи (от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки) – Октябрь – Городец</font></td>
-    <td><nobr>у 'name:be' непарныя дужкі ці двукоссі "("<br />way не паслядоўныя</nobr></td>
+    <td><nobr>у 'name:be' непарныя дужкі ці двукоссі "("<br />не дакранаецца да "М-1/Е 30"<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-848</nobr></td>
@@ -2691,7 +2697,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-875</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14398902'>osm</a><br /><a target='_josm' href='josm://relation/14398902' onclick='return josm("r14398902");'>josm</a></td>
     <td>Падалессе – Басяч – Луцэвічы (да аўтамабільнай дарогі Р-2/Е 85 Стоўбцы – Івацэвічы – Кобрын)<br /><font color='gray'>Подолесье – Босяч – Луцевичи (до автомобильной дороги Р-2/Е 85 Столбцы – Ивацевичи – Кобрин)</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-876</nobr></td>
@@ -16716,12 +16722,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="track" на way<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-11223</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14422432'>osm</a><br /><a target='_josm' href='josm://relation/14422432' onclick='return josm("r14422432");'>josm</a></td>
-    <td>Лапічы – Гоманаўка<br /><font color='gray'>Лапичи – Гомоновка</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-11224</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14422582'>osm</a><br /><a target='_josm' href='josm://relation/14422582' onclick='return josm("r14422582");'>josm</a></td>
     <td>Ручэй – Вярбілава<br /><font color='gray'>Ручей – Вербилово</font></td>
@@ -18783,7 +18783,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
  </table>
 </div><br /><hr />
 <p>
- <font size='-1'>Cтаронка створаная 2023-06-22 01:26:19 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-06-20 03:35:25+00:00</font>
+ <font size='-1'>Cтаронка створаная 2023-06-25 23:16:05 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-06-24 03:23:13+00:00</font>
  <br />
  <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
 </p>
