@@ -153,7 +153,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>М-12/Е 85</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/1273235'>osm</a><br /><a target='_josm' href='josm://relation/1273235' onclick='return josm("r1273235");'>josm</a></td>
     <td>Кобрын – мяжа Украіны (Макраны)<br /><font color='gray'>Кобрин – граница Украины (Мокраны)</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
   </tbody>
  </table>
@@ -221,8 +221,8 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-31</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2648005'>osm</a><br /><a target='_josm' href='josm://relation/2648005' onclick='return josm("r2648005");'>josm</a></td>
-    <td>Бабруйск (ад аўтамабільнай дарогі М-5/Е 271) – Мазыр – мяжа Украіны (Новая Рудня)<br /><font color='gray'>Бобруйск (от автомобильной дороги М-5/Е 271) – Мозырь – граница Украины (Новая Рудня)</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
+    <td>Бобруйск (пекло автомобільної дороги М-5/Е 271) – Мозир – межа України (Нова Рудня)<br /><font color='gray'></font></td>
+    <td><nobr>не знойдзены 'name:ru'<br />'name:be' не роўны 'name'<br />'name:ru' не супадае з Законам<br />розніца паміж даўжынёй 'name:be' і 'name:ru'<br />у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-34</nobr></td>
@@ -239,8 +239,8 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-36</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2648043'>osm</a><br /><a target='_josm' href='josm://relation/2648043' onclick='return josm("r2648043");'>josm</a></td>
-    <td>Мазыр – Лельчыцы – Мілашавічы – мяжа Украіны (Глушкавічы)<br /><font color='gray'>Мозырь – Лельчицы – Милошевичи – граница Украины (Глушковичи)</font></td>
-    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />памылковы 'highway'="service" на way<br />way змяшчае недапушчальны 'name:ru'</nobr></td>
+    <td>Мозир – Лельчиці – Мілашавічи – межа України (Глушкавічи)<br /><font color='gray'></font></td>
+    <td><nobr>не знойдзены 'name:ru'<br />'name:be' не роўны 'name'<br />'name:ru' не супадае з Законам<br />розніца паміж даўжынёй 'name:be' і 'name:ru'<br />не супадае 'ref' у relation і 'ref' яе ways<br />памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-37</nobr></td>
@@ -385,6 +385,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/2790172'>osm</a><br /><a target='_josm' href='josm://relation/2790172' onclick='return josm("r2790172");'>josm</a></td>
     <td>Ветка – Добруш – Церахоўка – мяжа Расійскай Федэрацыі і мяжа Украіны (Весялоўка)<br /><font color='gray'>Ветка – Добруш – Тереховка – граница Российской Федерации и граница Украины (Веселовка)</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Р-127</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/2367253'>osm</a><br /><a target='_josm' href='josm://relation/2367253' onclick='return josm("r2367253");'>josm</a></td>
+    <td>Кобрын – мяжа Украіны (Дзівін)<br /><font color='gray'>Кобрин – граница Украины (Дивин)</font></td>
+    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-136</nobr></td>
@@ -992,8 +998,8 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-216</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14398397'>osm</a><br /><a target='_josm' href='josm://relation/14398397' onclick='return josm("r14398397");'>josm</a></td>
-    <td>Нявель – мяжа Украіны<br /><font color='gray'>Невель – граница Украины</font></td>
-    <td><nobr>памылковы 'highway'="service" на way<br />way не паслядоўныя</nobr></td>
+    <td>Невель – кордон України<br /><font color='gray'></font></td>
+    <td><nobr>не знойдзены 'name:ru'<br />'name:be' не роўны 'name'<br />'name:ru' не супадае з Законам<br />розніца паміж даўжынёй 'name:be' і 'name:ru'<br />памылковы 'highway'="service" на way<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-217</nobr></td>
@@ -1377,7 +1383,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-355</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14398859'>osm</a><br /><a target='_josm' href='josm://relation/14398859' onclick='return josm("r14398859");'>josm</a></td>
     <td>Воўчын – Навасёлкі – Арля – Агароднікі<br /><font color='gray'>Волчин – Новосёлки – Орля – Огородники</font></td>
-    <td><nobr>way змяшчае недапушчальны 'name'<br />way не паслядоўныя</nobr></td>
+    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-357</nobr></td>
@@ -1390,12 +1396,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/14398886'>osm</a><br /><a target='_josm' href='josm://relation/14398886' onclick='return josm("r14398886");'>josm</a></td>
     <td>Турна Вялікая – Пелішча – Стралі<br /><font color='gray'>Турна Большая – Пелище – Стрели</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-362</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14398730'>osm</a><br /><a target='_josm' href='josm://relation/14398730' onclick='return josm("r14398730");'>josm</a></td>
-    <td>Ратайчыцы – Мінкавічы – Мураўчыцы<br /><font color='gray'>Ратайчицы – Минковичи – Муравчицы</font></td>
-    <td><nobr>way змяшчае недапушчальны 'name'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-366</nobr></td>
@@ -2247,7 +2247,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-705</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14398925'>osm</a><br /><a target='_josm' href='josm://relation/14398925' onclick='return josm("r14398925");'>josm</a></td>
     <td>Сенькавічы – Боркі<br /><font color='gray'>Сеньковичи – Борки</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>way змяшчае недапушчальны 'name'<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-706</nobr></td>
@@ -10209,7 +10209,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-8236</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417175'>osm</a><br /><a target='_josm' href='josm://relation/14417175' onclick='return josm("r14417175");'>josm</a></td>
     <td>Лазавыя – Цярэшкі – Баравыя<br /><font color='gray'>Лозовые – Терешки – Боровые</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-8237</nobr></td>
@@ -12831,12 +12831,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-9236</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417403'>osm</a><br /><a target='_josm' href='josm://relation/14417403' onclick='return josm("r14417403");'>josm</a></td>
     <td>Крывічы – Будслаў<br /><font color='gray'>Кривичи – Будслав</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-9238</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417871'>osm</a><br /><a target='_josm' href='josm://relation/14417871' onclick='return josm("r14417871");'>josm</a></td>
-    <td>Уздрыгалавічы – Плашына – Баравікі<br /><font color='gray'>Уздриголовичи – Плашино – Боровики</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -18072,6 +18066,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не дакранаецца да "Н-9841"<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-22034</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/15621714'>osm</a><br /><a target='_josm' href='josm://relation/15621714' onclick='return josm("r15621714");'>josm</a></td>
+    <td>Падʼезд да могілак вёскі Цеплень ад аўтамабільнай дарогі Н-9845 Ячанка – Цеплень – Трысцянец<br /><font color='gray'>Подъезд к кладбищу деревни Теплень от автомобильной дороги Н-9845 Яченка – Теплень – Тристенец</font></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />памылковы 'highway'="service" на way</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-22037</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/15621722'>osm</a><br /><a target='_josm' href='josm://relation/15621722' onclick='return josm("r15621722");'>josm</a></td>
     <td>Падʼезд да вёскі Каладзіно ад аўтамабільнай дарогі Н-9845 Ячанка – Цеплень – Трысцянец<br /><font color='gray'>Подъезд к деревне Колодино от автомобильной дороги Н-9845 Яченка – Теплень – Тристенец</font></td>
@@ -18837,7 +18837,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
  </table>
 </div><br /><hr />
 <p>
- <font size='-1'>Cтаронка створаная 2023-07-23 23:31:17 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-07-22 03:20:26+00:00</font>
+ <font size='-1'>Cтаронка створаная 2023-07-31 02:04:55 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-07-29 03:30:04+00:00</font>
  <br />
  <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
 </p>
