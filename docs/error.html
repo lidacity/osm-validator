@@ -123,7 +123,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>М-8/П 8</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/15970688'>osm</a><br /><a target='_josm' href='josm://relation/15970688' onclick='return josm("r15970688");'>josm</a></td>
     <td>Праезд па гарадскому пасёлку Копысь (вуліца Ленінская) ад аўтамабільнай дарогі М-8/П 3<br /><font color='gray'>Проезд по городскому посёлку Копысь (улица Ленинская) от автомобильной дороги М-8/П 3</font></td>
-    <td><nobr>'name:be' не роўны 'name'<br />не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
+    <td><nobr>не праходзіць побач з "Ленінская"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>М-10</nobr></td>
@@ -213,6 +213,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way занадта разарваны</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Р-28/П 3</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/15844479'>osm</a><br /><a target='_josm' href='josm://relation/15844479' onclick='return josm("r15844479");'>josm</a></td>
+    <td>Падʼезд да вёскі Крыжоўка ад аўтамабільнай дарогі Р-28<br /><font color='gray'>Подъезд к деревне Крыжовка от автомобильной дороги Р-28</font></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-31</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2648005'>osm</a><br /><a target='_josm' href='josm://relation/2648005' onclick='return josm("r2648005");'>josm</a></td>
     <td>Бабруйск (ад аўтамабільнай дарогі М-5/Е 271) – Мазыр – мяжа Украіны (Новая Рудня)<br /><font color='gray'>Бобруйск (от автомобильной дороги М-5/Е 271) – Мозырь – граница Украины (Новая Рудня)</font></td>
@@ -295,6 +301,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/1823593'>osm</a><br /><a target='_josm' href='josm://relation/1823593' onclick='return josm("r1823593");'>josm</a></td>
     <td>Заслаўе – Дзяржынск – Возера<br /><font color='gray'>Заславль – Дзержинск – Озеро</font></td>
     <td><nobr>way змяшчае недапушчальны 'name'</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Р-67</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/2798200'>osm</a><br /><a target='_josm' href='josm://relation/2798200' onclick='return josm("r2798200");'>josm</a></td>
+    <td>Барысаў – Беразіно – Бабруйск<br /><font color='gray'>Борисов – Березино – Бобруйск</font></td>
+    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-68</nobr></td>
@@ -423,7 +435,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-2</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/15735231'>osm</a><br /><a target='_josm' href='josm://relation/15735231' onclick='return josm("r15735231");'>josm</a></td>
     <td>Ганчары – Куршынавічы – Ганцавічы<br /><font color='gray'>Гончары – Куршиновичи – Ганцевичи</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>падвоеныя way<br />way знаходзяцца ў некалькіх relation<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-3</nobr></td>
@@ -2559,7 +2571,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-820</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14398503'>osm</a><br /><a target='_josm' href='josm://relation/14398503' onclick='return josm("r14398503");'>josm</a></td>
     <td>Дарава – Федзюкі<br /><font color='gray'>Дарево – Федюки</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>не супадае 'name' у relation і 'official_name' яе ways<br />не супадае 'name:be' у relation і 'official_name:be' яе ways<br />не супадае 'name:ru' у relation і 'official_name:ru' яе ways<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-823</nobr></td>
@@ -2998,12 +3010,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/14409149'>osm</a><br /><a target='_josm' href='josm://relation/14409149' onclick='return josm("r14409149");'>josm</a></td>
     <td>Бугры – Малькі – Яя<br /><font color='gray'>Бугры – Мальки – Яя</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-2172</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14408795'>osm</a><br /><a target='_josm' href='josm://relation/14408795' onclick='return josm("r14408795");'>josm</a></td>
-    <td>Карпішкі – Мяшкелі<br /><font color='gray'>Карпишки – Мешкели</font></td>
-    <td><nobr>не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-2174</nobr></td>
@@ -10761,7 +10767,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-8425</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417683'>osm</a><br /><a target='_josm' href='josm://relation/14417683' onclick='return josm("r14417683");'>josm</a></td>
     <td>Дзяржынск – Клыпаўшчына – Мікулічы<br /><font color='gray'>Дзержинск – Клыповщина – Микуличи</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>way змяшчае недапушчальны 'name'<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-8427</nobr></td>
@@ -17019,7 +17025,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-11438</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14422750'>osm</a><br /><a target='_josm' href='josm://relation/14422750' onclick='return josm("r14422750");'>josm</a></td>
     <td>Гіраўцы – Галузы<br /><font color='gray'>Гиревцы – Галузы</font></td>
-    <td><nobr>памылковы 'highway'="track" на way<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-11442</nobr></td>
@@ -18855,7 +18861,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
  </table>
 </div><br /><hr />
 <p>
- <font size='-1'>Cтаронка створаная 2023-08-14 00:05:01 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-08-12 02:58:08+00:00</font>
+ <font size='-1'>Cтаронка створаная 2023-08-21 00:14:58 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-08-19 04:13:37+00:00</font>
  <br />
  <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
 </p>
