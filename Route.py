@@ -863,7 +863,7 @@ class RouteValidator(Validator):
     Result['Error'] += self.CheckCoordPlace(Tag, Ways, Coords, HighwaysBe)
    #
    Ways = self.GetWays(Relation, Role=["", "route", "forward"]) #"backward"
-  if Ways:
+   if Ways:
     Result['Error'] += self.CheckCross(Ways)
     Result['Error'] += self.CheckIsland(Ways)
     Result['Error'] += self.CheckHaversine(Ways)
