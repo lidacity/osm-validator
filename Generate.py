@@ -24,6 +24,12 @@ Directory = os.path.join(Path, ".data")
 if not os.path.exists(Directory):
  os.makedirs(Directory)
 
+# type=boundary
+BY = 59065
+List = ["boundary"]
+Context = GetBoundaryContext(BY)
+Generate(List, Context)
+
 # type=route
 Route = {
  'M': { 'Cyr': "М", 'Lat': "M", 'ID': 1246287, 'FileName': "M.csv", 'Main': True, 'Desc': "Магістральныя аўтамабільныя дарогі" },
@@ -35,13 +41,6 @@ List = ["index", "highway", "error", "relation", "separated", "network", "missin
 Context = GetRouteContext(Route, Network)
 Context['PravoError'], Context['Pravo'] = GetPravo()
 Generate(List, Context)
-
-# type=boundary
-BY = 59065
-List = ["boundary"]
-Context = GetBoundaryContext(BY)
-Generate(List, Context)
-
 
 # git
 
