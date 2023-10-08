@@ -176,7 +176,8 @@ class Validator:
  def GetNameLang(self, TagName):
   S = TagName + ':'
   Result = S.split(":")
-  return Result[:2]
+#  return Result[:2]
+  return [Result[0], (":" if Result[1] else "") + Result[1]]
 
 
  def SplitName(self, S, TagName='name'):
@@ -194,10 +195,7 @@ class Validator:
    #
    if Result:
     Index = len(Result) + 1
-    if Lang:
-     Key = f"{Name}#{Index}:{Lang}"
-    else:
-     Key = f"{Name}#{Index}"
+    Key = f"{Name}#{Index}{Lang}"
    else:
     Key = f"{Name}"
    #
@@ -209,8 +207,10 @@ class Validator:
   Name, Lang = self.GetNameLang(TagName)
   Result = Tag.get(TagName, Default)
   i = 2
-  while f"{Name}#{i}:{Lang}" in Tag:
-   Result += Tag[f"{Name}#{i}:{Lang}"]
+  while f"{Name}#{i}{Lang}" in Tag:
+   Result += Tag[f"{Name}#{i}{Lang}"]
    i += 1
+  if f"alt_{Name}{Lang}" in Tag:
+   Result += Tag[f"alt_{Name}{Lang}"]
   return Result.replace("……", "")
 

@@ -255,10 +255,10 @@ class RouteValidator(Validator):
   Tag = Relation['tags']
   if 'name:ru' in Tag:
    Name = self.JoinName(Tag, 'name:ru')
-   for Ref in self.GetList(Name, 'ok'):
+   Roads = self.GetList(Name, 'ok')
+   for Ref in Roads:
     Highway = Highways[Ref]
-    if Ref in Highway['Desc']:
-     Name = Name.replace(f"{Ref} {Highway['Desc']}", f"{Ref}")
+    Name = Name.replace(f"{Ref} {Highway['Desc']}", f"{Ref}")
    Roads = self.GetList(Name, 'ok')
    if Roads:
     Nodes = set(self.GetAllNodes(Relation))
@@ -503,7 +503,7 @@ class RouteValidator(Validator):
   'railway': ["station", "halt"],
   'historic': ["memorial"],
   'amenity': ["school"],
-  'landuse': ["allotments", "quarry", "residential"],
+  'landuse': ["allotments", "quarry", "residential", "industrial"],
   'leisure': ["resort"],
   'highway': ["bus_stop"],
  }
@@ -863,7 +863,7 @@ class RouteValidator(Validator):
     Result['Error'] += self.CheckCoordPlace(Tag, Ways, Coords, HighwaysBe)
    #
    Ways = self.GetWays(Relation, Role=["", "route", "forward"]) #"backward"
-   if Ways:
+  if Ways:
     Result['Error'] += self.CheckCross(Ways)
     Result['Error'] += self.CheckIsland(Ways)
     Result['Error'] += self.CheckHaversine(Ways)
