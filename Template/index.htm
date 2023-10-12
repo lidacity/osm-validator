@@ -16,13 +16,68 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
 
 <hr />
 <div id='Help'>
- <h2>Даведка</h2>
- <div id='Law'>
-  {% block Law%}{% endblock %}
+
+ <div id='Documents'>
+  <h2>Справаздачы</h2>
+  <ul>
+   <!--<li><a href='http://osm-validator.lidacity.by/index.html'>гэтая старонка</a></li>-->
+   <li><a href='http://osm-validator.lidacity.by/highway.html'>спіс аўтамабільных дарог</a> (<a href='http://osm-validator.lidacity.by/highway.csv'>CSV</a>)
+    <ul>
+     <li><a href='http://osm-validator.lidacity.by/relation.html'>якія адсутнічаюць у osm</a> (<a href='http://osm-validator.lidacity.by/relation.csv'>CSV</a>)</li>
+     <li><a href='http://osm-validator.lidacity.by/separated.html'>з памылкамі ў osm</a> (<a href='http://osm-validator.lidacity.by/separated.csv'>CSV</a>)</li>
+    </ul>
+   </li>
+   <li><a href='http://osm-validator.lidacity.by/network.html'>спіс аўтамабільных дарог, якія не злучаныя ў агульную сетку аўтамабільных дарог</a> (<a href='http://osm-validator.lidacity.by/network.csv'>CSV</a>)</li>
+   <li><a href='http://osm-validator.lidacity.by/missing.html'>спіс дарог, якія не прывязаныя да аўтамабільных дарог</a> (<a href='http://osm-validator.lidacity.by/missing.csv'>CSV</a>)</li>
+   <li><a href='http://osm-validator.lidacity.by/boundary.html'>праверка замкнутай межы ў краіне</a> (<a href='http://osm-validator.lidacity.by/boundary.csv'>CSV</a>)</li>
+  </ul>
  </div>
 
- <details>
-  <summary>Кароткае апісанне памылак</summary>
+ <hr />
+
+ <div id='Law'>
+{%- for Item in Pravo %}
+  <h2>Законы</h2>
+  <p>
+    {% if Item['Error'] -%}
+<font color='red'><strike>
+{%- endif -%}
+<a href='{{Item['URL']}}'>{{Item['Desc']}}</a>
+{%- if Item['Error'] -%}
+</strike></font>
+{%- endif %}
+{%- if Item['Append'] %}
+   <br />
+   в том числе акты, изменяющие (дополняющие) документ:
+   <ul>
+{%- for Append in Item['Append'] %}
+    <li>
+{%- if Append['Error'] -%}
+<font color='red'><strike>
+{%- endif -%}
+{{Append['Desc']}}
+{%- if Append['Error'] -%}
+</strike></font>
+{%- endif -%}
+</li>
+{%- endfor %}
+   </ul>
+{%- endif %}
+  </p>
+  <hr width='50%' align='left'>
+{%- endfor %}
+  <h3>Найменні аўтамабільных дарог з заканадаўства</h3>
+  <ul>
+   <li><a href='http://osm-validator.lidacity.by/M.csv'>Магістральные аўтамабільныя дарогі</a></li>
+   <li><a href='http://osm-validator.lidacity.by/P.csv'>Рэспубліканскія аўтамабільныя дарогі</a></li>
+   <li><a href='http://osm-validator.lidacity.by/H.csv'>Мясцовыя аўтамабільныя дарогі</a></li>
+  </ul>
+ </div>
+
+ <hr />
+
+ <div id='Summary'>
+  <h2>Кароткае апісанне памылак</h2>
   <ul>
    <li><b>"{Ref}" адсутнічае ў Законе</b> - у заканадаўстве адсутнічае аўтамабільная дарога "{Ref}"</li>
    <li><b>relation адсутнічае</b> - у osm не знойдзены relation з зададзеным 'official_ref'</li>
@@ -72,36 +127,9 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <li><b>way занадта разарваны</b> - ланцужкі way у relation размешчаныя занадта далёка паміж сабою</li>
    <li><b>не прывязаны</b> - дарогі, якія не прывязаныя да аўтамабільных дарог</li>
   </ul>
- </details>
+ </div>
 
- <details>
-  <summary>Спрошчаныя справаздачы</summary>
-  <ul>URL:
-   <li><a href='http://osm-validator.lidacity.by/index.html'>гэтая старонка, поўны спіс</a></li>
-   <li><a href='http://osm-validator.lidacity.by/highway.html'>спіс аўтамабільных дарог</a></li>
-   <li><a href='http://osm-validator.lidacity.by/relation.html'>спіс аўтамабільных дарог, якія адсутнічаюць у osm</a></li>
-   <li><a href='http://osm-validator.lidacity.by/separated.html'>спіс аўтамабільных дарог з памылкамі ў osm</a></li>
-   <li><a href='http://osm-validator.lidacity.by/network.html'>спіс аўтамабільных дарог, якія не злучаныя ў агульную сетку аўтамабільных дарог</a></li>
-   <li><a href='http://osm-validator.lidacity.by/missing.html'>спіс дарог, якія не прывязаныя да аўтамабільных дарог</a></li>
-   <li><a href='http://osm-validator.lidacity.by/boundary.html'>праверка замкнутай межы краіны</a></li>
-  </ul>
-  <ul>CSV:
-   <li><a href='http://osm-validator.lidacity.by/highway.csv'>спіс аўтамабільных дарог</a></li>
-   <li><a href='http://osm-validator.lidacity.by/relation.csv'>спіс аўтамабільных дарог, якія адсутнічаюць у osm</a></li>
-   <li><a href='http://osm-validator.lidacity.by/separated.csv'>спіс аўтамабільных дарог з памылкамі ў osm</a></li>
-   <li><a href='http://osm-validator.lidacity.by/network.csv'>спіс аўтамабільных дарог, якія не злучаныя ў агульную сетку аўтамабільных дарог</a></li>
-   <li><a href='http://osm-validator.lidacity.by/missing.csv'>спіс дарог, якія не прывязаныя да аўтамабільных дарог</a></li>
-   <li><a href='http://osm-validator.lidacity.by/boundary.csv'>праверка замкнутай межы краіны</a></li>
-  </ul>
-  <ul>Найменне з заканадаўства ў CSV:
-   <li><a href='http://osm-validator.lidacity.by/M.csv'>магістральные аўтамабільныя дарогі</a></li>
-   <li><a href='http://osm-validator.lidacity.by/P.csv'>рэспубліканскія аўтамабільныя дарогі</a></li>
-   <li><a href='http://osm-validator.lidacity.by/H.csv'>мясцовыя аўтамабільныя дарогі</a></li>
-  </ul>
- </details>
 </div>
-
-{% block Highway -%}{%- endblock %}
 
 <br /><hr />
 <p>
