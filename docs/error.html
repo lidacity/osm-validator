@@ -147,6 +147,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way занадта разарваны</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Р-3</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/2793958'>osm</a><br /><a target='_josm' href='josm://relation/2793958' onclick='return josm("r2793958");'>josm</a></td>
+    <td>Лагойск – Зембін – Глыбокае – мяжа Латвійскай Рэспублікі (Урбаны)<br /><font color='gray'>Логойск – Зембин – Глубокое – граница Латвийской Республики (Урбаны)</font></td>
+    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Р-11</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2725767'>osm</a><br /><a target='_josm' href='josm://relation/2725767' onclick='return josm("r2725767");'>josm</a></td>
     <td>Парачаны (ад аўтамабільнай дарогі М-6/Е 28) – Навагрудак – Нясвіж<br /><font color='gray'>Поречаны (от автомобильной дороги М-6/Е 28) – Новогрудок – Несвиж</font></td>
@@ -417,7 +423,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-521</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/1690025'>osm</a><br /><a target='_josm' href='josm://relation/1690025' onclick='return josm("r1690025");'>josm</a></td>
     <td>Ружаны – Лыскава<br /><font color='gray'>Ружаны – Лысково</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>way змяшчае недапушчальны 'name'<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-522</nobr></td>
@@ -874,12 +880,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/14398635'>osm</a><br /><a target='_josm' href='josm://relation/14398635' onclick='return josm("r14398635");'>josm</a></td>
     <td>Косава – Мілейкі – Гладышы<br /><font color='gray'>Коссово – Милейки – Гладыши</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-700</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14398854'>osm</a><br /><a target='_josm' href='josm://relation/14398854' onclick='return josm("r14398854");'>josm</a></td>
-    <td>Яглевічы – Майск – Любішчыцы<br /><font color='gray'>Яглевичи – Майск – Любищицы</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-702</nobr></td>
@@ -1516,18 +1516,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/16640403'>osm</a><br /><a target='_josm' href='josm://relation/16640403' onclick='return josm("r16640403");'>josm</a></td>
     <td>Падʼезд да возера Бароўна ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к озеру Боровно от автомобильной дороги М-3 Минск – Витебск</font></td>
     <td><nobr>не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-2084</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16640408'>osm</a><br /><a target='_josm' href='josm://relation/16640408' onclick='return josm("r16640408");'>josm</a></td>
-    <td>Падʼезд да вёскі Бікложа праз вёску Ржаўка ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к деревне Бикложа через деревню Ржавка от автомобильной дороги М-3 Минск – Витебск</font></td>
-    <td><nobr>'name:ru' не супадае з Законам<br />існуе дублікат 'ref'<br />не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-2087</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16640400'>osm</a><br /><a target='_josm' href='josm://relation/16640400' onclick='return josm("r16640400");'>josm</a></td>
-    <td>Падʼезд да вёскі Малы Двор ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к деревне Малый Двор от автомобильной дороги М-3 Минск – Витебск</font></td>
-    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-2100</nobr></td>
@@ -6888,12 +6876,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-6057</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13177147'>osm</a><br /><a target='_josm' href='josm://relation/13177147' onclick='return josm("r13177147");'>josm</a></td>
-    <td>Бародзічы – Холстава – Зенькаўцы – Хамічы<br /><font color='gray'>Бородичи – Холстово – Зеньковцы – Хомичи</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-6079</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/13185304'>osm</a><br /><a target='_josm' href='josm://relation/13185304' onclick='return josm("r13185304");'>josm</a></td>
     <td>Падʼезд да асфальтабетоннага завода дарожнага будаўніча-рамонтнага кіравання № 118 ад аўтамабільнай дарогі Р-50 Масты – Зэльва – Ружаны<br /><font color='gray'>Подъезд к асфальтобетонному заводу дорожного ремонтно-строительного управления № 118 от автомобильной дороги Р-50 Мосты – Зельва – Ружаны</font></td>
@@ -7701,7 +7683,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-8006</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417342'>osm</a><br /><a target='_josm' href='josm://relation/14417342' onclick='return josm("r14417342");'>josm</a></td>
     <td>Волы – Мачаск – Любушаны<br /><font color='gray'>Волы – Маческ – Любушаны</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-8007</nobr></td>
@@ -8835,12 +8817,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-8490</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14416890'>osm</a><br /><a target='_josm' href='josm://relation/14416890' onclick='return josm("r14416890");'>josm</a></td>
     <td>Салаўі – Яфімавічы – Іскры<br /><font color='gray'>Соловьи – Ефимовичи – Искры</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-8491</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417057'>osm</a><br /><a target='_josm' href='josm://relation/14417057' onclick='return josm("r14417057");'>josm</a></td>
-    <td>Навадворкі – Шчэпічы – Яжавічы – Салаўі<br /><font color='gray'>Новодворки – Щепичи – Яжевичи – Соловьи</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -12432,12 +12408,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-9921</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417406'>osm</a><br /><a target='_josm' href='josm://relation/14417406' onclick='return josm("r14417406");'>josm</a></td>
-    <td>Калодзежы – Зарэчча<br /><font color='gray'>Колодежи – Заречье</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-9922</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417455'>osm</a><br /><a target='_josm' href='josm://relation/14417455' onclick='return josm("r14417455");'>josm</a></td>
     <td>Язоўкі – Велікаполле – Бярозаўка 2<br /><font color='gray'>Язовки – Великополье – Березовка 2</font></td>
@@ -12582,12 +12552,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-9959</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417454'>osm</a><br /><a target='_josm' href='josm://relation/14417454' onclick='return josm("r14417454");'>josm</a></td>
-    <td>Грабёнка – Глінішча – Чарнаградзь<br /><font color='gray'>Гребёнка – Глинище – Черноградь</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-9961</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14416765'>osm</a><br /><a target='_josm' href='josm://relation/14416765' onclick='return josm("r14416765");'>josm</a></td>
     <td>Астравы – Лежнёўка<br /><font color='gray'>Островы – Лежневка</font></td>
@@ -12624,6 +12588,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-9992</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665803'>osm</a><br /><a target='_josm' href='josm://relation/16665803' onclick='return josm("r16665803");'>josm</a></td>
+    <td>Падʼезд да АББ «ДРБУ № 121» ад аўтамабільнай дарогі М-4 Мінск – Магілёў<br /><font color='gray'>Подъезд к АББ «ДРСУ № 121» от автомобильной дороги М-4 Минск – Могилев</font></td>
+    <td><nobr>памылковы 'highway'="service" на way<br />не праходзіць побач з "ДРБУ"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-10000</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/1755561'>osm</a><br /><a target='_josm' href='josm://relation/1755561' onclick='return josm("r1755561");'>josm</a></td>
     <td>Бялынічы – Шклоў (да аўтамабільнай дарогі Р-77 Шклоў – Бялынічы (праз Прыгані 2))<br /><font color='gray'>Белыничи – Шклов (до автомобильной дороги Р-77 Шклов – Белыничи (через Пригани 2))</font></td>
@@ -12645,7 +12615,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-10004</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14422998'>osm</a><br /><a target='_josm' href='josm://relation/14422998' onclick='return josm("r14422998");'>josm</a></td>
     <td>Свяцілавічы – Лебядзянка – Барок<br /><font color='gray'>Светиловичи – Лебедянка – Борок</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-10005</nobr></td>
@@ -12795,12 +12765,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-10087</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14422973'>osm</a><br /><a target='_josm' href='josm://relation/14422973' onclick='return josm("r14422973");'>josm</a></td>
     <td>Каменка – Пятровічы – Мартынаўка<br /><font color='gray'>Каменка – Петровичи – Мартыновка</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-10088</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14422361'>osm</a><br /><a target='_josm' href='josm://relation/14422361' onclick='return josm("r14422361");'>josm</a></td>
-    <td>Міраціна – Саломенка – аўтадарога М-5/Е 271 Мінск – Гомель<br /><font color='gray'>Миратино – Соломенка – автодорога М-5/Е 271 Минск – Гомель</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -13968,12 +13932,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-11010</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14423017'>osm</a><br /><a target='_josm' href='josm://relation/14423017' onclick='return josm("r14423017");'>josm</a></td>
-    <td>Новае Пашкава – Сафіеўка (ад аўтамабільнай дарогі М-4 Мінск – Магілёў)<br /><font color='gray'>Новое Пашково – Софиевка (от автомобильной дороги М-4 Минск – Могилев)</font></td>
-    <td><nobr>не дакранаецца да "М-4"<br />way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-11011</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14422612'>osm</a><br /><a target='_josm' href='josm://relation/14422612' onclick='return josm("r14422612");'>josm</a></td>
     <td>Княжыцы – Горная Вуліца<br /><font color='gray'>Княжицы – Горная Улица</font></td>
@@ -14001,7 +13959,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>Н-11016</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14422594'>osm</a><br /><a target='_josm' href='josm://relation/14422594' onclick='return josm("r14422594");'>josm</a></td>
     <td>Завадская Слабада – Каменка – Арлянка – Астраўшчына – чыгуначны прыпыначны пункт «Семуковічы»<br /><font color='gray'>Заводская Слобода – Каменка – Орлянка – Островщина – железнодорожный остановочный пункт «Семуковичи»</font></td>
-    <td><nobr>памылковы 'highway'="track" на way<br />way не паслядоўныя</nobr></td>
+    <td><nobr>памылковы 'highway'="track" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-11017</nobr></td>
@@ -14820,6 +14778,66 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "Ветэран"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12106</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665780'>osm</a><br /><a target='_josm' href='josm://relation/16665780' onclick='return josm("r16665780");'>josm</a></td>
+    <td>Падʼезд да садаводчага таварыства «Ягадка» ад аўтамабільнай дарогі М-4/П 5 Падʼезд да горада Бялынічы ад аўтамабільнай дарогі М-4<br /><font color='gray'>Подъезд к садоводческому товариществу «Ягодка» от автомобильной дороги М-4/П 5 Подъезд к городу Белыничи от автомобильной дороги М-4</font></td>
+    <td><nobr>не праходзіць побач з "Ягадка"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12107</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665792'>osm</a><br /><a target='_josm' href='josm://relation/16665792' onclick='return josm("r16665792");'>josm</a></td>
+    <td>Падʼезд да могілак вёскі Ермалавічы ад аўтамабільнай дарогі М-4 Мінск – Магілёў<br /><font color='gray'>Подъезд к кладбищу деревни Ермоловичи от автомобильной дороги М-4 Минск – Могилев</font></td>
+    <td><nobr>way змяшчае недапушчальны 'name'</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12270</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672256'>osm</a><br /><a target='_josm' href='josm://relation/16672256' onclick='return josm("r16672256");'>josm</a></td>
+    <td>Падʼезд да вёскі Бабіна 2 ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Бабино-2 от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12271</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676493'>osm</a><br /><a target='_josm' href='josm://relation/16676493' onclick='return josm("r16676493");'>josm</a></td>
+    <td>Падʼезд да вёскі Плёсы ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Плессы от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не дакранаецца да "М-5/Е 271"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12272</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676492'>osm</a><br /><a target='_josm' href='josm://relation/16676492' onclick='return josm("r16676492");'>josm</a></td>
+    <td>Падʼезд да вёскі Забалацце ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Заболотье от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12274</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676489'>osm</a><br /><a target='_josm' href='josm://relation/16676489' onclick='return josm("r16676489");'>josm</a></td>
+    <td>Падʼезд да могілак вёскі Туркі ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к кладбищу деревни Турки от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>'name:ru' не супадае з Законам<br />у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />існуе дублікат 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не супадае 'ref' у relation і 'ref' яе ways<br />памылковы 'highway'="service" на way<br />не праходзіць побач з "Гомель"<br />way не паслядоўныя</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12276</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672263'>osm</a><br /><a target='_josm' href='josm://relation/16672263' onclick='return josm("r16672263");'>josm</a></td>
+    <td>Падʼезд да вёскі Такары ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Токари от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12278</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672255'>osm</a><br /><a target='_josm' href='josm://relation/16672255' onclick='return josm("r16672255");'>josm</a></td>
+    <td>Падʼезд да могілак вёскі Бабіна 2 ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к кладбищу деревни Бабино-2 от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12280</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672262'>osm</a><br /><a target='_josm' href='josm://relation/16672262' onclick='return josm("r16672262");'>josm</a></td>
+    <td>Падʼезд да вёскі Баяры ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Бояры от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12282</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672261'>osm</a><br /><a target='_josm' href='josm://relation/16672261' onclick='return josm("r16672261");'>josm</a></td>
+    <td>Падʼезд да дзяржаўнай установы адукацыі «Цэнтр турызму, краязнаўства і экскурсій дзяцей і моладзі горада Бабруйск» ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к государственному учреждению образования «Центр туризма, краеведения и экскурсий детей и молодежи города Бобруйска» от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Цэнтр"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-12894</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16551550'>osm</a><br /><a target='_josm' href='josm://relation/16551550' onclick='return josm("r16551550");'>josm</a></td>
     <td>Падʼезд да вёскі Мікольск ад аўтамабільнай дарогі Р-123 Масток (ад аўтамабільнай дарогі М-8/Е 95) – Дрыбін – Горкі<br /><font color='gray'>Подъезд к деревне Никольск от автомобильной дороги Р-123 Селец (от автомобильной дороги Р-93) – Мосток – Дрибин – Горки</font></td>
@@ -14830,6 +14848,30 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/16551556'>osm</a><br /><a target='_josm' href='josm://relation/16551556' onclick='return josm("r16551556");'>josm</a></td>
     <td>Падʼезд да вёскі Даманы ад аўтамабільнай дарогі Р-123 Масток (ад аўтамабільнай дарогі М-8/Е 95) – Дрыбін – Горкі<br /><font color='gray'>Подъезд к деревне Доманы от автомобильной дороги Р-123 Селец (от автомобильной дороги Р-93) – Мосток – Дрибин – Горки</font></td>
     <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />"Р-123" не адпавядае найменню ў 'name:ru'<br />не дакранаецца да "Р-93"<br />не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12977</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672260'>osm</a><br /><a target='_josm' href='josm://relation/16672260' onclick='return josm("r16672260");'>josm</a></td>
+    <td>Падʼезд да вёскі Гута ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Гута от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12980</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672259'>osm</a><br /><a target='_josm' href='josm://relation/16672259' onclick='return josm("r16672259");'>josm</a></td>
+    <td>Падʼезд да садаводчага таварыства «Ветэран» ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к садоводческому товариществу «Ветеран» от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12981</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672258'>osm</a><br /><a target='_josm' href='josm://relation/16672258' onclick='return josm("r16672258");'>josm</a></td>
+    <td>Падʼезд да садаводчага таварыства «Падрэцкае Поле» ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к садоводческому товариществу «Подрецкое поле» от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-12982</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672257'>osm</a><br /><a target='_josm' href='josm://relation/16672257' onclick='return josm("r16672257");'>josm</a></td>
+    <td>Падʼезд да садаводчых таварыстваў «Башмачок» і «Падрэчча» ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к садоводческим товариществам «Башмачок» и «Подречье» от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-13749</nobr></td>
@@ -14844,6 +14886,30 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>'name:ru' не супадае з Законам<br />"Н-11004" не адпавядае найменню ў 'name:ru'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-13908</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665790'>osm</a><br /><a target='_josm' href='josm://relation/16665790' onclick='return josm("r16665790");'>josm</a></td>
+    <td>Падʼезд да могілак аграгарадка Княжыцыі ад аўтамабільнай дарогі М-4 Мінск – Магілёў<br /><font color='gray'>Подъезд к кладбищу агрогородка Княжицы от автомобильной дороги М-4 Минск – Могилев</font></td>
+    <td><nobr>не супадаюць населеныя пункты ў 'name:be' і 'name:ru'<br />памылковы 'highway'="service" на way</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-13985</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665788'>osm</a><br /><a target='_josm' href='josm://relation/16665788' onclick='return josm("r16665788");'>josm</a></td>
+    <td>Падʼезд да санаторыя «Зарніца» ад аўтамабільнай дарогі М-4 Мінск – Магілёў<br /><font color='gray'>Подъезд к санаторию «Зарница» от автомобильной дороги М-4 Минск – Могилев</font></td>
+    <td><nobr>не праходзіць побач з "Зарніца"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-13986</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665791'>osm</a><br /><a target='_josm' href='josm://relation/16665791' onclick='return josm("r16665791");'>josm</a></td>
+    <td>Падʼезд да аграгарадка Княжыцыі ад аўтамабільнай дарогі М-4 Мінск – Магілёў<br /><font color='gray'>Подъезд к агрогородку Княжицы от автомобильной дороги М-4 Минск – Могилев</font></td>
+    <td><nobr>не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-14024</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665785'>osm</a><br /><a target='_josm' href='josm://relation/16665785' onclick='return josm("r16665785");'>josm</a></td>
+    <td>Падʼезд да вёскі Нікіцінічы (Аэрапорт) ад аўтамабільнай дарогі М-4/П 1 Падʼезд да аэрапорта Магілёў ад аўтамабільнай дарогі М-4<br /><font color='gray'>Подъезд к деревне Никитиничи (Аэропорт) от автомобильной дороги М-4/П 1 Подъезд к аэропорту Могилев от автомобильной дороги М-4</font></td>
+    <td><nobr>не праходзіць побач з "Аэрапорт"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-14025</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16545462'>osm</a><br /><a target='_josm' href='josm://relation/16545462' onclick='return josm("r16545462");'>josm</a></td>
     <td>Падʼезд да комплекса адкрытага акцыянернага таварыства "Агракамбінат «Усход»" ад аўтамабільнай дарогі М-8/П 5 Падʼезд да горада Магілёў ад аўтамабільнай дарогі М-8/Е 95<br /><font color='gray'>Подъезд к комплексу открытого акционерного общества "Агрокомбинат «Восход»" от автомобильной дороги М-8/П 5 Подъезд к городу Могилеву от автомобильной дороги М-8/Е 95</font></td>
@@ -14854,6 +14920,30 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/15954442'>osm</a><br /><a target='_josm' href='josm://relation/15954442' onclick='return josm("r15954442");'>josm</a></td>
     <td>Падʼезд да вёскі Селішча ад аўтамабільнай дарогі Р-76 Орша – Шклоў – Магілёў<br /><font color='gray'>Подъезд к деревне Селище от автомобильной дороги Р-76 Орша – Шклов – Могилев</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-14441</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672265'>osm</a><br /><a target='_josm' href='josm://relation/16672265' onclick='return josm("r16672265");'>josm</a></td>
+    <td>Падʼезд да вёскі Камарын ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Комарино от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не супадаюць населеныя пункты ў 'name:be' і 'name:ru'<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-14442</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672266'>osm</a><br /><a target='_josm' href='josm://relation/16672266' onclick='return josm("r16672266");'>josm</a></td>
+    <td>Падʼезд да вёскі Смык ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Смык от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-14445</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672264'>osm</a><br /><a target='_josm' href='josm://relation/16672264' onclick='return josm("r16672264");'>josm</a></td>
+    <td>Падʼезд да вёскі Вайнілава ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Войнилово от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-14446</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672267'>osm</a><br /><a target='_josm' href='josm://relation/16672267' onclick='return josm("r16672267");'>josm</a></td>
+    <td>Падʼезд да садаводчых таварыстваў «Баравінка» і «Разліў» ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к садоводческим товариществам «Боровинка» и «Разлив» от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-14620</nobr></td>
@@ -14868,40 +14958,16 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="track" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-15396</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16640395'>osm</a><br /><a target='_josm' href='josm://relation/16640395' onclick='return josm("r16640395");'>josm</a></td>
-    <td>Падʼезд да вёскі Ваяводкі праз вёску Васількі ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к деревне Воеводки через деревню Васильки от автомобильной дороги М-3 Минск – Витебск;9/100547</font></td>
-    <td><nobr>'name:ru' не супадае з Законам<br />у 'name:ru' спецыяльныя знакі ";"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-15745</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14409109'>osm</a><br /><a target='_josm' href='josm://relation/14409109' onclick='return josm("r14409109");'>josm</a></td>
     <td>Падʼезд да вёскі Фларʼянава ад аўтамабільнай дарогі Р-29 Ушачы – Вілейка<br /><font color='gray'>Подъезд к деревне Флорьяново от автомобильной дороги Р-29 Ушачи – Вилейка</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-15806</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16623647'>osm</a><br /><a target='_josm' href='josm://relation/16623647' onclick='return josm("r16623647");'>josm</a></td>
-    <td>Падʼезд да вёскі Новая Зямля ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Подъезд к деревне Застенки от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
-    <td><nobr>'name:be' не роўны 'name'<br />не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-15817</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16623645'>osm</a><br /><a target='_josm' href='josm://relation/16623645' onclick='return josm("r16623645");'>josm</a></td>
     <td>Падʼезд да могілак вёскі Рыленкі ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Подъезд к кладбищу деревни Рыленки от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
     <td><nobr>памылковы 'highway'="track" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-15945</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16634900'>osm</a><br /><a target='_josm' href='josm://relation/16634900' onclick='return josm("r16634900");'>josm</a></td>
-    <td>Падʼезд да аграгарадка Слабада ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к агрогородку Слобода через деревню Рудня от автомобильной дороги М-3 Минск – Витебск</font></td>
-    <td><nobr>розніца паміж даўжынёй 'name:be' і 'name:ru'<br />не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-15955</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16634896'>osm</a><br /><a target='_josm' href='josm://relation/16634896' onclick='return josm("r16634896");'>josm</a></td>
-    <td>Падʼезд да дзіцячага санаторыя ў горадзе Лепель ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к детскому санаторию в городе Лепель от автомобильной дороги М-3 Минск – Витебск;9/100547</font></td>
-    <td><nobr>'name:ru' не супадае з Законам<br />у 'name:ru' спецыяльныя знакі ";"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-15957</nobr></td>
@@ -15016,6 +15082,96 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/16487177'>osm</a><br /><a target='_josm' href='josm://relation/16487177' onclick='return josm("r16487177");'>josm</a></td>
     <td>Падʼезд да вёскі Яноўка праз вёску Роўнае ад аўтамабільнай дарогі Р-33 Рэчыца – Хойнікі<br /><font color='gray'>Подъезд к деревне Яновка через деревню Ровное от автомобильной дороги Р-33 Речица – Хойники</font></td>
     <td><nobr>"Р-33" не адпавядае найменню ў 'name:be'<br />"Р-33" не адпавядае найменню ў 'name:ru'<br />не праходзіць побач з "Рэчыца"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18746</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676485'>osm</a><br /><a target='_josm' href='josm://relation/16676485' onclick='return josm("r16676485");'>josm</a></td>
+    <td>Падʼезд да пасёлка Малыя Казловічы ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к посёлку Малые Козловичи от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18747</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676483'>osm</a><br /><a target='_josm' href='josm://relation/16676483' onclick='return josm("r16676483");'>josm</a></td>
+    <td>Падʼезд да аграгарадка Майскае ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к агрогородку Майское от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18748</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676482'>osm</a><br /><a target='_josm' href='josm://relation/16676482' onclick='return josm("r16676482");'>josm</a></td>
+    <td>Падʼезд да горада Жлобін праз вёску Лугавая Вірня ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к городу Жлобин через деревню Луговая Вирня от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18750</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676481'>osm</a><br /><a target='_josm' href='josm://relation/16676481' onclick='return josm("r16676481");'>josm</a></td>
+    <td>Падʼезд да чыгуначнай станцыі Хальч ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к железнодорожной станции Хальч от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18751</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676476'>osm</a><br /><a target='_josm' href='josm://relation/16676476' onclick='return josm("r16676476");'>josm</a></td>
+    <td>Падʼезд чыгуначнай станцыі Салтанаўка ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к железнодорожной станции Салтановка от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18753</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676480'>osm</a><br /><a target='_josm' href='josm://relation/16676480' onclick='return josm("r16676480");'>josm</a></td>
+    <td>Падʼезд да вёскі Чацвярня ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Четверня от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18754</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676478'>osm</a><br /><a target='_josm' href='josm://relation/16676478' onclick='return josm("r16676478");'>josm</a></td>
+    <td>Падʼезд да вёскі Баранаўка ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Барановка от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18755</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676479'>osm</a><br /><a target='_josm' href='josm://relation/16676479' onclick='return josm("r16676479");'>josm</a></td>
+    <td>Падʼезд да вёскі Завад ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Завод от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-18756</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676484'>osm</a><br /><a target='_josm' href='josm://relation/16676484' onclick='return josm("r16676484");'>josm</a></td>
+    <td>Падʼезд да садаводчага таварыства «Жлобінскі Сейбіт» ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к садоводческому товариществу «Жлобинский Сейбит» от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-19212</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676486'>osm</a><br /><a target='_josm' href='josm://relation/16676486' onclick='return josm("r16676486");'>josm</a></td>
+    <td>Падʼезд да вёскі Ухватаўка ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Ухватовка от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-19213</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676488'>osm</a><br /><a target='_josm' href='josm://relation/16676488' onclick='return josm("r16676488");'>josm</a></td>
+    <td>Падʼезд да былой вёскі Цагельня ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к упраздненной деревне Цагельня от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не дакранаецца да "М-5/Е 271"<br />памылковы 'highway'="track" на way<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-19214</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676487'>osm</a><br /><a target='_josm' href='josm://relation/16676487' onclick='return josm("r16676487");'>josm</a></td>
+    <td>Падʼезд да вёскі Сенажаткі ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Сеножатки от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-19215</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676490'>osm</a><br /><a target='_josm' href='josm://relation/16676490' onclick='return josm("r16676490");'>josm</a></td>
+    <td>Падʼезд да вёскі Амельна ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Омельно от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />неправільная крыніца "9/101937" наймення<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-19552</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676477'>osm</a><br /><a target='_josm' href='josm://relation/16676477' onclick='return josm("r16676477");'>josm</a></td>
+    <td>Падʼезд да пасёлка Уютны ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к посёлку Уютный от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />памылковы 'highway'="service" на way<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-19555</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16676474'>osm</a><br /><a target='_josm' href='josm://relation/16676474' onclick='return josm("r16676474");'>josm</a></td>
+    <td>Падʼезд да могілак вёскі Наспа ад аўтамабільнай дарогі М-5/Е 271 Мінск – Гомель<br /><font color='gray'>Подъезд к кладбищу деревни Наспа от автомобильной дороги М-5/Е 271 Минск – Гомель;9/101937</font></td>
+    <td><nobr>'name:ru' не супадае з Законам<br />у 'name:ru' спецыяльныя знакі ";"<br />памылковы 'highway'="track" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-20006</nobr></td>
@@ -15942,16 +16098,16 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-23707</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16618821'>osm</a><br /><a target='_josm' href='josm://relation/16618821' onclick='return josm("r16618821");'>josm</a></td>
-    <td>Падʼезд да вёскі Курганаўка ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Подъезд к агрогородку Лошница от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
-    <td><nobr>'name:be' не роўны 'name'<br />не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
+    <td><nobr>Н-23537</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665795'>osm</a><br /><a target='_josm' href='josm://relation/16665795' onclick='return josm("r16665795");'>josm</a></td>
+    <td>Падʼезд да вёскі Слабада ад аўтамабільнай дарогі М-4 Мінск – Магілёў<br /><font color='gray'>Подъезд к деревне Слобода от автомобильной дороги М-4 Минск – Могилев;9/112951</font></td>
+    <td><nobr>'name:ru' не супадае з Законам<br />у 'name:ru' спецыяльныя знакі ";"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-23711</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16618820'>osm</a><br /><a target='_josm' href='josm://relation/16618820' onclick='return josm("r16618820");'>josm</a></td>
-    <td>Падʼезд да садаводчага таварыства «Ручаек» ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Подъезд к садоводческому товариществу «Ручеек» от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
-    <td><nobr>не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
+    <td>Падʼезд да садаводчага таварыства «Ручаёк» ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Подъезд к садоводческому товариществу «Ручеек» от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
+    <td><nobr>не праходзіць побач з "Ручаёк"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-23762</nobr></td>
@@ -15968,8 +16124,8 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-23960</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16623643'>osm</a><br /><a target='_josm' href='josm://relation/16623643' onclick='return josm("r16623643");'>josm</a></td>
-    <td>Падʼезд да вёскі Нявелічы ад падʼезда да горада Дзяржынск ад аўтамабільнай дарогі М-1/Е 30<br /><font color='gray'>Подъезд к деревне Невеличи от подъезда к городу Дзержинску от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
-    <td><nobr>розніца паміж даўжынёй 'name:be' і 'name:ru'<br />не дакранаецца да "М-1/Е 30"<br />не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
+    <td>Падʼезд да вёскі Нявелічы ад падʼезда да горада Дзяржынск ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Подъезд к деревне Невеличи от подъезда к городу Дзержинску от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
+    <td><nobr>не дакранаецца да "М-1/Е 30"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-24030</nobr></td>
@@ -16176,6 +16332,60 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "Труд"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24691</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672272'>osm</a><br /><a target='_josm' href='josm://relation/16672272' onclick='return josm("r16672272");'>josm</a></td>
+    <td>Падʼезд да вёскі Благадаць ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Благодать от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24692</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672268'>osm</a><br /><a target='_josm' href='josm://relation/16672268' onclick='return josm("r16672268");'>josm</a></td>
+    <td>Падʼезд да вёскі Блужскі Бор ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Блужский Бор от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24693</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672273'>osm</a><br /><a target='_josm' href='josm://relation/16672273' onclick='return josm("r16672273");'>josm</a></td>
+    <td>Падʼезд да вёскі Жораўка ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Жоровка от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24694</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672269'>osm</a><br /><a target='_josm' href='josm://relation/16672269' onclick='return josm("r16672269");'>josm</a></td>
+    <td>Падʼезд да вёскі Зацішша ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Затишье от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24695</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672274'>osm</a><br /><a target='_josm' href='josm://relation/16672274' onclick='return josm("r16672274");'>josm</a></td>
+    <td>Падʼезд да садаводчага таварыства «Мара» ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к садоводческому товариществу «Мара» от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24696</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672270'>osm</a><br /><a target='_josm' href='josm://relation/16672270' onclick='return josm("r16672270");'>josm</a></td>
+    <td>Падʼезд да аграгарадка Пухавічы ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к агрогородку Пуховичи от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24697</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672271'>osm</a><br /><a target='_josm' href='josm://relation/16672271' onclick='return josm("r16672271");'>josm</a></td>
+    <td>Падʼезд да садаводчага таварыства «Сонечнае» ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к садоводческому товариществу «Солнечное» от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Сонечнае"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24698</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672275'>osm</a><br /><a target='_josm' href='josm://relation/16672275' onclick='return josm("r16672275");'>josm</a></td>
+    <td>Падʼезд да вёскі Труд ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Труд от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24699</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672276'>osm</a><br /><a target='_josm' href='josm://relation/16672276' onclick='return josm("r16672276");'>josm</a></td>
+    <td>Падʼезд да вёскі Феліцыянава ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Фелицианово от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-24700</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417891'>osm</a><br /><a target='_josm' href='josm://relation/14417891' onclick='return josm("r14417891");'>josm</a></td>
     <td>Падʼезд да вёскі Габрыелеўка ад аўтамабільнай дарогі Р-68 Пухавічы – Узда – Негарэлае<br /><font color='gray'>Подъезд к деревне Габриелевка от автомобильной дороги Р-68 Пуховичи – Узда – Негорелое</font></td>
@@ -16224,16 +16434,22 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-24940</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16629855'>osm</a><br /><a target='_josm' href='josm://relation/16629855' onclick='return josm("r16629855");'>josm</a></td>
-    <td>Падʼезд да садаводчага таварыства «Чырвоная гваздзiка» ад аўтамабільнай дарогі М-2 Мінск – Нацыянальны аэрапорт Мінск<br /><font color='gray'>Подъезд к садоводческому товариществу «Красная гвоздика» от автомобильной дороги М-2 Минск – Национальный аэропорт Минск</font></td>
-    <td><nobr>у 'name:be' лацінскія літары "i"</nobr></td>
+    <td><nobr>Н-24944</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16665809'>osm</a><br /><a target='_josm' href='josm://relation/16665809' onclick='return josm("r16665809");'>josm</a></td>
+    <td>Падʼезд да вёскі Ксавярова ад аўтамабільнай дарогі М-4 Мінск – Магілёў<br /><font color='gray'>Подъезд к деревне Ксаверово от автомобильной дороги М-4 Минск – Могилев</font></td>
+    <td><nobr>не дакранаецца да "М-4"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-24941</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/15621733'>osm</a><br /><a target='_josm' href='josm://relation/15621733' onclick='return josm("r15621733");'>josm</a></td>
-    <td>Падʼезд да садаводчага таварыства «Навука» ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к садоводческому товариществу «Наука» от автомобильной дороги М-3 Минск – Витебск</font></td>
-    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
+    <td><nobr>Н-24945</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672278'>osm</a><br /><a target='_josm' href='josm://relation/16672278' onclick='return josm("r16672278");'>josm</a></td>
+    <td>Падʼезд да вёскі Яўхімова ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Ефимово от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-24948</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16672277'>osm</a><br /><a target='_josm' href='josm://relation/16672277' onclick='return josm("r16672277");'>josm</a></td>
+    <td>Падʼезд да вёскі Лебядзінец ад аўтамабільнай дарогі М-5 Мінск – Гомель<br /><font color='gray'>Подъезд к деревне Лебединец от автомобильной дороги М-5/Е 271 Минск – Гомель</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />у 'name:be' не вызначаны "М-5"<br />не праходзіць побач з "Гомель"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-24971</nobr></td>
@@ -16248,22 +16464,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не дакранаецца да "М-3"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-24981</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16629853'>osm</a><br /><a target='_josm' href='josm://relation/16629853' onclick='return josm("r16629853");'>josm</a></td>
-    <td>Падʼезд да прыпыначнага пункта «Слабада» ад аўтамабільнай дарогі М-2 Мінск – Нацыянальны аэрапорт Мінск<br /><font color='gray'>Подъезд к садоводческому товариществу «Автомобилист-04» от автомобильной дороги М-2 Минск – Национальный аэропорт Минск</font></td>
-    <td><nobr>'name:be' не роўны 'name'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-26135</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16407813'>osm</a><br /><a target='_josm' href='josm://relation/16407813' onclick='return josm("r16407813");'>josm</a></td>
     <td>Падʼезд да вёскі Камяніца Жыравецкая ад аўтамабільнай дарогі Н-133 Брэст – Малыя Радванічы – Старое Сяло – Гайкоўка<br /><font color='gray'>Подъезд к деревне Каменица-Жировецкая от автомобильной дороги Н-133 Брест – Малые Радваничи – Старое Село – Гайковка</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-26140</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16407812'>osm</a><br /><a target='_josm' href='josm://relation/16407812' onclick='return josm("r16407812");'>josm</a></td>
-    <td>Падʼезд да садаводчага таварыства «Ветэран», «Керамік-1», «Паўднёвае-2» ад аўтамабільнай дарогі Н-133 Брэст – Малыя Радванічы – Старое Сяло – Гайкоўка<br /><font color='gray'>Подъезд к садоводческому товариществу «Ветеран», «Керамик-1», «Южное-2» от автомобильной дороги Н-133 Брест – Малые Радваничи – Старое Село – Гайковка</font></td>
-    <td><nobr>не праходзіць побач з "Ветэран"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-26142</nobr></td>
@@ -16278,28 +16482,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "Сасновы бор"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-26506</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16623640'>osm</a><br /><a target='_josm' href='josm://relation/16623640' onclick='return josm("r16623640");'>josm</a></td>
-    <td>Падʼезд да дзіцячага рэабілітацыйна-аздараўленчага цэнтра « Колас» ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Подъезд к детскому реабилитационно-оздоровительному центру «Колос» от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-26507</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16618833'>osm</a><br /><a target='_josm' href='josm://relation/16618833' onclick='return josm("r16618833");'>josm</a></td>
     <td>Падʼезд да дзіцячага аздараўленчага лагера «Салют» ад аўтамабільнай дарогі М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)<br /><font color='gray'>Подъезд к детскому оздоровительному лагерю «Салют» от автомобильной дороги М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)</font></td>
     <td><nobr>не праходзіць побач з "Салют"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-26837</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16629857'>osm</a><br /><a target='_josm' href='josm://relation/16629857' onclick='return josm("r16629857");'>josm</a></td>
-    <td>Падʼезд да вёскі Млынок ад аўтамабільнай дарогі М-1/П 2 Падʼезд да горада Пружаны ад аўтамабільнай дарогі М-1/Е 30<br /><font color='gray'>Подъезд к деревне Млынок от автомобильной дороги М-1/П 2 Подъезд к городу Пружаны от автомобильной дороги М-1/Е 30</font></td>
-    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />way знаходзяцца ў некалькіх relation<br />не праходзіць побач з "Млынок"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-26838</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16629858'>osm</a><br /><a target='_josm' href='josm://relation/16629858' onclick='return josm("r16629858");'>josm</a></td>
-    <td>Падʼезд да вёскі Слабудка ад аўтамабільнай дарогі М-1/П 2 Падʼезд да горада Пружаны ад аўтамабільнай дарогі М-1/Е 30<br /><font color='gray'>Подъезд к деревне Слобудка от автомобильной дороги М-1/П 2 Подъезд к городу Пружаны от автомобильной дороги М-1/Е 30</font></td>
-    <td><nobr>way знаходзяцца ў некалькіх relation</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-26840</nobr></td>
@@ -16335,7 +16521,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
  </table>
 </div><br /><hr />
 <p>
- <font size='-1'>Cтаронка створаная 2023-11-06 04:53:47 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-11-05 02:56:27+00:00</font>
+ <font size='-1'>Cтаронка створаная 2023-11-13 02:46:10 і змяшчае ўсе дадзеныя OSM за перыяд да 2023-11-12 01:53:15+00:00</font>
  <br />
  <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
 </p>
