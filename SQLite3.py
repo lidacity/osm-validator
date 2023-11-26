@@ -161,11 +161,11 @@ class OsmPbf:
   #
   Cookie = Requests.text
   Result = {}
+  Key = 'gf_download_oauth'
   for Item in Cookie.split(";"):
-   if "=" not in Item:
-    Item += "="
-   Key, Value = Item.split("=", 1)
-   Result[Key.strip()] = Value.strip("\"")
+   if Item[:len(Key)] == Key:
+    _, Value = Item.split("=", 1)
+    Result[Key] = Value.strip("\"")
   return Result
 
 
