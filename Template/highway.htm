@@ -21,7 +21,11 @@
 {%- if Item['Key'][:6] == "error-" %}
     <td>&nbsp;</td>
 {%- else %}
+{%- if UID == Item['UID'] %}
     <td><nobr>{{Item['Key']}}</nobr></td>
+{%- else %}
+    <td><nobr><i>{{Item['Key']}}</i></nobr></td>
+{%- endif %}
 {%- endif %}
 {%- if Item['ID'] %}
     <td><a target='_blank' href='https://openstreetmap.org/{{Item['Type']}}/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='josm://{{Item['Type']}}/{{Item['ID']}}' onclick='return josm("{{Item['Type'][0]}}{{Item['ID']}}");'>josm</a></td>

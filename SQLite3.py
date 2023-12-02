@@ -254,20 +254,13 @@ class OsmPbf:
   CountNode, CountWay, CountRelation = 0, 0, 0
   Count = 65536
   #
-  n, w, r = True, True, True
   for Feature in IterFromOsm(FileName):
    if Feature['type'] == "node":
-    if n:
-     print(Feature)
-     n = False
     CountNode += 1
     Cursor.execute("insert into nodes(node_id, lat, lon, uid) values(?, ?, ?, ?);", [Feature['id'], Feature['lat'], Feature['lon'], Feature['uid']])
     for Key, Value in Feature['tag'].items():
      Cursor.execute("insert into node_tags(node_id, key, value) values(?, ?, ?);", [Feature['id'], Key, Value])
    elif Feature['type'] == "way":
-    if w:
-     print(Feature)
-     w = False
     CountWay += 1
     Cursor.execute("insert into ways(way_id, uid) values(?, ?);", [Feature['id'], Feature['uid']])
     Order = 0
@@ -277,9 +270,6 @@ class OsmPbf:
     for Key, Value in Feature['tag'].items():
      Cursor.execute("insert into way_tags(way_id, key, value) values(?, ?, ?);", [Feature['id'], Key, Value])
    elif Feature['type'] == "relation":
-    if r:
-     print(Feature)
-     r = False
     CountRelation += 1
     Cursor.execute("insert into relations(relation_id, uid) values(?, ?);", [Feature['id'], Feature['uid']])
     for Order, Member in enumerate(Feature['member']):

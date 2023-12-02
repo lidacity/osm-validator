@@ -821,6 +821,7 @@ class RouteValidator(Validator):
    Type = Relation['type']
    Result['Type'] = Type
    Result['ID'] = Relation['id']
+   Result['UID'] = Relation['uid']
    Tag = Relation['tags']
    Be = self.JoinName(Tag, 'name')
    if Be:
@@ -939,6 +940,11 @@ class RouteValidator(Validator):
   return Result
 
 
+ def GetUID(self):
+  FileName = os.path.join(".data", ".uid")
+  for Line in open(FileName, mode="r", encoding="utf-8"):
+   return int(Line)
+
 
 # -=-=-=-=-=-
 
@@ -962,6 +968,7 @@ def Generate(Check, Network):
  Result['Separated'] = Route.GetSeparated(Check)
  Result['Missing'] = Route.GetMissing([Item['ID'] for _, Item in Check.items()])
  Result['Network'] = { Network[Bool]: Route.GetNetwork(Check, Bool) for Bool in [False, True] }
+ Result['UID'] = Route.GetUID()
  Result['PBFDateTime'] = Route.GetDateTime()
  Result['DateTime'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
  return Result
