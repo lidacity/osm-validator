@@ -119,8 +119,8 @@ class RouteValidator(Validator):
 
 
  Pair = {
-  'Split': re.compile("|".join(map(re.escape, "{}()[]\"«»")) + "|" + "|".join(["\B'", "'\B"])).findall,
-  'Replace': re.compile("|".join([re.escape(s) for s in ["{}", "()", "[]", "''", "\"\"", "«»"]])).sub,
+  'Split': re.compile("|".join(map(re.escape, "{}()[]\"«»„“")) + "|" + "|".join(["\B'", "'\B"])).findall,
+  'Replace': re.compile("|".join([re.escape(s) for s in ["{}", "()", "[]", "''", "\"\"", "«»", "„“"]])).sub,
  }
 
 
