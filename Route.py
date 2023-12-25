@@ -93,7 +93,7 @@ class RouteValidator(Validator):
   'Latin': {'re': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары"},
   'Number': {'re': re.compile("[a-zA-Zа-яА-ЯёЁўЎіІʼ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁўЎіІʼ]").search, 'Desc': "няправільныя лічбы"},
   'Hyphen': {'re': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок"},
-  'Bracket': {'re': re.compile("[^ \"(]\(|\)[^ …\")]").search, 'Desc': "неправільныя дужкі"},
+  'Bracket': {'re': re.compile("[^ «(]\(|\)[^ …»)]").search, 'Desc': "неправільныя дужкі"},
   'Special': {'re': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\'’—"))).search, 'Desc': "спецыяльныя знакі"},
   'Abbreviations': {'re': re.compile("|".join([re.escape(s) for s in ["а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", "вул.", "ул.", ]])).search, 'Desc': "недапушчальны скарот"},
  }
