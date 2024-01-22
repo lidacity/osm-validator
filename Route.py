@@ -257,8 +257,12 @@ class RouteValidator(Validator):
    Name = self.JoinName(Tag, 'name:ru')
    Roads = self.GetList(Name, 'ok')
    for Ref in Roads:
-    Highway = Highways[Ref]
-    Name = Name.replace(f"{Ref} {Highway['Desc']}", f"{Ref}")
+    if Ref in Highways:
+     Highway = Highways[Ref]
+     Name = Name.replace(f"{Ref} {Highway['Desc']}", f"{Ref}")
+    else:
+     Result.append(f"не знойдзены \"{Ref}\"")
+     break
    Roads = self.GetList(Name, 'ok')
    if Roads:
     Nodes = set(self.GetAllNodes(Relation))
