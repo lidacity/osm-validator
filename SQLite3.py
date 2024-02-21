@@ -9,6 +9,7 @@ import json
 import re
 
 import requests
+from urllib.parse import urlencode
 from datetime import datetime
 from dateutil.parser import parse as parsedate
 
@@ -74,22 +75,33 @@ class OsmPbf:
   return f"{Pre}{Ext}"
 
 
+ def GetCookieToken(self, CookieText):
+  Pattern = r"(?<=gf_download_oauth=).*?(?=; )"
+  Result = re.findall(Pattern, CookieText)
+  if Result is None:
+   logger.error(f"Could not find the gf_download_oauth in the cookie.")
+  try:
+   return {'gf_download_oauth': Result[0]}
+  except IndexError:
+   logger.error(f"Cookie not found")
+
+
  def FindAuthenticityToken(self, Response):
   Pattern = r"name=\"csrf-token\" content=\"([^\"]+)\""
-  m = re.search(Pattern, Response)
-  if m is None:
-   logger.error("Could not find the authenticity_token in the website to be scraped.")
+  Result = re.search(Pattern, Response)
+  if Result is None:
+   logger.error(f"Could not find the authenticity_token in the website to be scraped.")
   try:
-   return m.group(1)
+   return Result.group(1)
   except IndexError:
-   logger.error("ERROR: The login form does not contain an authenticity_token.")
-   exit(1)
+   logger.error(f"The login form does not contain an authenticity_token.")
 
 
- #https://pavie.info/2020/08/12/complete-full-history-osm/
- #https://github.com/geofabrik/sendfile_osm_oauth_protector/
- def GetCookie(self, GEO="https://osm-internal.download.geofabrik.de/get_cookie", Auth=None, OSM="https://www.openstreetmap.org/", Header={}):
+ #https://github.com/geofabrik/sendfile_osm_oauth_protector/blob/master/oauth_cookie_client.py
+ def GetCookie(self, ConsumerUrl="https://osm-internal.download.geofabrik.de/get_cookie", Auth=None, OSMHost="https://www.openstreetmap.org", Header={}):
   if Auth:
+   Insecure = True
+   Format = "http"
    match Auth['Type']:
     case "HTTPBasic":
      #HTTPBasic = {'UserName': "<username>", 'Password': "<password>", )
@@ -113,59 +125,80 @@ class OsmPbf:
     case _:
      return {}
   else:
-   logger.error(f"")
+   logger.error(f"No OSM auth!")
+  #
   # get request token
-  URL = f"{GEO}?action=request_token"
-  Requests = requests.post(URL, data={}, headers=Header)
+  Json = {'action': "get_authorization_url"}
+  Arg = urlencode(Json)
+  Url = f"{ConsumerUrl}?{Arg}"
+  Data = {}
+  Requests = requests.post(Url, data=Data, headers=Header, verify=Insecure)
   if Requests.status_code != 200:
-   logger.error(f"POST {URL}, received HTTP status code {Requests.status_code} but expected 200")
-  Response = json.loads(Requests.text)
-  #URL = f"{OSM}/oauth/authorize"
+   logger.error(f"POST {Url}, received HTTP status code {Requests.status_code} but expected 200")
+  JsonResponse = json.loads(Requests.text)
+  AuthorizationUrl = None
+  State = None
+  RedirectUri = None
+  ClientID = None
   try:
-   OAuthToken = Response["oauth_token"]
-   OAuthTokenSecretEncr = Response["oauth_token_secret_encr"]
+   AuthorizationUrl = JsonResponse['authorization_url']
+   State = JsonResponse['state']
+   RedirectUri = JsonResponse['redirect_uri']
+   ClientID = JsonResponse['client_id']
   except KeyError:
-   logger.error("oauth_token was not found in the first response by the consumer")
+   logger.error(f"oauth_token was not found in the first response by the consumer")
   # get OSM session
-  URL = f"{OSM}/login?cookie_test=true"
+  Json = {'cookie_test': "true"}
+  Arg = urlencode(Json)
+  LoginUrl = f"{OSMHost}/login?{Arg}"
   Session = requests.Session()
-  Requests = Session.get(URL, headers=Header)
+  Requests = Session.get(LoginUrl, headers=Header)
   if Requests.status_code != 200:
-   logger.error(f"GET {URL}, received HTTP code {Requests.status_code}")
+   logger.error(f"GET {LoginUrl}, received HTTP code {Requests.status_code}")
   # login
   AuthenticityToken = self.FindAuthenticityToken(Requests.text)
-  URL = f"{OSM}/login"
-  Requests = Session.post(URL, data={"username": UserName, "password": Password, "referer": "/", "commit": "Login", "authenticity_token": AuthenticityToken}, allow_redirects=False, headers=Header)
+  LoginUrl = f"{OSMHost}/login"
+  Data = {'username': UserName, 'password': Password, 'referer': "/", 'commit': "Login", 'authenticity_token': AuthenticityToken}
+  Requests = Session.post(LoginUrl, data=Data, allow_redirects=False, headers=Header)
   if Requests.status_code != 302:
-   logger.error(f"POST {URL}, received HTTP code {Requests.status_code} but expected 302")
+   logger.error(f"POST {LoginUrl}, received HTTP code {Requests.status_code} but expected 302")
+  logger.debug(f"{Requests.request.url} -> {Requests.headers['location']}")
   # authorize
-  URL = f"{OSM}/oauth/authorize?oauth_token={OAuthToken}"
-  Requests = Session.get(URL, headers=Header)
-  if Requests.status_code != 200:
-   logger.error(f"GET {URL}, received HTTP code {Requests.status_code} but expected 200")
-  AuthenticityToken = self.FindAuthenticityToken(Requests.text)
-  #
-  Data = {"oauth_token": OAuthToken, "oauth_callback": "", "authenticity_token": AuthenticityToken, "allow_read_prefs": [0, 1], "commit": "Save changes"}
-  URL = f"{OSM}/oauth/authorize"
-  Requests = Session.post(URL, data=Data, headers=Header)
-  if Requests.status_code != 200:
-   logger.error(f"POST {URL}, received HTTP code {Requests.status_code} but expected 200")
+  Requests = Session.get(AuthorizationUrl, headers=Header, allow_redirects=False)
+  if Requests.status_code != 302:
+   # If authorization has been granted to the OAuth client yet, we will receive status 302. If not, status 200 should be returned and the form needs to be submitted.
+   if Requests.status_code != 200:
+    logger.error(f"GET {AuthorizationUrl}, received HTTP code {Requests.status_code} but expected 200")
+   AuthenticityToken = self.FindAuthenticityToken(Requests.text)
+   #
+   PostData = {'client_id': ClientID, 'redirect_uri': RedirectUri, 'authenticity_token': AuthenticityToken, 'state': State, 'response_type': "code", 'scope': "read_prefs", 'nonce': "", 'code_challenge': "", 'code_challenge_method': "", 'commit': "Authorize"}
+   Requests = Session.post(AuthorizationUrl, data=PostData, headers=Header, allow_redirects=False)
+   if Requests.status_code != 302:
+    logger.error(f"POST {AuthorizationUrl}, received HTTP code {Requests.status_code} but expected 302")
+  else:
+   logger.debug(f"{Requests.request.url} -> {Requests.headers['location']}")
+  Location = None
+  try:
+   Location = Requests.headers["location"]
+  except KeyError:
+   logger.error(f"Response headers of authorization request did not contain a location header.")
+  if "?" not in Location:
+   logger.error(f"Redirect URL after authorization misses query string.")
   # logout
-  URL = f"{OSM}/logout"
-  Requests = Session.get(URL, headers=Header)
+  LogoutUrl = f"{OSMHost}/logout"
+  Requests = Session.get(LogoutUrl, headers=Header)
   if Requests.status_code != 200 and Requests.status_code != 302:
-   logger.error(f"POST {URL}, received HTTP code {Requests.status_code} but expected 200 or 302")
+   logger.error(f"POST {LogoutUrl}, received HTTP code {Requests.status_code} but expected 200 or 302")
   # get final cookie
-  URL = f"{GEO}?action=get_access_token_cookie&format=http"
-  Requests = requests.post(URL, data={"oauth_token": OAuthToken, "oauth_token_secret_encr": OAuthTokenSecretEncr}, headers=Header)
+  Json = {'format': Format}
+  Arg = urlencode(Json)
+  Url = f"{Location}&{Arg}"
+  Requests = requests.get(Url, headers=Header, verify=Insecure)
   #
-  Cookie = Requests.text
-  Result = {}
-  Key = 'gf_download_oauth'
-  for Item in Cookie.split(";"):
-   if Item[:len(Key)] == Key:
-    _, Value = Item.split("=", 1)
-    Result[Key] = Value.strip("\"")
+  CookieText = Requests.text
+  if not CookieText.endswith("\n"):
+   CookieText += "\n"
+  Result = self.GetCookieToken(CookieText)
   return Result
 
 
