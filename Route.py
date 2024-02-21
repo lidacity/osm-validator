@@ -99,7 +99,7 @@ class RouteValidator(Validator):
  }
 
 
- Replace = { 'SOS': "СОС", 'III': "3", 'II': "2", 'I': "1", }
+ Replace = { 'SOS': "СОС", 'XXI': "21", 'III': "3", 'II': "2", 'I': "1", }
 
 
  def CheckWrong(self, Tag):
