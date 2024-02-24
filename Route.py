@@ -119,7 +119,7 @@ class RouteValidator(Validator):
 
 
  Pair = {
-  'Split': re.compile("|".join(map(re.escape, "{}()[]\"«»„“")) + "|" + "|".join(["\B'", "'\B"])).findall,
+  'Split': re.compile("|".join(map(re.escape, "{}()[]\"«»„“")) + "|" + "|".join([r"\B'", r"'\B"])).findall,
   'Replace': re.compile("|".join([re.escape(s) for s in ["{}", "()", "[]", "''", "\"\"", "«»", "„“"]])).sub,
  }
 
@@ -691,7 +691,7 @@ class RouteValidator(Validator):
   return int(Text) if Text.isdigit() else Text
 
 
- Sorted = re.compile("(\d+)")
+ Sorted = re.compile(r"(\d+)")
 
 
  def NaturalKeys(self, text):
