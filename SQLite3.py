@@ -284,37 +284,112 @@ class OsmPbf:
  def Convert(self, FileName):
   logger.info("PBF to SQLite3")
   Cursor = self.DB.cursor()
-  CountNode, CountWay, CountRelation = 0, 0, 0
-  Count = 65536
+  Cursor.execute('''PRAGMA synchronous = OFF''')
+  Cursor.execute('''PRAGMA journal_mode = OFF''')
+  self.DB.commit()
+  #
+  Nodes, NodeTags, CountNode, CountNodeTags = [], [], 0, 0
+  Ways, WayNodes, WayTags, CountWay, CountWayNodes, CountWayTags = [], [], [], 0, 0, 0
+  Relations, RelationMembers, RelationTags, CountRelation, CountRelationMembers, CountRelationTags = [], [], [], 0, 0, 0
+  Count = 65536 * 128
   #
   for Feature in IterFromOsm(FileName):
    if Feature['type'] == "node":
     CountNode += 1
-    Cursor.execute("insert into nodes(node_id, lat, lon, uid) values(?, ?, ?, ?);", [Feature['id'], Feature['lat'], Feature['lon'], Feature['uid']])
+    Item = (Feature['id'], Feature['lat'], Feature['lon'], Feature['uid'])
+    Nodes.append(Item)
     for Key, Value in Feature['tag'].items():
-     Cursor.execute("insert into node_tags(node_id, key, value) values(?, ?, ?);", [Feature['id'], Key, Value])
+     CountNodeTags += 1
+     Item = (Feature['id'], Key, Value)
+     NodeTags.append(Item)
    elif Feature['type'] == "way":
     CountWay += 1
-    Cursor.execute("insert into ways(way_id, uid) values(?, ?);", [Feature['id'], Feature['uid']])
+    Item = (Feature['id'], Feature['uid'])
+    Ways.append(Item)
     Order = 0
     for ID in Feature['nd']:
-     Cursor.execute("insert into way_nodes(way_id, node_id, node_order) values(?, ?, ?);", [Feature['id'], ID, Order])
+     CountWayNodes += 1
+     Item = (Feature['id'], ID, Order)
+     WayNodes.append(Item)
      Order += 1
     for Key, Value in Feature['tag'].items():
-     Cursor.execute("insert into way_tags(way_id, key, value) values(?, ?, ?);", [Feature['id'], Key, Value])
+     CountWayTags += 1
+     Item = (Feature['id'], Key, Value)
+     WayTags.append(Item)
    elif Feature['type'] == "relation":
     CountRelation += 1
-    Cursor.execute("insert into relations(relation_id, uid) values(?, ?);", [Feature['id'], Feature['uid']])
+    Item = (Feature['id'], Feature['uid'])
+    Relations.append(Item)
     for Order, Member in enumerate(Feature['member']):
-     Cursor.execute("insert into relation_members(relation_id, type, ref, role, member_order) values(?, ?, ?, ?, ?);", [Feature['id'], Member['type'], Member['ref'], Member['role'], Order])
+     CountRelationMembers += 1
+     Item = (Feature['id'], Member['type'], Member['ref'], Member['role'], Order)
+     RelationMembers.append(Item)
     for Key, Value in Feature['tag'].items():
-     Cursor.execute("insert into relation_tags(relation_id, key, value) values(?, ?, ?);", [Feature['id'], Key, Value])
+     CountRelationTags += 1
+     Item = (Feature['id'], Key, Value)
+     RelationTags.append(Item)
    #
-   if (CountNode + CountWay + CountRelation) % Count == 0:
+   if len(Nodes) > Count:
+    Cursor.executemany("insert into nodes(node_id, lat, lon, uid) values(?, ?, ?, ?);", Nodes)
+    Nodes = []
+    self.DB.commit()
+   #
+   if len(NodeTags) > Count:
+    Cursor.executemany("insert into node_tags(node_id, key, value) values(?, ?, ?);", NodeTags)
+    NodeTags = []
+    self.DB.commit()
+   #
+   if len(Ways) > Count:
+    Cursor.executemany("insert into ways(way_id, uid) values(?, ?);", Ways)
+    Ways = []
+    self.DB.commit()
+   #
+   if len(WayNodes) > Count:
+    Cursor.executemany("insert into way_nodes(way_id, node_id, node_order) values(?, ?, ?);", WayNodes)
+    WayNodes = []
+    self.DB.commit()
+   #
+   if len(WayTags) > Count:
+    Cursor.executemany("insert into way_tags(way_id, key, value) values(?, ?, ?);", WayTags)
+    WayTags = []
+    self.DB.commit()
+   #
+   if len(Relations) > Count:
+    Cursor.executemany("insert into relations(relation_id, uid) values(?, ?);", Relations)
+    Relations = []
+    self.DB.commit()
+   #
+   if len(RelationMembers) > Count:
+    Cursor.executemany("insert into relation_members(relation_id, type, ref, role, member_order) values(?, ?, ?, ?, ?);", RelationMembers)
+    RelationMembers = []
+    self.DB.commit()
+   #
+   if len(RelationTags) > Count:
+    Cursor.executemany("insert into relation_tags(relation_id, key, value) values(?, ?, ?);", RelationTags)
+    RelationTags = []
     self.DB.commit()
   #
+  if Nodes:
+   Cursor.executemany("insert into nodes(node_id, lat, lon, uid) values(?, ?, ?, ?);", Nodes)
+  if NodeTags:
+   Cursor.executemany("insert into node_tags(node_id, key, value) values(?, ?, ?);", NodeTags)
+  if Ways:
+   Cursor.executemany("insert into ways(way_id, uid) values(?, ?);", Ways)
+  if WayNodes:
+   Cursor.executemany("insert into way_nodes(way_id, node_id, node_order) values(?, ?, ?);", WayNodes)
+  if WayTags:
+   Cursor.executemany("insert into way_tags(way_id, key, value) values(?, ?, ?);", WayTags)
+  if Relations:
+   Cursor.executemany("insert into relations(relation_id, uid) values(?, ?);", Relations)
+  if RelationMembers:
+   Cursor.executemany("insert into relation_members(relation_id, type, ref, role, member_order) values(?, ?, ?, ?, ?);", RelationMembers)
+  if RelationTags:
+   Cursor.executemany("insert into relation_tags(relation_id, key, value) values(?, ?, ?);", RelationTags)
   self.DB.commit()
-  logger.info(f"total Nodes: {CountNode}, Ways: {CountWay}, Relations: {CountRelation}")
+  #
+  logger.info(f"total Nodes: {CountNode:_}, NodeTags: {CountNodeTags:_}")
+  logger.info(f"total Ways: {CountWay:_}, WayNodes: {CountWayNodes:_}, WayTags: {CountWayTags:_}")
+  logger.info(f"total Relations: {CountRelation:_}, RelationMembers: {CountRelationMembers:_}, RelationTags: {CountRelationTags:_}")
 
 
  def CreateIndex(self):
