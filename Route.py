@@ -183,7 +183,7 @@ class RouteValidator(Validator):
 
 
  def ExcludeRef(self, Name, Index):
-  return Name[Index-1:].strip()[:1] in ["(", ")", "", "\""]
+  return Name[Index-1:].strip()[:1] in ["(", ")", "", "\"", "»"]
 
 
 
