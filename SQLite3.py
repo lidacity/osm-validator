@@ -291,101 +291,74 @@ class OsmPbf:
   Nodes, NodeTags, CountNode, CountNodeTags = [], [], 0, 0
   Ways, WayNodes, WayTags, CountWay, CountWayNodes, CountWayTags = [], [], [], 0, 0, 0
   Relations, RelationMembers, RelationTags, CountRelation, CountRelationMembers, CountRelationTags = [], [], [], 0, 0, 0
-  Count = 65536 * 128
+  Count = 65535
   #
   for Feature in IterFromOsm(FileName):
    if Feature['type'] == "node":
     CountNode += 1
     Item = (Feature['id'], Feature['lat'], Feature['lon'], Feature['uid'])
     Nodes.append(Item)
+    if len(Nodes) > Count:
+     Nodes = self.Insert("insert into nodes(node_id, lat, lon, uid) values(?, ?, ?, ?);", Params=Nodes)
     for Key, Value in Feature['tag'].items():
      CountNodeTags += 1
      Item = (Feature['id'], Key, Value)
      NodeTags.append(Item)
+     if len(NodeTags) > Count:
+      NodeTags = self.Insert("insert into node_tags(node_id, key, value) values(?, ?, ?);", Params=NodeTags)
    elif Feature['type'] == "way":
     CountWay += 1
     Item = (Feature['id'], Feature['uid'])
     Ways.append(Item)
-    Order = 0
-    for ID in Feature['nd']:
+    if len(Ways) > Count:
+     Ways = self.Insert("insert into ways(way_id, uid) values(?, ?);", Params=Ways)
+    for Order, ID in enumerate(Feature['nd']):
      CountWayNodes += 1
      Item = (Feature['id'], ID, Order)
      WayNodes.append(Item)
-     Order += 1
+     if len(WayNodes) > Count:
+      WayNodes = self.Insert("insert into way_nodes(way_id, node_id, node_order) values(?, ?, ?);", Params=WayNodes)
     for Key, Value in Feature['tag'].items():
      CountWayTags += 1
      Item = (Feature['id'], Key, Value)
      WayTags.append(Item)
+     if len(WayTags) > Count:
+      WayTags = self.Insert("insert into way_tags(way_id, key, value) values(?, ?, ?);", Params=WayTags)
    elif Feature['type'] == "relation":
     CountRelation += 1
     Item = (Feature['id'], Feature['uid'])
     Relations.append(Item)
+    if len(Relations) > Count:
+     Relations = self.Insert("insert into relations(relation_id, uid) values(?, ?);", Params=Relations)
     for Order, Member in enumerate(Feature['member']):
      CountRelationMembers += 1
      Item = (Feature['id'], Member['type'], Member['ref'], Member['role'], Order)
      RelationMembers.append(Item)
+     if len(RelationMembers) > Count:
+      RelationMembers = self.Insert("insert into relation_members(relation_id, type, ref, role, member_order) values(?, ?, ?, ?, ?);", Params=RelationMembers)
     for Key, Value in Feature['tag'].items():
      CountRelationTags += 1
      Item = (Feature['id'], Key, Value)
      RelationTags.append(Item)
-   #
-   if len(Nodes) > Count:
-    Cursor.executemany("insert into nodes(node_id, lat, lon, uid) values(?, ?, ?, ?);", Nodes)
-    Nodes = []
-    self.DB.commit()
-   #
-   if len(NodeTags) > Count:
-    Cursor.executemany("insert into node_tags(node_id, key, value) values(?, ?, ?);", NodeTags)
-    NodeTags = []
-    self.DB.commit()
-   #
-   if len(Ways) > Count:
-    Cursor.executemany("insert into ways(way_id, uid) values(?, ?);", Ways)
-    Ways = []
-    self.DB.commit()
-   #
-   if len(WayNodes) > Count:
-    Cursor.executemany("insert into way_nodes(way_id, node_id, node_order) values(?, ?, ?);", WayNodes)
-    WayNodes = []
-    self.DB.commit()
-   #
-   if len(WayTags) > Count:
-    Cursor.executemany("insert into way_tags(way_id, key, value) values(?, ?, ?);", WayTags)
-    WayTags = []
-    self.DB.commit()
-   #
-   if len(Relations) > Count:
-    Cursor.executemany("insert into relations(relation_id, uid) values(?, ?);", Relations)
-    Relations = []
-    self.DB.commit()
-   #
-   if len(RelationMembers) > Count:
-    Cursor.executemany("insert into relation_members(relation_id, type, ref, role, member_order) values(?, ?, ?, ?, ?);", RelationMembers)
-    RelationMembers = []
-    self.DB.commit()
-   #
-   if len(RelationTags) > Count:
-    Cursor.executemany("insert into relation_tags(relation_id, key, value) values(?, ?, ?);", RelationTags)
-    RelationTags = []
-    self.DB.commit()
+     if len(RelationTags) > Count:
+      RelationTags = self.Insert("insert into relation_tags(relation_id, key, value) values(?, ?, ?);", Params=RelationTags)
   #
-  if Nodes:
-   Cursor.executemany("insert into nodes(node_id, lat, lon, uid) values(?, ?, ?, ?);", Nodes)
-  if NodeTags:
-   Cursor.executemany("insert into node_tags(node_id, key, value) values(?, ?, ?);", NodeTags)
-  if Ways:
-   Cursor.executemany("insert into ways(way_id, uid) values(?, ?);", Ways)
-  if WayNodes:
-   Cursor.executemany("insert into way_nodes(way_id, node_id, node_order) values(?, ?, ?);", WayNodes)
-  if WayTags:
-   Cursor.executemany("insert into way_tags(way_id, key, value) values(?, ?, ?);", WayTags)
-  if Relations:
-   Cursor.executemany("insert into relations(relation_id, uid) values(?, ?);", Relations)
-  if RelationMembers:
-   Cursor.executemany("insert into relation_members(relation_id, type, ref, role, member_order) values(?, ?, ?, ?, ?);", RelationMembers)
-  if RelationTags:
-   Cursor.executemany("insert into relation_tags(relation_id, key, value) values(?, ?, ?);", RelationTags)
-  self.DB.commit()
+  if len(Nodes) > 0:
+   Nodes = self.Insert("insert into nodes(node_id, lat, lon, uid) values(?, ?, ?, ?);", Params=Nodes)
+  if len(NodeTags) > 0:
+   NodeTags = self.Insert("insert into node_tags(node_id, key, value) values(?, ?, ?);", Params=NodeTags)
+  if len(Ways) > 0:
+   Ways = self.Insert("insert into ways(way_id, uid) values(?, ?);", Params=Ways)
+  if len(WayNodes) > 0:
+   WayNodes = self.Insert("insert into way_nodes(way_id, node_id, node_order) values(?, ?, ?);", Params=WayNodes)
+  if len(WayTags) > 0:
+   WayTags = self.Insert("insert into way_tags(way_id, key, value) values(?, ?, ?);", Params=WayTags)
+  if len(Relations) > 0:
+   Relations = self.Insert("insert into relations(relation_id, uid) values(?, ?);", Params=Relations)
+  if len(RelationMembers) > 0:
+   RelationMembers = self.Insert("insert into relation_members(relation_id, type, ref, role, member_order) values(?, ?, ?, ?, ?);", Params=RelationMembers)
+  if len(RelationTags) > 0:
+   RelationTags = self.Insert("insert into relation_tags(relation_id, key, value) values(?, ?, ?);", Params=RelationTags)
   #
   logger.info(f"total Nodes: {CountNode:_}, NodeTags: {CountNodeTags:_}")
   logger.info(f"total Ways: {CountWay:_}, WayNodes: {CountWayNodes:_}, WayTags: {CountWayTags:_}")
@@ -525,3 +498,10 @@ class OsmPbf:
   Cursor = self.DB.cursor()
   Cursor.execute(SQL, Params)
   return Cursor.fetchone()
+
+
+ def Insert(self, SQL, Params):
+  Cursor = self.DB.cursor()
+  Cursor.executemany(SQL, Params)
+  #self.DB.commit()
+  return []
