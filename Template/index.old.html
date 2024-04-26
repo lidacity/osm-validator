@@ -1,0 +1,41 @@
+{% extends 'index.old.htm' %}
+
+
+{% block Law -%}
+{%- if PravoError -%}
+  <details open>
+{%- else -%}
+  <details>
+{%- endif %}
+{%- for Item in Pravo %}
+   <summary>Законы</summary>
+   <p>
+    {% if Item['Error'] -%}
+<font color='red'><strike>
+{%- endif -%}
+<a href='{{Item['URL']}}'>{{Item['Desc']}}</a>
+{%- if Item['Error'] -%}
+</strike></font>
+{%- endif %}
+{%- if Item['Append'] %}
+    <br />
+    в том числе акты, изменяющие (дополняющие) документ:
+    <ul>
+{%- for Append in Item['Append'] %}
+     <li>
+{%- if Append['Error'] -%}
+<font color='red'><strike>
+{%- endif -%}
+{{Append['Desc']}}
+{%- if Append['Error'] -%}
+</strike></font>
+{%- endif -%}
+</li>
+{%- endfor %}
+    </ul>
+{%- endif %}
+   </p>
+   <hr width='50%' align='left'>
+{%- endfor %}
+  </details>
+{%- endblock %}

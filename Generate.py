@@ -37,7 +37,7 @@ Route = {
  'H': { 'Cyr': "Н", 'Lat': "H", 'ID': 1246286, 'FileName': "H.csv", 'Main': False, 'Desc': "Мясцовыя аўтамабільныя дарогі" },
 }
 Network = {False: 'Рэспубліканскія аўтамабільныя дарогі', True: 'Мясцовыя аўтамабільныя дарогі'}
-List = ["index", "highway", "error", "relation", "separated", "network", "missing"]
+List = ["index", "highway", "error", "relation", "separated", "network", "missing", "index.old"]
 Context = GetRouteContext(Route, Network)
 Context['PravoError'], Context['Pravo'] = GetPravo()
 Generate(List, Context)
