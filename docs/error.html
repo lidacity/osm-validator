@@ -39,7 +39,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr><i>М-2</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/159001'>osm</a><br /><a target='_josm' href='josm://relation/159001' onclick='return josm("r159001");'>josm</a></td>
     <td>Мінск – Нацыянальны аэрапорт Мінск<br /><font color='gray'>Минск – Национальный аэропорт Минск</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>М-4/П 1</i></nobr></td>
@@ -255,7 +255,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="construction" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Р-62</nobr></td>
+    <td><nobr><i>Р-62</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2630828'>osm</a><br /><a target='_josm' href='josm://relation/2630828' onclick='return josm("r2630828");'>josm</a></td>
     <td>Чашнікі – Бобр – Бабруйск (праз Клічаў)<br /><font color='gray'>Чашники – Бобр – Бобруйск (через Кличев)</font></td>
     <td><nobr>не праходзіць побач з "Бабруйск"</nobr></td>
@@ -1377,6 +1377,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr><i>Н-2083</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16640408'>osm</a><br /><a target='_josm' href='josm://relation/16640408' onclick='return josm("r16640408");'>josm</a></td>
     <td>Падʼезд да вёскі Бікложа праз вёску Ржаўка ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к деревне Бикложа через деревню Ржавка от автомобильной дороги М-3 Минск – Витебск</font></td>
+    <td><nobr>way змяшчае недапушчальны 'name'</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr><i>Н-2088</i></nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/16640397'>osm</a><br /><a target='_josm' href='josm://relation/16640397' onclick='return josm("r16640397");'>josm</a></td>
+    <td>Падʼезд да вёскі Прыдзвінне ад аўтамабільнай дарогі М-3 Мінск – Віцебск<br /><font color='gray'>Подъезд к деревне Придвинье от автомобильной дороги М-3 Минск – Витебск</font></td>
     <td><nobr>way змяшчае недапушчальны 'name'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -14892,6 +14898,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не дакранаецца да "М-8/Е 95"<br />не праходзіць побач з "Лес"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr><i>Н-17174</i></nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/17241341'>osm</a><br /><a target='_josm' href='josm://relation/17241341' onclick='return josm("r17241341");'>josm</a></td>
+    <td>Падʼезд да могілак вёскі Малое Бабіна ад аўтамабільнай дарогі Р-87 Віцебск – Орша<br /><font color='gray'>Подъезд к кладбищу деревни Малое Бабино от автомобильной дороги Р-87 Витебск – Орша</font></td>
+    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-17177</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/17481150'>osm</a><br /><a target='_josm' href='josm://relation/17481150' onclick='return josm("r17481150");'>josm</a></td>
     <td>Падʼезд да могілак вёскі Браздзечына ад аўтамабільнай дарогі Н-17161 Падʼезд да могілак вёскі Прыгузкі ад аўтамабільнай дарогі Р-15 Крычаў – Орша – Лепель<br /><font color='gray'>Подъезд к кладбищу деревни Браздетчино от автомобильной дороги Н-17161 Подъезд к кладбищу деревни Пригузки от автомобильной дороги Р-15 Кричев – Орша – Лепель</font></td>
@@ -14980,12 +14992,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/17477247'>osm</a><br /><a target='_josm' href='josm://relation/17477247' onclick='return josm("r17477247");'>josm</a></td>
     <td>Падʼезд да могілак вёскі Янова ад аўтамабільнай дарогі Н-17712 Падʼезд № 1 да вёскі Янова ад аўтамабільнай дарогі Р-14 Полацк – Мёры – Браслаў<br /><font color='gray'>Подъезд к кладбищу деревни Яново от автомобильной дороги Н-17712 Подъезд № 1 к деревне Яново от автомобильной дороги Р-14 Полоцк – Миоры – Браслав</font></td>
     <td><nobr>памылковы 'highway'="track" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-17714</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/16789887'>osm</a><br /><a target='_josm' href='josm://relation/16789887' onclick='return josm("r16789887");'>josm</a></td>
-    <td>Падʼезд да хутара Юркоўшчына ад аўтамабільнай дарогі Р-14 Полацк – Мёры – Браслаў<br /><font color='gray'>Подъезд к хутору Юрковщина от автомобильной дороги Р-14 Полоцк – Миоры – Браслав</font></td>
-    <td><nobr>не праходзіць побач з "Юркоўшчына"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-17715</nobr></td>
@@ -18123,7 +18129,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
  </table>
 </div><br /><hr />
 <p>
- <font size='-1'>Cтаронка створаная 2024-05-13 11:50:45 і змяшчае ўсе дадзеныя OSM за перыяд да 2024-05-11 20:20:42+00:00</font>
+ <font size='-1'>Cтаронка створаная 2024-05-20 07:50:48 і змяшчае ўсе дадзеныя OSM за перыяд да 2024-05-18 20:30:17+00:00</font>
  <br />
  <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
 </p>
