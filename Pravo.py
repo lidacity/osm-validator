@@ -18,6 +18,8 @@ URLs = {
  'Могилёвская область': "https://pravo.by/document/?guid=3961&p0=R920m0104900",
 }
 
+Headers = {'user-agent': "https://osm-validator.lidacity.by/"}
+
 Path = os.path.dirname(os.path.abspath(__file__))
 FileName = os.path.join(Path, ".data", "pravo.json")
 
@@ -48,7 +50,7 @@ def GetAppend(Soup):
 def DownloadPravo():
  Result = {}
  for District, URL in URLs.items():
-  Response = requests.get(URL)
+  Response = requests.get(URL, headers=Headers)
   Soup = BeautifulSoup(Response.text, "html.parser")
   Result[District] = [URL] + GetMain(Soup) + GetAppend(Soup)
  return Result
