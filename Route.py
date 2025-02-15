@@ -364,7 +364,7 @@ class RouteValidator(Validator):
 
  def CheckHighway(self, Ways):
   Result = []
-  Highways = ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", ]
+  Highways = ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "track", ]
   for Way in Ways:
    Tag = Way['tags']
    if 'highway' in Tag:
