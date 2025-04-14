@@ -45,7 +45,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr><i>М-3</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/164796'>osm</a><br /><a target='_josm' href='josm://relation/164796' onclick='return josm("r164796");'>josm</a></td>
     <td>Мінск – Віцебск<br /><font color='gray'>Минск – Витебск</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
+    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>М-4/П 1</i></nobr></td>
@@ -153,7 +153,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="construction" на way<br />way занадта разарваны</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Р-6</i></nobr></td>
+    <td><nobr>Р-6</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/1131871'>osm</a><br /><a target='_josm' href='josm://relation/1131871' onclick='return josm("r1131871");'>josm</a></td>
     <td>Івацэвічы – Пінск – Столін<br /><font color='gray'>Ивацевичи – Пинск – Столин</font></td>
     <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
@@ -189,7 +189,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="construction" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Р-23</i></nobr></td>
+    <td><nobr>Р-23</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/176487'>osm</a><br /><a target='_josm' href='josm://relation/176487' onclick='return josm("r176487");'>josm</a></td>
     <td>Мінск – Мікашэвічы<br /><font color='gray'>Минск – Микашевичи</font></td>
     <td><nobr>памылковы 'highway'="construction" на way<br />way занадта разарваны</nobr></td>
@@ -343,6 +343,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/2790177'>osm</a><br /><a target='_josm' href='josm://relation/2790177' onclick='return josm("r2790177");'>josm</a></td>
     <td>Магілёў – Быхаў – Рагачоў<br /><font color='gray'>Могилев – Быхов – Рогачев</font></td>
     <td><nobr>не праходзіць побач з "Магілёў"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr><i>Р-99</i></nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/158325'>osm</a><br /><a target='_josm' href='josm://relation/158325' onclick='return josm("r158325");'>josm</a></td>
+    <td>Баранавічы – Ваўкавыск – Пагранічны – Гродна<br /><font color='gray'>Барановичи – Волковыск – Пограничный – Гродно</font></td>
+    <td><nobr>падвоеныя way<br />way знаходзяцца ў некалькіх relation</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Р-99/П 3</i></nobr></td>
@@ -2184,6 +2190,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr><i>Н-2921</i></nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/14409030'>osm</a><br /><a target='_josm' href='josm://relation/14409030' onclick='return josm("r14409030");'>josm</a></td>
+    <td>Перамонт – Стар<br /><font color='gray'>Перемонт – Старь</font></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-2924</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14408809'>osm</a><br /><a target='_josm' href='josm://relation/14408809' onclick='return josm("r14408809");'>josm</a></td>
     <td>Вялікая Выдрэя – Рэчкі – Бор<br /><font color='gray'>Большая Выдрея – Речки – Бор</font></td>
@@ -3278,14 +3290,8 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-3872</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/18802019'>osm</a><br /><a target='_josm' href='josm://relation/18802019' onclick='return josm("r18802019");'>josm</a></td>
-    <td>Падʼезд да могілак вёскі Руднае ад аўтамабільнай дарогі Н-3871 Падʼезд да могілак вёскі Багданава ад аўтамабільнай дарогі Н-2802 Чарнаручча – Латыгалічы – Красналукі<br /><font color='gray'>Подъезд к кладбищу деревни Рудное от автомобильной дороги Н-3871 Подъезд к кладбищу деревни Богданово от автомобильной дороги Н-2802 Черноручье – Латыголичи – Краснолуки</font></td>
-    <td><nobr>"Н-3871" не адпавядае найменню ў 'name:be'<br />"Н-3871" не адпавядае найменню ў 'name:ru'<br />не дакранаецца да "Н-3871"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-3873</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/18891809'>osm</a><br /><a target='_josm' href='josm://relation/18891809' onclick='return josm("r18891809");'>josm</a></td>
-    <td>Падʼезд да вёскі Рыжанкі ад аўтамабільнай дарогі Н- Нізкі Гарадзец – Антаполле – Замачак<br /><font color='gray'>Подъезд к деревне Рыжанки от автомобильной дороги Н-3604 Низкий Городец – Анотополье – Замочек</font></td>
-    <td><nobr>у 'name:be' неправільны злучок "- "<br />у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />не праходзіць побач з "Замачак"</nobr></td>
+    <td>Падʼезд да могілак вёскі Руднае ад аўтамабільнай дарогі Н-3870 Падʼезд да вёскі Багданава ад аўтамабільнай дарогі Н-2802 Чарнаручча – Латыгалічы – Красналукі<br /><font color='gray'>Подъезд к кладбищу деревни Рудное от автомобильной дороги Н-3871 Подъезд к кладбищу деревни Богданово от автомобильной дороги Н-2802 Черноручье – Латыголичи – Краснолуки</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />"Н-3871" не адпавядае найменню ў 'name:ru'<br />не дакранаецца да "Н-3871"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-3891</nobr></td>
@@ -3396,16 +3402,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-3956</i></nobr></td>
+    <td><nobr>Н-3956</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14408881'>osm</a><br /><a target='_josm' href='josm://relation/14408881' onclick='return josm("r14408881");'>josm</a></td>
     <td>Бешанковічы – Крывое Сяло – Улазавічы<br /><font color='gray'>Бешенковичи – Кривое Село – Улазовичи</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-3957</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14408828'>osm</a><br /><a target='_josm' href='josm://relation/14408828' onclick='return josm("r14408828");'>josm</a></td>
-    <td>Крывое Сяло – Навікі<br /><font color='gray'>Кривое Село – Новики</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-3959</i></nobr></td>
@@ -3630,12 +3630,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-4098</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/4676302'>osm</a><br /><a target='_josm' href='josm://relation/4676302' onclick='return josm("r4676302");'>josm</a></td>
-    <td>Гомель – Лапаціна – Востраў<br /><font color='gray'>Гомель – Лопатино – Остров</font></td>
-    <td><nobr>непатрэбны 'source:ref:date'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-4100</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14412968'>osm</a><br /><a target='_josm' href='josm://relation/14412968' onclick='return josm("r14412968");'>josm</a></td>
     <td>Цыкуны – Рудня Каменева<br /><font color='gray'>Цыкуны – Рудня Каменева</font></td>
@@ -3670,12 +3664,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/14412676'>osm</a><br /><a target='_josm' href='josm://relation/14412676' onclick='return josm("r14412676");'>josm</a></td>
     <td>Новая Гута – Краўцоўка – Маркавічы<br /><font color='gray'>Новая Гута – Кравцовка – Марковичи</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-4107</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/18901127'>osm</a><br /><a target='_josm' href='josm://relation/18901127' onclick='return josm("r18901127");'>josm</a></td>
-    <td>Яроміна – «аўтамабільная дарога Н-4098 Гомель – Лапаціна – Востраў»<br /><font color='gray'>Ерёмино – «автомобильная дорога Н-4098 Гомель – Лопатино – Остров»</font></td>
-    <td><nobr>непатрэбны 'source:ref:date'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-4109</i></nobr></td>
@@ -4992,37 +4980,13 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-5037</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/18905397'>osm</a><br /><a target='_josm' href='josm://relation/18905397' onclick='return josm("r18905397");'>josm</a></td>
-    <td>Абыход вёскі Карані (ад аўтамабільнай дарогі Н-5007 Прасвет – Горкі – Карані – мяжа Калінкавіцкага раёну, км 14,5)<br /><font color='gray'>Обход деревни Корени (от автомобильной дороги Н-5007 Просвет – Горки – Корени – граница Калинковичского района, км 12 до автомобильной дороги Н-5007 Просвет – Горки – Корени – граница Калинковичского района, км 14,5)</font></td>
-    <td><nobr>розніца паміж даўжынёй 'name:be' і 'name:ru'<br />у 'name:be' і 'name:ru' не аднолькавыя 'ref'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6005</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/4207237'>osm</a><br /><a target='_josm' href='josm://relation/4207237' onclick='return josm("r4207237");'>josm</a></td>
-    <td>Карэлічы – Валеўка – Наваельня<br /><font color='gray'>Кореличи – Валевка – Новоельня</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6017</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/2692253'>osm</a><br /><a target='_josm' href='josm://relation/2692253' onclick='return josm("r2692253");'>josm</a></td>
-    <td>Ваўкавыск – Малая Лапеніца – Кабузі<br /><font color='gray'>Волковыск – Малая Лапеница – Кабузи</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6024</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12574059'>osm</a><br /><a target='_josm' href='josm://relation/12574059' onclick='return josm("r12574059");'>josm</a></td>
-    <td>Падʼезд да садаводчага таварыства «Сонейка» ад аўтамабільнай дарогі Н-6041 Падʼезд да турбазы «Нёман» ад аўтамабільнай дарогі Н-6031 Гродна – Зарачанка – Сапоцкін<br /><font color='gray'>Подъезд к садоводческому товариществу «Солнышко» от автомобильной дороги Н-6041 Подъезд к турбазе «Неман» от автомобильной дороги Н-6031 Гродно – Заречанка – Сопоцкин</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6030</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/1314842'>osm</a><br /><a target='_josm' href='josm://relation/1314842' onclick='return josm("r1314842");'>josm</a></td>
     <td>Індура – Адэльск – мяжа Рэспублікі Польшча<br /><font color='gray'>Индура – Одельск – граница Республики Польша</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6043</i></nobr></td>
+    <td><nobr>Н-6043</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2811740'>osm</a><br /><a target='_josm' href='josm://relation/2811740' onclick='return josm("r2811740");'>josm</a></td>
     <td>Гродна – Аўгустоў<br /><font color='gray'>Гродно – Августов</font></td>
     <td><nobr>не праходзіць побач з "Аўгустоў"</nobr></td>
@@ -5034,7 +4998,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6054</i></nobr></td>
+    <td><nobr>Н-6054</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/216141'>osm</a><br /><a target='_josm' href='josm://relation/216141' onclick='return josm("r216141");'>josm</a></td>
     <td>Гродна – Сапоцкін – мяжа Літоўскай Рэспублікі<br /><font color='gray'>Гродно – Сопоцкин – граница Литовской Республики</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
@@ -5046,16 +5010,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6093</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12906009'>osm</a><br /><a target='_josm' href='josm://relation/12906009' onclick='return josm("r12906009");'>josm</a></td>
-    <td>Мядзвінавічы – Лозкі – Малдавічы<br /><font color='gray'>Медвиновичи – Лозки – Молдовичи</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6107</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12208346'>osm</a><br /><a target='_josm' href='josm://relation/12208346' onclick='return josm("r12208346");'>josm</a></td>
-    <td>Пагародна – Паляцкішкі – Беняконі<br /><font color='gray'>Погородно – Полецкишки – Бенякони</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>Н-6105</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/2833637'>osm</a><br /><a target='_josm' href='josm://relation/2833637' onclick='return josm("r2833637");'>josm</a></td>
+    <td>Воранава – Тракелі<br /><font color='gray'>Вороново – Трокели</font></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6118</i></nobr></td>
@@ -5070,28 +5028,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6138</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14394691'>osm</a><br /><a target='_josm' href='josm://relation/14394691' onclick='return josm("r14394691");'>josm</a></td>
-    <td>Залессе – Паніззе<br /><font color='gray'>Залесье – Понизье</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6151</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13317280'>osm</a><br /><a target='_josm' href='josm://relation/13317280' onclick='return josm("r13317280");'>josm</a></td>
-    <td>Трабы – Сурвілішкі – Пяцкуны<br /><font color='gray'>Трабы – Сурвилишки – Пецкуны</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6167</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2734939'>osm</a><br /><a target='_josm' href='josm://relation/2734939' onclick='return josm("r2734939");'>josm</a></td>
     <td>Канюшаны – Любары – Дзітрыкі – Ерамеевічы<br /><font color='gray'>Конюшаны – Люборы – Дитрики – Еремеевичи</font></td>
     <td><nobr>не праходзіць побач з "Канюшаны"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6198</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13609182'>osm</a><br /><a target='_josm' href='josm://relation/13609182' onclick='return josm("r13609182");'>josm</a></td>
-    <td>Карэлічы – Руціца – Амневічы<br /><font color='gray'>Кореличи – Рутица – Омневичи</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6200</i></nobr></td>
@@ -5106,34 +5046,16 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>пусты 'highway' на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6226</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/11601481'>osm</a><br /><a target='_josm' href='josm://relation/11601481' onclick='return josm("r11601481");'>josm</a></td>
-    <td>Вялікая Бераставіца – Паплаўцы – Кавалі – Алекшыцы<br /><font color='gray'>Большая Берестовица – Поплавцы – Ковали – Олекшицы</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6228</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/11601479'>osm</a><br /><a target='_josm' href='josm://relation/11601479' onclick='return josm("r11601479");'>josm</a></td>
-    <td>Пачобуты – Одла – Магіляны<br /><font color='gray'>Пачебуты – Одла – Могиляны</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6255</i></nobr></td>
+    <td><nobr>Н-6255</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2666156'>osm</a><br /><a target='_josm' href='josm://relation/2666156' onclick='return josm("r2666156");'>josm</a></td>
     <td>Жалудок – Першамайск – мяжа Літоўскай Рэспублікі<br /><font color='gray'>Желудок – Першемайск – граница Литовской Республики</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6257</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/2665791'>osm</a><br /><a target='_josm' href='josm://relation/2665791' onclick='return josm("r2665791");'>josm</a></td>
-    <td>Орля – Ракавічы – чыгуначная станцыя Ражанка<br /><font color='gray'>Орля – Раковичи – железнодорожная станция Рожанка</font></td>
-    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6259</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2684616'>osm</a><br /><a target='_josm' href='josm://relation/2684616' onclick='return josm("r2684616");'>josm</a></td>
     <td>Чыгуначная станцыя Ражанка – аграгарадок Ражанка – Малявічы<br /><font color='gray'>Железнодорожная станция Рожанка – агрогородок Рожанка – Малевичи</font></td>
-    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways<br />не праходзіць побач з "Чыгуначная"</nobr></td>
+    <td><nobr>не праходзіць побач з "Чыгуначная"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6268</i></nobr></td>
@@ -5172,13 +5094,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>непатрэбны 'source:ref:date'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6305</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14030519'>osm</a><br /><a target='_josm' href='josm://relation/14030519' onclick='return josm("r14030519");'>josm</a></td>
-    <td>Бердаўка – Ацмінава – Дзетамля<br /><font color='gray'>Бердовка – Отминово – Детомля</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6327</i></nobr></td>
+    <td><nobr>Н-6327</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14394861'>osm</a><br /><a target='_josm' href='josm://relation/14394861' onclick='return josm("r14394861");'>josm</a></td>
     <td>Ашмяны – Анжадава – мяжа Літоўскай Рэспублікі<br /><font color='gray'>Ошмяны – Онжадово – граница Литовской Республики</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
@@ -5202,34 +5118,16 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "Чыгуначная"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6411</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14394606'>osm</a><br /><a target='_josm' href='josm://relation/14394606' onclick='return josm("r14394606");'>josm</a></td>
-    <td>Куклічы – Рудня<br /><font color='gray'>Кукличи – Рудня</font></td>
-    <td><nobr>way змяшчае недапушчальны 'name'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6431</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/11136496'>osm</a><br /><a target='_josm' href='josm://relation/11136496' onclick='return josm("r11136496");'>josm</a></td>
     <td>Падʼезд да вёскі Святляны ад праспекта Індустрыяльны горада Смаргонь<br /><font color='gray'>Подъезд к деревне Светляны от проспекта Индустриальный города Сморгонь</font></td>
     <td><nobr>не праходзіць побач з "Індустрыяльны"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6456</i></nobr></td>
+    <td><nobr>Н-6456</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2667969'>osm</a><br /><a target='_josm' href='josm://relation/2667969' onclick='return josm("r2667969");'>josm</a></td>
     <td>Жалудок – Фарны Канец – Свінакомплекс<br /><font color='gray'>Желудок – Фарный Конец – Свинокомплекс</font></td>
     <td><nobr>не праходзіць побач з "Свінакомплекс"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6478</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14395077'>osm</a><br /><a target='_josm' href='josm://relation/14395077' onclick='return josm("r14395077");'>josm</a></td>
-    <td>Смаргонь – Дзевятні – Жодзішкі<br /><font color='gray'>Сморгонь – Девятни – Жодишки</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way занадта разарваны</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6516</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/4230879'>osm</a><br /><a target='_josm' href='josm://relation/4230879' onclick='return josm("r4230879");'>josm</a></td>
-    <td>Дубніца – Стрэльчыкі – Саннікі – Тумашы – Рагачы<br /><font color='gray'>Дубница – Стрельчики – Санники – Тумаши – Рогачи</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6545</i></nobr></td>
@@ -5250,18 +5148,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "Гродна"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6602</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12219827'>osm</a><br /><a target='_josm' href='josm://relation/12219827' onclick='return josm("r12219827");'>josm</a></td>
-    <td>Радунь – Нача – Бялюнцы<br /><font color='gray'>Радунь – Нача – Белюнцы</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6656</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12920270'>osm</a><br /><a target='_josm' href='josm://relation/12920270' onclick='return josm("r12920270");'>josm</a></td>
-    <td>Падʼезд да карʼеру «Данілавіцкае» ад аўтамабільнай дарогі Н-6005 Карэлічы – Валеўка – Наваельня<br /><font color='gray'>Подъезд к карьеру «Даниловичское» от автомобильной дороги Н-6005 Кореличи – Валевка – Новоельня</font></td>
-    <td><nobr>не дакранаецца да "Н-6005"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6669</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/2946742'>osm</a><br /><a target='_josm' href='josm://relation/2946742' onclick='return josm("r2946742");'>josm</a></td>
     <td>Малая Бераставіца – мяжа Рэспублікі Польшча<br /><font color='gray'>Малая Берестовица – граница Республики Польша</font></td>
@@ -5280,16 +5166,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6711</i></nobr></td>
+    <td><nobr>Н-6711</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/12239426'>osm</a><br /><a target='_josm' href='josm://relation/12239426' onclick='return josm("r12239426");'>josm</a></td>
     <td>Навіянка – Мікшавічы – Ягелы – Вінцукі<br /><font color='gray'>Новиянка – Микшевичи – Ягелы – Винцуки</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6716</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12239421'>osm</a><br /><a target='_josm' href='josm://relation/12239421' onclick='return josm("r12239421");'>josm</a></td>
-    <td>Гайцюнішкі – Таўрэлі – Кулькішкі<br /><font color='gray'>Гайтюнишки – Таврели – Кулькишки</font></td>
-    <td><nobr>памылковы 'highway'="service" на way<br />way не паслядоўныя</nobr></td>
+    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6719</i></nobr></td>
@@ -5304,10 +5184,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6766</i></nobr></td>
+    <td><nobr>Н-6766</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/12788962'>osm</a><br /><a target='_josm' href='josm://relation/12788962' onclick='return josm("r12788962");'>josm</a></td>
-    <td>Абʼезд вёскі Гарны («аўтамабільная дарогі Н-6582 Квасоўка – Гарны – Агароднікі» (км 4,340 – км 5,314)<br /><font color='gray'>Объезд деревни Горны («автомобильная дорога Н-6582 Квасовка – Горны – Огородники» (км 4,340 – км 5,314)</font></td>
-    <td><nobr>у 'name:be' непарныя дужкі ці двукоссі "("</nobr></td>
+    <td>Абʼезд вёскі Гарны («аўтамабільная дарогі Н-6582 Квасоўка – Гарны – Агароднікі» (км 4,340 – км 5,314))<br /><font color='gray'>Объезд деревни Горны («автомобильная дорога Н-6582 Квасовка – Горны – Огородники» (км 4,340 – км 5,314)</font></td>
+    <td><nobr>у 'name:ru' непарныя дужкі ці двукоссі "("</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6861</i></nobr></td>
@@ -5322,10 +5202,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-6869</i></nobr></td>
+    <td><nobr>Н-6869</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/12793634'>osm</a><br /><a target='_josm' href='josm://relation/12793634' onclick='return josm("r12793634");'>josm</a></td>
-    <td>Абʼезд вёскі Баранава («аўтамабільная дарога Н-6045 Квасоўка – Баранава – Навасёлкі – Дайлідкі» (км 6,357 – км 4,515)<br /><font color='gray'>Объезд деревни Бараново («автомобильная дорога Н-6045 Квасовка – Бараново – Новоселки – Дайлидки» (км 6,357 – км 4,515)</font></td>
-    <td><nobr>у 'name:be' непарныя дужкі ці двукоссі "("</nobr></td>
+    <td>Абʼезд вёскі Баранава («аўтамабільная дарога Н-6045 Квасоўка – Баранава – Навасёлкі – Дайлідкі» (км 6,357 – км 4,515))<br /><font color='gray'>Объезд деревни Бараново («автомобильная дорога Н-6045 Квасовка – Бараново – Новоселки – Дайлидки» (км 6,357 – км 4,515)</font></td>
+    <td><nobr>у 'name:ru' непарныя дужкі ці двукоссі "("</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-6871</i></nobr></td>
@@ -5388,13 +5268,13 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "Санаторый"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-7061</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14050030'>osm</a><br /><a target='_josm' href='josm://relation/14050030' onclick='return josm("r14050030");'>josm</a></td>
-    <td>Гарадзечна – Брацянка – Літоўка<br /><font color='gray'>Городечно – Бретянка – Литовка</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
+    <td><nobr>Н-7141</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/14394667'>osm</a><br /><a target='_josm' href='josm://relation/14394667' onclick='return josm("r14394667");'>josm</a></td>
+    <td>Падʼезд да вёскі Вайцехава ад аўтамабільнай дарогі Н-6329 Ашмяны – Баруны – мяжа Мінскай вобласці<br /><font color='gray'>Подъезд к деревне Войтехово от автомобильной дороги Н-6329 Ошмяны – Боруны – граница Минской области</font></td>
+    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-7282</i></nobr></td>
+    <td><nobr>Н-7282</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/4230912'>osm</a><br /><a target='_josm' href='josm://relation/4230912' onclick='return josm("r4230912");'>josm</a></td>
     <td>Падʼезд да вёскі Вусава ад аўтамабільнай дарогі Н-6035 Плоскаўцы – Селіванаўцы – застава імя Усова<br /><font color='gray'>Подъезд к деревне Усово от автомобильной дороги Н-6035 Плосковцы – Селивановцы – застава имени Усова</font></td>
     <td><nobr>'fixme' у way</nobr></td>
@@ -5403,12 +5283,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr><i>Н-7302</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/13219195'>osm</a><br /><a target='_josm' href='josm://relation/13219195' onclick='return josm("r13219195");'>josm</a></td>
     <td>Лебядзі – Самаравічы<br /><font color='gray'>Лебеди – Самаровичи</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-7311</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13850052'>osm</a><br /><a target='_josm' href='josm://relation/13850052' onclick='return josm("r13850052");'>josm</a></td>
-    <td>Падʼезд да карʼера «Машталеры» ад аўтамабільнай дарогі Н-7234 Машталеры – Кухары<br /><font color='gray'>Подъезд к карьеру «Машталеры» от автомобильной дороги Н-7234 Машталеры – Кухари</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -5460,22 +5334,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "Чыгуначная"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-7710</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12276861'>osm</a><br /><a target='_josm' href='josm://relation/12276861' onclick='return josm("r12276861");'>josm</a></td>
-    <td>Пузелі – Постаўкі<br /><font color='gray'>Пузели – Поставки</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-7726</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/8416262'>osm</a><br /><a target='_josm' href='josm://relation/8416262' onclick='return josm("r8416262");'>josm</a></td>
     <td>Цантэлі – Каменны Лог – мяжа Літоўскай Рэспублікі<br /><font color='gray'>Центели – Каменный Лог – граница Литовской Республики</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-7737</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14394859'>osm</a><br /><a target='_josm' href='josm://relation/14394859' onclick='return josm("r14394859");'>josm</a></td>
-    <td>Падʼезд да вёскі Якімавічы ад аўтамабільнай дарогі Н-6347 Слонім – мяжа Брэсцкай вобласці<br /><font color='gray'>Подъезд к деревне Якимовичи от автомобильной дороги Н-6347 Слоним – граница Брестской области</font></td>
-    <td><nobr>'name:ru' не супадае з Законам</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-7742</i></nobr></td>
@@ -5496,28 +5358,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "Лясная"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-7810</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13233247'>osm</a><br /><a target='_josm' href='josm://relation/13233247' onclick='return josm("r13233247");'>josm</a></td>
-    <td>Падʼезд да дзіцячага аздараўленчага лагеру «Блакітная хваля» ад аўтамабільнай дарогі Н-6075 Бярэжкі – Лаўрыновічы – Каралін<br /><font color='gray'>Подъезд к детскому оздоровительному лагерю «Голубая Волна» от автомобильной дороги Н-6075 Бережки – Лавриновичи – Каролин</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-7863</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13235686'>osm</a><br /><a target='_josm' href='josm://relation/13235686' onclick='return josm("r13235686");'>josm</a></td>
-    <td>Падʼезд да могілак аграгарадка Славацічы ад аўтамабільнай дарогі Н-6057 Бародзічы – Холстава – Зенькаўцы – Хамічы<br /><font color='gray'>Подъезд к кладбищу агрогородка Словатичи от автомобильной дороги Н-6057 Бородичи – Холстово – Зеньковцы – Хомичи</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-7963</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14394732'>osm</a><br /><a target='_josm' href='josm://relation/14394732' onclick='return josm("r14394732");'>josm</a></td>
     <td>Сасноўка – Бярозы<br /><font color='gray'>Сосновка – Березы</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-7982</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14394740'>osm</a><br /><a target='_josm' href='josm://relation/14394740' onclick='return josm("r14394740");'>josm</a></td>
-    <td>Падʼезд да вёскі Качаны ад аўтамабільнай дарогі Н-6417 Навасёлкі – Баярск – Пераходы<br /><font color='gray'>Подъезд к деревне Кочаны от автомобильной дороги Н-6417 Новосёлки – Боярск – Переходы</font></td>
-    <td><nobr>не дакранаецца да "Н-6417"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-8000</i></nobr></td>
@@ -6012,12 +5856,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8247</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417471'>osm</a><br /><a target='_josm' href='josm://relation/14417471' onclick='return josm("r14417471");'>josm</a></td>
-    <td>Дворышча – Забрэззе – Вішнева<br /><font color='gray'>Дворище – Забрезье – Вишнево</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-8250</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417007'>osm</a><br /><a target='_josm' href='josm://relation/14417007' onclick='return josm("r14417007");'>josm</a></td>
     <td>Рудзеўшчына – Высокае – Гародзькі – Лоск<br /><font color='gray'>Рудевщина – Высокое – Городьки – Лоск</font></td>
@@ -6198,12 +6036,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8308</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14416643'>osm</a><br /><a target='_josm' href='josm://relation/14416643' onclick='return josm("r14416643");'>josm</a></td>
-    <td>Падʼезд да вёскі Мількаўшчына ад аўтамабільнай дарогі Н-8247 Дворышча – Забрэззе – Вішнева<br /><font color='gray'>Подъезд к деревне Мильковщина от автомобильной дороги Н-8247 Дворище – Забрезье – Вишнево</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-8310</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14416964'>osm</a><br /><a target='_josm' href='josm://relation/14416964' onclick='return josm("r14416964");'>josm</a></td>
     <td>Бурбаўшчына – Палубоўцы<br /><font color='gray'>Бурбовщина – Полубовцы</font></td>
@@ -6324,18 +6156,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8384</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417789'>osm</a><br /><a target='_josm' href='josm://relation/14417789' onclick='return josm("r14417789");'>josm</a></td>
-    <td>Баравое – Косцевічы – «аўтамабільная дарога Н-8385 Дзяржынск – Вялікае Сяло»<br /><font color='gray'>Боровое – Костевичи – «автомобильная дорога Н-8385 Дзержинск – Великое Село»</font></td>
-    <td><nobr>не дакранаецца да "Н-8385"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8385</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417748'>osm</a><br /><a target='_josm' href='josm://relation/14417748' onclick='return josm("r14417748");'>josm</a></td>
-    <td>Дзяржынск – Вялікае Сяло<br /><font color='gray'>Дзержинск – Великое Село</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-8394</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417793'>osm</a><br /><a target='_josm' href='josm://relation/14417793' onclick='return josm("r14417793");'>josm</a></td>
     <td>Скірмантава – Кавальцы – Волма<br /><font color='gray'>Скирмантово – Ковальцы – Волма</font></td>
@@ -6370,12 +6190,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/14416774'>osm</a><br /><a target='_josm' href='josm://relation/14416774' onclick='return josm("r14416774");'>josm</a></td>
     <td>Волма – Валмечка – Падзерычы<br /><font color='gray'>Волма – Волмечка – Падеричи</font></td>
     <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8402</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417791'>osm</a><br /><a target='_josm' href='josm://relation/14417791' onclick='return josm("r14417791");'>josm</a></td>
-    <td>Вялікія Навасёлкі – Юцкі – Дворышча<br /><font color='gray'>Большие Новосёлки – Юцки – Дворище</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-8406</i></nobr></td>
@@ -6594,12 +6408,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8542</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417501'>osm</a><br /><a target='_josm' href='josm://relation/14417501' onclick='return josm("r14417501");'>josm</a></td>
-    <td>Капыль – Леніна – Селішча<br /><font color='gray'>Копыль – Ленино – Селище</font></td>
-    <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-8543</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14416906'>osm</a><br /><a target='_josm' href='josm://relation/14416906' onclick='return josm("r14416906");'>josm</a></td>
     <td>Скабін – Кель – Мазалі<br /><font color='gray'>Скабин – Кель – Мозоли</font></td>
@@ -6609,12 +6417,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr><i>Н-8546</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14416931'>osm</a><br /><a target='_josm' href='josm://relation/14416931' onclick='return josm("r14416931");'>josm</a></td>
     <td>Доктаравічы – Астравок – Яўсеевічы – Балгавічы<br /><font color='gray'>Докторовичи – Островок – Евсеевичи – Балговичи</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8547</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417815'>osm</a><br /><a target='_josm' href='josm://relation/14417815' onclick='return josm("r14417815");'>josm</a></td>
-    <td>Капыль – Блеўчыцы – Мацкевічы<br /><font color='gray'>Копыль – Блевчицы – Мацкевичи</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -6648,7 +6450,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8559</i></nobr></td>
+    <td><nobr>Н-8559</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417776'>osm</a><br /><a target='_josm' href='josm://relation/14417776' onclick='return josm("r14417776");'>josm</a></td>
     <td>Цімкавічы – Кіявічы<br /><font color='gray'>Тимковичи – Киевичи</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
@@ -6972,12 +6774,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8697</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417269'>osm</a><br /><a target='_josm' href='josm://relation/14417269' onclick='return josm("r14417269");'>josm</a></td>
-    <td>Ротань – Буда – «аўтамабільная дарога Н-8642 Крупкі – Прошыка»<br /><font color='gray'>Ротань – Буда – «автомобильная дорога Н-8642 Крупки – Прошика»</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-8702</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14416885'>osm</a><br /><a target='_josm' href='josm://relation/14416885' onclick='return josm("r14416885");'>josm</a></td>
     <td>Яджар – Забалоцце<br /><font color='gray'>Еджар – Заболотье</font></td>
@@ -6987,12 +6783,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr><i>Н-8705</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417196'>osm</a><br /><a target='_josm' href='josm://relation/14417196' onclick='return josm("r14417196");'>josm</a></td>
     <td>Абчуга – Шарпілаўка<br /><font color='gray'>Обчуга – Шарпиловка</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-8715</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14418000'>osm</a><br /><a target='_josm' href='josm://relation/14418000' onclick='return josm("r14418000");'>josm</a></td>
-    <td>Крупкі – Халопенічы<br /><font color='gray'>Крупки – Холопеничи</font></td>
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -9186,12 +8976,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-9692</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417961'>osm</a><br /><a target='_josm' href='josm://relation/14417961' onclick='return josm("r14417961");'>josm</a></td>
-    <td>Добрынка – Горкі – Урбанаўка<br /><font color='gray'>Добринка – Горки – Урбановка</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-9694</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14417399'>osm</a><br /><a target='_josm' href='josm://relation/14417399' onclick='return josm("r14417399");'>josm</a></td>
     <td>Ляўкі – Падарэссе – Залужжа<br /><font color='gray'>Левки – Подоресье – Залужье</font></td>
@@ -9628,12 +9412,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/14416673'>osm</a><br /><a target='_josm' href='josm://relation/14416673' onclick='return josm("r14416673");'>josm</a></td>
     <td>Дзешчанка – Гарбаты<br /><font color='gray'>Дещенка – Горбаты</font></td>
     <td><nobr>замкнутая ў пятлю ці перакрыжаваная<br />way не паслядоўныя</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-9880</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/14417817'>osm</a><br /><a target='_josm' href='josm://relation/14417817' onclick='return josm("r14417817");'>josm</a></td>
-    <td>Зенькавічы – Каменка<br /><font color='gray'>Зеньковичи – Каменка</font></td>
-    <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-9882</i></nobr></td>
@@ -12474,12 +12252,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не праходзіць побач з "СТА"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-16939</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/18897056'>osm</a><br /><a target='_josm' href='josm://relation/18897056' onclick='return josm("r18897056");'>josm</a></td>
-    <td>Падʼезд да вёскі Дубінкі ад аўтамабільнай дарогі Н-3951 Бешанковічы – Шуміліна – Сураўні<br /><font color='gray'>Подъезд к деревне Дубинки от автомобильной дороги Н-3951 Бешенковичи – Шумилино – Суровни</font></td>
-    <td><nobr>не супадае 'ref' у relation і 'ref' яе ways</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-17027</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14408945'>osm</a><br /><a target='_josm' href='josm://relation/14408945' onclick='return josm("r14408945");'>josm</a></td>
     <td>Іст – Шарагі – Катовічы<br /><font color='gray'>Ист – Шараги – Котовичи</font></td>
@@ -12538,6 +12310,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/18443866'>osm</a><br /><a target='_josm' href='josm://relation/18443866' onclick='return josm("r18443866");'>josm</a></td>
     <td>Падʼезд да могілак вёскі Смільгіні ад аўтамабільнай дарогі Н-3301 Гадуцішкі – да аўтамабільнай дарогі Р-45 Полацк – Глыбокае – мяжа Літоўскай Рэспублікі (Катлоўка)<br /><font color='gray'>Подъезд к кладбищу деревни Смильгини от автомобильной дороги Н-3301 Адутишкис – до автомобильной дороги Р-45 Полоцк – Глубокое – граница Литовской Республики (Котловка)</font></td>
     <td><nobr>не праходзіць побач з "Смільгіні"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr><i>Н-17444</i></nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/17303184'>osm</a><br /><a target='_josm' href='josm://relation/17303184' onclick='return josm("r17303184");'>josm</a></td>
+    <td>Падʼезд да вёскі Жыгуны праз вёску Марачы ад аўтамабільнай дарогі Р-110 Глыбокае – Паставы – Лынтупы – мяжа Літоўскай Рэспублікі (Лынтупы)<br /><font color='gray'>Подъезд к деревне Жигуны через деревню Марачи от автомобильной дороги Р-110 Глубокое – Поставы – Лынтупы – граница Литовской Республики (Лынтупы)</font></td>
+    <td><nobr>замкнутая ў пятлю ці перакрыжаваная</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-17458</nobr></td>
@@ -12628,12 +12406,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/17448218'>osm</a><br /><a target='_josm' href='josm://relation/17448218' onclick='return josm("r17448218");'>josm</a></td>
     <td>Падʼезд да садаводчага таварыства «Матор» ад аўтамабільнай дарогі Н-4091 Навабеліца – Чонкі да аўтамабільнай дарогі М-8/Е 95 Мяжа Расійскай Федэрацыі (Езярышча) – Віцебск – Гомель – мяжа Украіны (Новая Гута)<br /><font color='gray'>Подъезд к садоводческому товариществу «Мотор» от автомобильной дороги Н-4091 Новобелица – Чёнки до автомобильной дороги М-8/Е 95 Граница Российской Федерации (Езерище) – Витебск – Гомель – граница Украины (Новая Гута)</font></td>
     <td><nobr>не праходзіць побач з "Матор"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-18287</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/18901126'>osm</a><br /><a target='_josm' href='josm://relation/18901126' onclick='return josm("r18901126");'>josm</a></td>
-    <td>Падʼезд да могілак аграгарадка Яроміна ад аўтамабільнай дарогі Н-4107 Яроміна – «аўтамабільная дарога Н-4098 Гомель – Лапаціна – Востраў»<br /><font color='gray'>Подъезд к кладбищу агрогородка Ерёмино от автомобильной дороги Н-4107 Ерёмино – «автомобильная дорога Н-4098 Гомель – Лопатино – Остров»</font></td>
-    <td><nobr>непатрэбны 'source:ref:date'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-18350</i></nobr></td>
@@ -12894,28 +12666,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не дакранаецца да "Н-18866"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-18909</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/18905415'>osm</a><br /><a target='_josm' href='josm://relation/18905415' onclick='return josm("r18905415");'>josm</a></td>
-    <td>Падʼезд да вёскі Дубнякі ад аўтамабільнай дарогі Н-4459 Падʼезд да могілак аграгарадка Каплічы ад аўтамабільнай дарогі Н-4459 Каплічы – Капліцкі Варатын<br /><font color='gray'>Подъезд к деревне Дубняки от автомобильной дороги Н-4459 Капличи – Капличский Воротын</font></td>
-    <td><nobr>розніца паміж даўжынёй 'name:be' і 'name:ru'<br />у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />"Н-4459" не адпавядае найменню ў 'name:be'<br />"Н-4459" не адпавядае найменню ў 'name:be'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-18910</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/18905414'>osm</a><br /><a target='_josm' href='josm://relation/18905414' onclick='return josm("r18905414");'>josm</a></td>
-    <td>Падʼезд да могілак аграгарадка Ператрутаўскі Варатын ад аўтамабільнай дарогі Н-4459 Падʼезд да могілак аграгарадка Каплічы ад аўтамабільнай дарогі Н-4459 Каплічы – Капліцкі Варатын<br /><font color='gray'>Подъезд к кладбищу агрогородка Перетрутовский Воротын от автомобильной дороги Н-4459 Капличи – Капличский Воротын</font></td>
-    <td><nobr>розніца паміж даўжынёй 'name:be' і 'name:ru'<br />у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />"Н-4459" не адпавядае найменню ў 'name:be'<br />"Н-4459" не адпавядае найменню ў 'name:be'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr>Н-18911</nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/18905413'>osm</a><br /><a target='_josm' href='josm://relation/18905413' onclick='return josm("r18905413");'>josm</a></td>
-    <td>Падʼезд да могілак вёскі Капліцкі Варатын ад аўтамабільнай дарогі Н-4459 Падʼезд да могілак аграгарадка Каплічы ад аўтамабільнай дарогі Н-4459 Каплічы – Капліцкі Варатын<br /><font color='gray'>Подъезд к кладбищу деревни Капличский Воротын от автомобильной дороги Н-4459 Капличи – Капличский Воротын</font></td>
-    <td><nobr>розніца паміж даўжынёй 'name:be' і 'name:ru'<br />у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />"Н-4459" не адпавядае найменню ў 'name:be'<br />"Н-4459" не адпавядае найменню ў 'name:be'</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-18922</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/18905427'>osm</a><br /><a target='_josm' href='josm://relation/18905427' onclick='return josm("r18905427");'>josm</a></td>
-    <td>Падʼезд да вёскі Садкі ад аўтамабільнай дарогі Н-4469 Падʼезд да могілак аграгарадка Якімавічы ад аўтамабільнай дарогі Н-4469 «Аўтамабільная дарога Н-4451 Калінкавічы – Азарычы праз аграгарадок Каплічы» км 24,77 – Якімавічы – Клінск<br /><font color='gray'>Подъезд к деревне Садки от автомобильной дороги Н-4469 Автомобильная дорога Калинковичи – Озаричи через агрогородок Капличи км 24,77 – Якимовичи – Клинск</font></td>
-    <td><nobr>розніца паміж даўжынёй 'name:be' і 'name:ru'<br />у 'name:be' і 'name:ru' не аднолькавыя 'ref'<br />"Н-4469" не адпавядае найменню ў 'name:be'<br />"Н-4469" не адпавядае найменню ў 'name:be'</nobr></td>
+    <td>Падʼезд да вёскі Садкі ад аўтамабільнай дарогі Н-4469 «Аўтамабільная дарога Н-4451 Калінкавічы – Азарычы праз аграгарадок Каплічы» км 24,77 – Якімавічы – Клінск<br /><font color='gray'>Подъезд к деревне Садки от автомобильной дороги Н-4469 Автомобильная дорога Калинковичи – Озаричи через агрогородок Капличи км 24,77 – Якимовичи – Клинск</font></td>
+    <td><nobr>у 'name:be' і 'name:ru' не аднолькавыя 'ref'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr>Н-18923</nobr></td>
@@ -13314,12 +13068,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20006</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/11988421'>osm</a><br /><a target='_josm' href='josm://relation/11988421' onclick='return josm("r11988421");'>josm</a></td>
-    <td>Падʼезд да жывёлагадоўчага комплексу «Данілаўцы» ад аўтамабільнай дарогі Н-7000 Крываносаўцы – Лозы – Плябанаўцы – Данілаўцы<br /><font color='gray'>Подъезд к животноводческому комплексу «Даниловцы» от автомобильной дороги Н-7000 Кривоносовцы – Лозы – Плебановцы – Даниловцы</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20012</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/11988420'>osm</a><br /><a target='_josm' href='josm://relation/11988420' onclick='return josm("r11988420");'>josm</a></td>
     <td>Падʼезд да жывёлагадоўчага комплексу «Дубаўцы» ад аўтамабільнай дарогі Н-6303 Ваўкавыск – Плябанаўцы – Дубаўцы<br /><font color='gray'>Подъезд к животноводческому комплексу «Дубовцы» от автомобильной дороги Н-6303 Волковыск – Плебановцы – Дубовцы</font></td>
@@ -13332,21 +13080,9 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20051</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/2735216'>osm</a><br /><a target='_josm' href='josm://relation/2735216' onclick='return josm("r2735216");'>josm</a></td>
-    <td>Падʼезд да вёскі Былінскія ад аўтамабільнай дарогі Н-20191 Падʼезд да вёскі Навіцкія ад аўтамабільнай дарогі Н-6165 Агароднікі – Плябанцы – Навіцкія<br /><font color='gray'>Подъезд к деревне Былинские от автомобильной дороги Н-20191 Подъезд к деревне Новицкие от автомобильной дороги Н-6165 Ёдки – Дубровня – Тябы</font></td>
-    <td><nobr>"Н-20191" не адпавядае найменню ў 'name:be'<br />"Н-6165" не адпавядае найменню ў 'name:be'<br />не супадаюць населеныя пункты ў 'name:be' і 'name:ru'<br />не праходзіць побач з "Навіцкія"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20056</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/12734123'>osm</a><br /><a target='_josm' href='josm://relation/12734123' onclick='return josm("r12734123");'>josm</a></td>
     <td>Падʼезд да жывёлагадоўчага комплексу «Рыдзялі» ад аўтамабільнай дарогі Н-6568 Табала – Рыдзялі<br /><font color='gray'>Подъезд к животноводческому комплексу «Рыдели» от автомобильной дороги Н-6568 Табола – Рыдели</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20059</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12797701'>osm</a><br /><a target='_josm' href='josm://relation/12797701' onclick='return josm("r12797701");'>josm</a></td>
-    <td>Падʼезд да жывёлагадоўчага комплексу «Луцкаўляны» ад аўтамабільнай дарогі Н-6039 Луцкаўляны – Рагачы – Няцечы<br /><font color='gray'>Подъезд к животноводческому комплексу «Луцковляны» от автомобильной дороги Н-6039 Луцковляны – Рогачи – Нетечи</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -13374,12 +13110,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20083</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13477794'>osm</a><br /><a target='_josm' href='josm://relation/13477794' onclick='return josm("r13477794");'>josm</a></td>
-    <td>Падʼезд да дарожна-рамонтнага пункта гарадскога пасёлка Юрацішкі ад аўтамабільнай дарогі Н-6157 Юрацішкі – Эйгерды – мяжа Мінскай вобласці<br /><font color='gray'>Подъезд к дорожно-ремонтному пункту городского посёлка Юратишки от автомобильной дороги Н-6157 Юратишки – Эйгерды – граница Минской области</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20089</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/13640831'>osm</a><br /><a target='_josm' href='josm://relation/13640831' onclick='return josm("r13640831");'>josm</a></td>
     <td>Усходні абыход гарадскога пасёлка Мір (ад аўтамабільнай дарогі Р-11 Парачаны (ад аўтамабільнай дарогі М-6/Е 28) – Навагрудак – Нясвіж да аўтамабільнай дарогі Р-64 Стоўбцы – Мір)<br /><font color='gray'>Восточный обход городского посёлка Мир (от автомобильной дороги Р-11 Поречаны (от автомобильной дороги М-6/Е 28) – Новогрудок – Несвиж до автомобильной дороги Р-64 Столбцы – Мир)</font></td>
@@ -13398,10 +13128,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20126</i></nobr></td>
+    <td><nobr>Н-20126</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/11639305'>osm</a><br /><a target='_josm' href='josm://relation/11639305' onclick='return josm("r11639305");'>josm</a></td>
-    <td>Абыход вёскі Чаплічы (ад аўтамабільнай дарогі Н-6493 Кватары – Гарбачы да аўтамабільнай дарогі Н-6011 Цецяроўка – Пагранічны – Ражкі 1 (км 4,0 – км 4,6)<br /><font color='gray'>Обход деревни Чапличи (от автомобильной дороги Н-6493 Кваторы – Горбачи до автомобильной дороги Н-6011 Тетеревка – Пограничный – Рожки 1 (км 4,0 – км 4,6)</font></td>
-    <td><nobr>у 'name:be' непарныя дужкі ці двукоссі "("</nobr></td>
+    <td>Абыход вёскі Чаплічы (ад аўтамабільнай дарогі Н-6493 Кватары – Гарбачы да аўтамабільнай дарогі Н-6011 Цецяроўка – Пагранічны – Ражкі 1 (км 4,0 – км 4,6))<br /><font color='gray'>Обход деревни Чапличи (от автомобильной дороги Н-6493 Кваторы – Горбачи до автомобильной дороги Н-6011 Тетеревка – Пограничный – Рожки 1 (км 4,0 – км 4,6)</font></td>
+    <td><nobr>у 'name:ru' непарныя дужкі ці двукоссі "("</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20169</i></nobr></td>
@@ -13426,12 +13156,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/14394582'>osm</a><br /><a target='_josm' href='josm://relation/14394582' onclick='return josm("r14394582");'>josm</a></td>
     <td>Праезд па вуліцы Маладзёжная аграгарадка Партызанаўка ад аўтамабільнай дарогі Н-6349 Жыровічы – Акунінава – Партызанаўка – Новадзевяткавічы<br /><font color='gray'>Проезд по улице Молодежная агрогородка Партизановка от автомобильной дороги Н-6349 Жировичи – Окуниново – Партизановка – Новодевятковичи</font></td>
     <td><nobr>не праходзіць побач з "Маладзёжная"</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20264</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/2717604'>osm</a><br /><a target='_josm' href='josm://relation/2717604' onclick='return josm("r2717604");'>josm</a></td>
-    <td>Падʼезд да хімцэнтра вёскі Струга ад аўтамабільнай дарогі Н-6012 Лунна – Гудзевічы – Вялікія Эйсманты – Алекшыцы<br /><font color='gray'>Подъезд к химцентру деревни Струга от автомобильной дороги Н-6012 Лунно – Гудевичи – Большие Эйсмонты – Олекшицы</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20270</i></nobr></td>
@@ -13464,10 +13188,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20331</i></nobr></td>
+    <td><nobr>Н-20331</nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14395078'>osm</a><br /><a target='_josm' href='josm://relation/14395078' onclick='return josm("r14395078");'>josm</a></td>
-    <td>Падʼезд да комплексу аграгарадка Дабраволя ад аўтамабільнай дарогі Н-6398 Свіслач – Дабраволя – Ціхаволя – мяжа Рэспублікі Польшча да аўтамабільнай дарогі Н-6400 Падʼезд да вёскі Жаркаўшчына ад аўтамабільнай дарогі Н-6398 Свіслач – Дабраволя – Ціхаволя –…<br /><font color='gray'>Подъезд к комплексу агрогородка Доброволя от автомобильной дороги Н-6398 Свислочь – Доброволя – Тиховоля – граница Республики Польша до автомобильной дороги Н-6400 Подъезд к деревне Жарковщина от автомобильной дороги Н-6398 Свислочь – Доброволя – Тиховол…</font></td>
-    <td><nobr>'name:ru' не супадае з Законам<br />"Н-6398" не адпавядае найменню ў 'name:be'<br />"Н-6400" не адпавядае найменню ў 'name:be'<br />"Н-6398" не адпавядае найменню ў 'name:be'<br />"Н-6398" не адпавядае найменню ў 'name:ru'<br />"Н-6400" не адпавядае найменню ў 'name:ru'<br />"Н-6398" не адпавядае найменню ў 'name:ru'<br />не дакранаецца да "Н-6400"<br />не праходзіць побач з "Свіслач"</nobr></td>
+    <td>Падʼезд да комплексу аграгарадка Дабраволя ад аўтамабільнай дарогі Н-6398 Свіслач – Дабраволя – Ціхаволя – мяжа Рэспублікі Польшча да аўтамабільнай дарогі Н-6400 Падʼезд да вёскі Жаркаўшчына ад аўтамабільнай дарогі Н-6398 Свіслач – Дабраволя – Ціхаволя –я – граница Республики Польша<br /><font color='gray'>Подъезд к комплексу агрогородка Доброволя от автомобильной дороги Н-6398 Свислочь – Доброволя – Тиховоля – граница Республики Польша до автомобильной дороги Н-6400 Подъезд к деревне Жарковщина от автомобильной дороги Н-6398 Свислочь – Доброволя – Тиховоля – граница Республики Польша</font></td>
+    <td><nobr>'name:be' не роўны 'name'<br />"Н-6398" не адпавядае найменню ў 'name:be'<br />"Н-6400" не адпавядае найменню ў 'name:be'<br />"Н-6398" не адпавядае найменню ў 'name:be'<br />не дакранаецца да "Н-6400"<br />не праходзіць побач з "Свіслач"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20365</i></nobr></td>
@@ -13486,12 +13210,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/2695712'>osm</a><br /><a target='_josm' href='josm://relation/2695712' onclick='return josm("r2695712");'>josm</a></td>
     <td>Мажэйкава – Шпількі<br /><font color='gray'>Можейково – Шпильки</font></td>
     <td><nobr>'fixme' у way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20373</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/12739000'>osm</a><br /><a target='_josm' href='josm://relation/12739000' onclick='return josm("r12739000");'>josm</a></td>
-    <td>Падʼезд да вёскі Калонія Казіміроўка ад аўтамабільнай дарогі Н-6037 Гродна – Парэчча<br /><font color='gray'>Подъезд к деревне Колония Казимировка от автомобильной дороги Н-6037 Гродно – Поречье</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20375</i></nobr></td>
@@ -13524,16 +13242,10 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>не супадаюць населеныя пункты ў 'name:be' і 'name:ru'</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20401</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13238530'>osm</a><br /><a target='_josm' href='josm://relation/13238530' onclick='return josm("r13238530");'>josm</a></td>
-    <td>Падʼезд да садаводчага таварыства «Будаўнік» ад аўтамабільнай дарогі Н-6061 Зэльва – Галынка – Вострава<br /><font color='gray'>Подъезд к садоводческому товариществу «Строитель» от автомобильной дороги Н-6061 Зельва – Голынка – Острово</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20402</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/13238529'>osm</a><br /><a target='_josm' href='josm://relation/13238529' onclick='return josm("r13238529");'>josm</a></td>
     <td>Падʼезд да садаводчага таварыства «Колас», «Бярозка» ад аўтамабільнай дарогі Н-6061 Зэльва – Галынка – Вострава<br /><font color='gray'>Подъезд к садоводческому товариществу «Колос», «Березка» от автомобильной дороги Н-6061 Зельва – Голынка – Острово</font></td>
-    <td><nobr>памылковы 'highway'="service" на way<br />не праходзіць побач з "Бярозка"</nobr></td>
+    <td><nobr>не праходзіць побач з "Бярозка"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20409</i></nobr></td>
@@ -13575,13 +13287,13 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr><i>Н-20423</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/15256314'>osm</a><br /><a target='_josm' href='josm://relation/15256314' onclick='return josm("r15256314");'>josm</a></td>
     <td>Падʼезд да садаводчага таварыства «Станкабудаўнік», «Будаўнік», «Лясное» ад аўтамабільнай дарогі Н-6478 Смаргонь – Дзевятні – Жодзішкі<br /><font color='gray'>Подъезд к садоводческому товариществу «Станкостроитель», «Строитель», «Лесное» от автомобильной дороги Н-6478 Сморгонь – Девятни – Жодишки</font></td>
-    <td><nobr>памылковы 'highway'="service" на way<br />не праходзіць побач з "Будаўнік"</nobr></td>
+    <td><nobr>не праходзіць побач з "Будаўнік"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20424</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/13238528'>osm</a><br /><a target='_josm' href='josm://relation/13238528' onclick='return josm("r13238528");'>josm</a></td>
     <td>Падʼезд да садаводчага таварыства «Медык», «Энергетык», «Зэльвянка» ад аўтамабільнай дарогі Н-6061 Зэльва – Галынка – Вострава<br /><font color='gray'>Подъезд к садоводческому товариществу «Медик», «Энергетик», «Зельвянка» от автомобильной дороги Н-6061 Зельва – Голынка – Острово</font></td>
-    <td><nobr>памылковы 'highway'="service" на way<br />не праходзіць побач з "Энергетык"</nobr></td>
+    <td><nobr>не праходзіць побач з "Энергетык"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-20426</i></nobr></td>
@@ -13683,12 +13395,6 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr><i>Н-20578</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/14672896'>osm</a><br /><a target='_josm' href='josm://relation/14672896' onclick='return josm("r14672896");'>josm</a></td>
     <td>Гальшаны – малочнатаварная ферма «Гальшаны»<br /><font color='gray'>Гольшаны – молочно-товарная ферма «Гольшаны»</font></td>
-    <td><nobr>памылковы 'highway'="service" на way</nobr></td>
-   </tr>
-   <tr bgcolor='#ffc0c0' valign='top'>
-    <td><nobr><i>Н-20611</i></nobr></td>
-    <td><a target='_blank' href='https://openstreetmap.org/relation/13238522'>osm</a><br /><a target='_josm' href='josm://relation/13238522' onclick='return josm("r13238522");'>josm</a></td>
-    <td>Падʼезд да могілак аграгарадка Цяглевічы ад аўтамабільнай дарогі Н-6070 Міжэрычы – Цяглевічы – Агатова<br /><font color='gray'>Подъезд к кладбищу агрогородка Теглевичи от автомобильной дороги Н-6070 Мижеричи – Теглевичи – Агатово</font></td>
     <td><nobr>памылковы 'highway'="service" на way</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
@@ -14034,6 +13740,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><nobr>way не паслядоўныя</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-22800</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/18964329'>osm</a><br /><a target='_josm' href='josm://relation/18964329' onclick='return josm("r18964329");'>josm</a></td>
+    <td>Падʼезд да РІЗ «Лебедзева» ад аўтамабільнай дарогі Н-9107 Лебедзева – Крэва<br /><font color='gray'>Подъезд к РИЗ «Лебедево» от автомобильной дороги Н-9107 Лебедево – Крево</font></td>
+    <td><nobr>у 'name:be' немагчымае спалучэнне "рі"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-22914</i></nobr></td>
     <td><a target='_blank' href='https://openstreetmap.org/relation/16390596'>osm</a><br /><a target='_josm' href='josm://relation/16390596' onclick='return josm("r16390596");'>josm</a></td>
     <td>Падʼезд да кірпічнага заводу Гайдукоўка ад аўтамабільнай дарогі Р-28 Мінск – Маладзечна – Нарач<br /><font color='gray'>Подъезд к кирпичному заводу Гайдуковка от автомобильной дороги Р-28 Минск – Молодечно – Нарочь</font></td>
@@ -14332,6 +14044,12 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
     <td><a target='_blank' href='https://openstreetmap.org/relation/17419984'>osm</a><br /><a target='_josm' href='josm://relation/17419984' onclick='return josm("r17419984");'>josm</a></td>
     <td>Падʼезд да садаводчага таварыства «Будаўнік» ад аўтамабільнай дарогі Н-8378 «М-1/Е 30 Брэст (Казловічы) – Мінск – мяжа Расійскай Федэрацыі (Рэдзькі)» – Паланевічы – Журавінка<br /><font color='gray'>Подъезд к садоводческому товариществу «Строитель» от автомобильной дороги Н-8378 «М-1/Е 30 Брест (Козловичи) – Минск – граница Российской Федерации (Редьки)» – Полоневичи – Журавинка</font></td>
     <td><nobr>не праходзіць побач з "Будаўнік"</nobr></td>
+   </tr>
+   <tr bgcolor='#ffc0c0' valign='top'>
+    <td><nobr>Н-23885</nobr></td>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/18971304'>osm</a><br /><a target='_josm' href='josm://relation/18971304' onclick='return josm("r18971304");'>josm</a></td>
+    <td>Падʼезд да садаводчага таварыства «Чаромушкі» ад аўтамабільнай дарогі Н-8385 Дзяржынск – Вялікае Сяло<br /><font color='gray'>Подъезд к садоводческому товариществу «Черемушки» от автомобильной дороги Н-8385 Дзержинск – Великое Село</font></td>
+    <td><nobr>не праходзіць побач з "Чаромушкі"</nobr></td>
    </tr>
    <tr bgcolor='#ffc0c0' valign='top'>
     <td><nobr><i>Н-23960</i></nobr></td>
@@ -15021,7 +14739,7 @@ function josm(x) { document.getElementById('ID').src='http://localhost:8111/load
  </table>
 </div><br /><hr />
 <p>
- <font size='-1'>Cтаронка створаная 2025-03-31 03:47:32 і змяшчае ўсе дадзеныя OSM за перыяд да 2025-03-29 21:21:35+00:00</font>
+ <font size='-1'>Cтаронка створаная 2025-04-14 05:49:23 і змяшчае ўсе дадзеныя OSM за перыяд да 2025-04-12 20:21:29+00:00</font>
  <br />
  <font size='-2'><i><a href='http://osm-validator.lidacity.by/'>Галоўная старонка</a></i></font>
 </p>
