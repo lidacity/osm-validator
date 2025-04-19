@@ -144,7 +144,7 @@ class Validator:
 
  def GetAllNodes(self, Relation):
   Result = []
-  List = [ Member['ref'] for Member in Relation['members'] if Member['type'] == "way"]
+  List = [ Member['ref'] for Member in Relation['members'] if Member['type'] == "way" ]
   Result = [ ID for Way in self.OSM.ReadWays(List) for ID in Way['nodes'] ]
   return Result
 
