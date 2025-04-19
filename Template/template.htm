@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="be">
+<head>
+ <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+ <title>Валідатар аўтамабільных дарог Рэспублікі Беларусь</title>
+ <link rel="icon" type="image/png" href="favicon.png" />
+</head>
+<body>
+
+<img id='ID' width='1' height='1' border='0' style='display:none'>
+<script><!--
+function josm(x) { document.getElementById('ID').src='http://localhost:8111/load_object?objects='+x+'&relation_members=true&referrers=true'; return false; }
+--></script>
+
+<h1>Республіка Беларусь</h1>
+
+<hr />
+<div id='Help'>
+ <h2>Даведка</h2>
+ <div id='Law'>
+  {% block Law%}{% endblock %}
+ </div>
+
+ <details>
+  <summary>Кароткае апісанне памылак</summary>
+  <ul>
+   <li><b>"{Ref}" адсутнічае ў Законе</b> - у заканадаўстве адсутнічае аўтамабільная дарога "{Ref}"</li>
+   <li><b>relation адсутнічае</b> - у osm не знойдзены relation з зададзеным 'official_ref'</li>
+   <li><b>не 'relation'</b> - дададзеная аўтамабільна дарога не знаходзіцца ў relation</li>
+   <li><b>несапраўдны 'official_ref'</b> - у relation адсутнічае 'official_ref' (які згодна заканадаўства)</li>
+   <li><b>не знойдзены '{TagName}'</b> - у relation адсутнічае прадвызначаны ключ '{TagName}'</li>
+   <li><b>'{TagName}' не роўны "{Value}"</b> - у relation адсутнічае прадвызначаны ключ '{TagName}' з прадвызначаным значэннем "{Value}"</li>
+   <li><b>'ref' не пачынаецца з "{Class}"</b> - у relation неправільны клас аўтамабільнай дарогі, 'ref' не пачынаеца з "{Class}"</li>
+   <li><b>'official_ref' не пачынаецца з "{Class}-"</b> - у relation неправільны клас аўтамабільнай дарогі, 'official_ref' не пачынаеца з "{Class}-"</li>
+   <li><b>'official_ref' не адпавядае 'ref'</b> - лічбавыя індэксы аўтамабільнай дарогі ў 'official_ref' і 'ref' не супадаюць</li>
+   <li><b>'name:be' не роўны 'name'</b> - у relation не супадаюць найменні аўтамабільнай дарог 'name:be' і 'name'</li>
+   <li><b>'name:ru' не супадае з Законам</b> - у relation найменне аўтамабільнай дарогі 'name:ru' не супадае з найменнем аўтамабільнай дарогі ў заканадаўстве</li>
+   <li><b>непатрэбны 'official_name&lt;:lang&gt;'</b> - прысутнічаеь непатрэбны 'official_name&lt;:lang&gt;'</li>
+   <li><b>непатрэбны 'description&lt;:lang&gt;'</b> - прысутнічае непатрэбны 'description&lt;:lang&gt;'</li>
+   <li><b>'fixme' у relation</b> - трэба ўдакладніць, бо прысутнічае 'fixme' у relation</li>
+   <li><b>у 'name&lt;:lang&gt;' лацінскія літары</b> - у найменні 'name&lt;:lang&gt;' аўтамабільнай дарогі прысутнічаюць непатрэбныя лацінскія літары</li>
+   <li><b>у 'name&lt;:lang&gt;' няправільныя лічбы</b> - у найменні 'name&lt;:lang&gt;' аўтамабільнай дарогі прысутнічаюць няправльна ўжытыя лічбы</li>
+   <li><b>у 'name&lt;:lang&gt;' неправільны злучок</b> - у найменні 'name&lt;:lang&gt;' аўтамабільнай дарогі неправільна ўжыты злучок</li>
+   <li><b>у 'name&lt;:lang&gt;' неправільныя дужкі</b> - у найменні 'name&lt;:lang&gt;' аўтамабільнай дарогі неправільна ўжытыя дужкі</li>
+   <li><b>у 'name&lt;:lang&gt;' спецыяльныя знакі</b> - у найменні 'name&lt;:lang&gt;' аўтамабільнай дарогі прысутнічаюць непатрэбныя спецыяльныя знакі</li>
+   <li><b>у 'name&lt;:lang&gt;' недапушчальны скарот</b> - у 'name:&lt;l:ang&gt;' прысутнічае недапушчальнае словазлучэнне</li>
+   <li><b>у 'name&lt;:lang&gt;' непарныя дужкі ці двукоссі</b> - у 'name&lt;:lang&gt;' сустракаюцца няпарныя дужкі альбо двукоссі</li>
+   <li><b>розніца паміж даўжынёй 'name:be' і 'name:ru'</b> - занадта вялікая розніца паміж даўжынёй найменняў 'name:be' і 'name:ru' аўтамабільнай дарогі</li>
+   <li><b>у 'name&lt;:lang&gt;' немагчымае спалучэнне</b> - у 'name&lt;:lang&gt;' немагчымае спалучэнне літар мовы &lt;lang&gt;</li>
+   <li><b>у 'name:be' і 'name:ru' не аднолькавыя 'ref'</b> - у 'name:be' і 'name:ru' пералічаныя не аднолькавыя 'ref' аўтамабільных дарог</li>
+   <li><b>у 'name&lt;:lang&gt;' не вызначаны 'ref'</b> - адсутнічае аўтамабільная дарога 'ref' з найменнем name&lt;:lang&gt;</li>
+   <li><b>існуе дублікат 'ref'</b> - існуе аўтамабільная дарога з аднолькавымі 'ref'</li>
+   <li><b>у relation прысутнічае ня толькі way</b> - у relation магчыма прысутнічаюць непатрэбныя node ці relation</li>
+   <li><b>"{Ref}" не адпавядае найменню ў 'name&lt;lang&gt;'</b> - "{Ref}" у 'name&lt;:lang&gt;' не адпавядае найменню, якое вызначана раней ў спісе аўтамабільных дарог</li>
+   <li><b>у 'name&lt;:lang&gt;' не вызначаны "{Ref}"</b> - адсутнічае аўтамабільная дарога "{Ref}" з найменнем name&lt;:lang&gt;</li>
+   <li><b>не дакранаецца да "{Ref}"</b> - аўтамабільная дарога не дакранаецца да аўтамабільнай дарогі з наймення</li>
+   <li><b>не знойдзены "{Ref}"</b> - аўтамабільная дарога не можа дакрануцца да аўтамабільнай дарогі з наймення, таму што яна адсутнічае</li>
+   <li><b>не супадаюць населеныя пункты у name:be і name:ru</b> - населеныя пункты не адпавядаюць паміж найменнямі ў name:be і name:ru</li>
+   <li><b>адсутнічае крыніца "{Highway['Law']}" наймення</b> - у аўтамабільнай дарогі адсутнічае спасылак на крыніцу "{Highway['Law']}" заканадаўства, дзе вызначана найменне
+   <li><b>неправільная крыніца "{Highway['Law']}" наймення</b> - у аўтамабільнай дарогі неправільны спасылак на крыніцу "{Highway['Law']}" заканадаўства, дзе вызначана найменне
+   <li><b>не супадае '{TagRelation}' у relation і '{TagWay}' яе ways</b> - не супадаюць значэнні '{TagRelation}' у relation і ў '{TagWay}' яе ways</li>
+   <li><b>'fixme' у way</b> - трэба ўдакладніць, бо прысутнічае 'fixme' у way</li>
+   <li><b>памылковы 'highway'="{Highway}" на way</b> - на way азначаны тып "{Highway}", які не прапануецца для сеткі аўтамабільных дарог</li>
+   <li><b>пусты 'highway' на way</b> - на way наогул не адзначана аніякага тыпу 'highway'</li>
+   <li><b>падвоеныя way</b> - у relation прысутнічаюць паўторныя way</li>
+   <li><b>way змяшчае недапушчальны 'name«:lang»'</b> - way змяшчае у 'name«:lang»' неправільныя дадзеныя</li>
+   <li><b>way знаходзяцца ў некалькіх relation</b> - way належыць да relation некалькіх аўтамабільных дарог</li>
+   <li><b>way не знаходзіцца нават у адным relation</b> - way не належыць да relation</li>
+   <li><b>не праходзіць побач з "{name:be}"</b> - way не праходзіць побач з населеным пунктам</li>
+   <li><b>замкнутая ў пятлю ці перакрыжаваная</b> - аўтамабільная дарога сама сабе перасякае, альбо перакрыжаваная, магчыма не хапае 'role'="link" у relation</li>
+   <li><b>way не паслядоўныя</b> - way у relation аўтамабільнай дарогі размешчаныя не паслядоўна</li>
+   <li><b>way занадта разарваны</b> - ланцужкі way у relation размешчаныя занадта далёка паміж сабою</li>
+   <li><b>не прывязаны</b> - дарогі, якія не прывязаныя да аўтамабільных дарог</li>
+  </ul>
+ </details>
+
+ <details>
+  <summary>Спрошчаныя справаздачы</summary>
+  <ul>URL:
+   <li><a href='http://osm-validator.lidacity.by/index.html'>гэтая старонка, поўны спіс</a></li>
+   <li><a href='http://osm-validator.lidacity.by/highway.html'>спіс аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/relation.html'>спіс аўтамабільных дарог, якія адсутнічаюць у osm</a></li>
+   <li><a href='http://osm-validator.lidacity.by/separated.html'>спіс аўтамабільных дарог з памылкамі ў osm</a></li>
+   <li><a href='http://osm-validator.lidacity.by/network.html'>спіс аўтамабільных дарог, якія не злучаныя ў агульную сетку аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/missing.html'>спіс дарог, якія не прывязаныя да аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/boundary.html'>праверка замкнутай межы краіны</a></li>
+  </ul>
+  <ul>CSV:
+   <li><a href='http://osm-validator.lidacity.by/highway.csv'>спіс аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/relation.csv'>спіс аўтамабільных дарог, якія адсутнічаюць у osm</a></li>
+   <li><a href='http://osm-validator.lidacity.by/separated.csv'>спіс аўтамабільных дарог з памылкамі ў osm</a></li>
+   <li><a href='http://osm-validator.lidacity.by/network.csv'>спіс аўтамабільных дарог, якія не злучаныя ў агульную сетку аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/missing.csv'>спіс дарог, якія не прывязаныя да аўтамабільных дарог</a></li>
+   <li><a href='http://osm-validator.lidacity.by/boundary.csv'>праверка замкнутай межы краіны</a></li>
+  </ul>
+  <ul>Найменне з заканадаўства ў CSV:
+   <li><a href='http://osm-validator.lidacity.by/M.csv'>магістральные аўтамабільныя дарогі</a></li>
+   <li><a href='http://osm-validator.lidacity.by/P.csv'>рэспубліканскія аўтамабільныя дарогі</a></li>
+   <li><a href='http://osm-validator.lidacity.by/H.csv'>мясцовыя аўтамабільныя дарогі</a></li>
+  </ul>
+ </details>
+</div>
+
+{% block Block -%}{%- endblock %}
+
+<br /><hr />
+<p>
+ Калі ёсць заўвагі, дасылайце свае думкі ў <a href='https://openstreetmap.org/message/new/LidaCity'>асабістыя паведамленні</a>.
+ <!-- сакрэтная частка: валідатар знаходзіцца на https://github.com/lidacity/osm-validator, ну і даслаць ліст мне можна на mailto:dzmitry@lidacity.by -->
+ <br />
+ <font size='-1'>Cтаронка створаная {{DateTime}} і змяшчае ўсе дадзеныя OSM за перыяд да {{PBFDateTime}}</font>
+ <br />
+ <font size='-2'><i>Валідатар аўтаматычна стварае <a href='http://osm-validator.lidacity.by/'>старонку</a>, звычайна ў нядзелю ў 0:00</i></font>
+</p>
+
+</body>
+</html>

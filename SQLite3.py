@@ -388,8 +388,12 @@ class OsmPbf:
 
  def ReadNode(self, ID):
   Result = {'type': "node", 'id': ID, }
-  Result['lat'], Result['lon'], Result['uid'] = self.ExecuteOne("SELECT lat, lon, uid FROM nodes WHERE node_id = ?;", Params=[ID])
-  Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM node_tags WHERE node_id = ?;", Params=[ID]) }
+  try:
+   Result['lat'], Result['lon'], Result['uid'] = self.ExecuteOne("SELECT lat, lon, uid FROM nodes WHERE node_id = ?;", Params=[ID])
+   Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM node_tags WHERE node_id = ?;", Params=[ID]) }
+  except:
+   Result['lat'], Result['lon'], Result['uid'] = 0, 0, 0
+   Result['tags'] = { }
   return Result
 
 
@@ -418,9 +422,14 @@ class OsmPbf:
 
  def ReadWay(self, ID):
   Result = {'type': "way", 'id': ID, }
-  Result['uid'], = self.ExecuteOne("SELECT uid FROM ways WHERE way_id = ?;", Params=[ID])
-  Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM way_tags WHERE way_id = ?;", Params=[ID]) }
-  Result['nodes'] = [ Node[0] for Node in self.Execute("SELECT node_id FROM way_nodes WHERE way_id = ? ORDER BY node_order;", Params=[ID]) ]
+  try:
+   Result['uid'], = self.ExecuteOne("SELECT uid FROM ways WHERE way_id = ?;", Params=[ID])
+   Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM way_tags WHERE way_id = ?;", Params=[ID]) }
+   Result['nodes'] = [ Node[0] for Node in self.Execute("SELECT node_id FROM way_nodes WHERE way_id = ? ORDER BY node_order;", Params=[ID]) ]
+  except:
+   Result['uid'] = 0
+   Result['tags'] = { }
+   Result['nodes'] = [ ]
   return Result
 
 
@@ -448,9 +457,14 @@ class OsmPbf:
 
  def ReadRelation(self, ID):
   Result = {'type': "relation", 'id': ID, }
-  Result['uid'], = self.ExecuteOne("SELECT uid FROM relations WHERE relation_id = ?;", Params=[ID])
-  Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", Params=[ID]) }
-  Result['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in self.Execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", Params=[ID]) ]
+  try:
+   Result['uid'], = self.ExecuteOne("SELECT uid FROM relations WHERE relation_id = ?;", Params=[ID])
+   Result['tags'] = { Key: Value for Key, Value in self.Execute("SELECT key, value FROM relation_tags WHERE relation_id = ?;", Params=[ID]) }
+   Result['members'] = [ { 'type': Type, 'ref': Ref, 'role': Role } for Type, Ref, Role in self.Execute("SELECT type, ref, role FROM relation_members WHERE relation_id = ? ORDER BY member_order;", Params=[ID]) ]
+  except:
+   Result['uid'] = 0
+   Result['tags'] = { }
+   Result['members'] = [ ]
   return Result
 
 
@@ -479,7 +493,7 @@ class OsmPbf:
  ##################################################
 
 
- def RelationsForFeature(self, ID):
+ def GetRelationsForFeature(self, ID):
   return [self.ReadRelation(ID) for ID, in self.Execute("SELECT relation_id FROM relation_members WHERE ref = ? ORDER BY member_order;", Params=[ID])]
 
 

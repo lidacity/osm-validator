@@ -9,6 +9,8 @@ from loguru import logger
 from Pravo import GetPravo
 from Route import Generate as GetRouteContext
 from Boundary import Generate as GetBoundaryContext
+from RouteBus import Generate as GetRouteBusContext
+
 from Jinja2 import Generate
 from Git import GitPush
 
@@ -28,6 +30,11 @@ if not os.path.exists(Directory):
 BY = 59065
 List = ["boundary"]
 Context = GetBoundaryContext(BY)
+Generate(List, Context)
+
+# type=master_route
+List = ["route"]
+Context = GetRouteBusContext()
 Generate(List, Context)
 
 # type=route

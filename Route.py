@@ -17,12 +17,6 @@ from Validator import Validator
 
 class RouteValidator(Validator):
 
- Classes = {
-  'М': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
-  'Р': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
-  'Н': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:regional', 'name': None, 'name:be': None, 'name:ru': None, },
- }
-
 
  def CheckRef(self, Key):
   Result = []
@@ -38,15 +32,28 @@ class RouteValidator(Validator):
   return Result
 
 
- def CheckTag(self, Tag, Class):
-  Result = []
-  for TagName, Value in self.Classes[Class].items():
-   if TagName not in Tag:
-    Result.append(f"не знойдзены '{TagName}'")
-   elif Value is not None:
-    if self.JoinName(Tag, TagName) != Value:
-     Result.append(f"'{TagName}' не роўны \"{Value}\"")
-  return Result
+ Classes = {
+  'М': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
+  'Р': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:national', 'name': None, 'name:be': None, 'name:ru': None, },
+  'Н': { 'ref': None, 'official_ref': None, 'type': 'route', 'route': 'road', 'network': 'by:regional', 'name': None, 'name:be': None, 'name:ru': None, },
+ }
+
+
+ AllowHighways = {
+  'highway': ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "track", ],
+  'ferry': ["trunk", "primary", "secondary", "tertiary", "unclassified", ],
+ }
+
+
+ Wrong = {
+  'Latin': {'re': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары"},
+  'Number': {'re': re.compile("[a-zA-Zа-яА-ЯёЁўЎіІʼ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁўЎіІʼ]").search, 'Desc': "няправільныя лічбы"},
+  'Hyphen': {'re': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок"},
+  'Bracket': {'re': re.compile("[^ «(]\(|\)[^ …»)]").search, 'Desc': "неправільныя дужкі"},
+  'Special': {'re': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\'’—"))).search, 'Desc': "спецыяльныя знакі"},
+  'Abbreviations': {'re': re.compile("|".join([re.escape(s) for s in ["а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", "вул.", "ул.", ]])).search, 'Desc': "недапушчальны скарот"},
+ }
+
 
 
  def CheckClass(self, Tag, Class):
@@ -62,15 +69,6 @@ class RouteValidator(Validator):
   return Result
 
 
- def CheckBe(self, Tag):
-  Result = []
-  Name = self.JoinName(Tag, 'name')
-  Be = self.JoinName(Tag, 'name:be')
-  if Name != Be:
-   Result.append(f"'name:be' не роўны 'name'")
-  return Result
-
-
  def CheckRu(self, Tag, Name):
   Result = []
   Ru = self.JoinName(Tag, 'name:ru')
@@ -78,97 +76,6 @@ class RouteValidator(Validator):
    Result.append(f"'name:ru' не супадае з Законам")
   return Result
 
-
- def CheckOfficialName(self, Tag):
-  Result = []
-  for TagName in ['official_name', 'official_name:be', 'official_name:ru', 'description', 'description:be', 'description:ru', 'source:ref:date', ]:
-   if TagName in Tag:
-    Result.append(f"непатрэбны '{TagName}'")
-  if 'fixme' in Tag:
-   Result.append(f"'fixme' у relation")
-  return Result
-
-
- Wrong = {
-  'Latin': {'re': re.compile("[a-zA-Z]").search, 'Desc': "лацінскія літары"},
-  'Number': {'re': re.compile("[a-zA-Zа-яА-ЯёЁўЎіІʼ][0-9]|[0-9][a-zA-Zа-яА-ЯёЁўЎіІʼ]").search, 'Desc': "няправільныя лічбы"},
-  'Hyphen': {'re': re.compile("[^ ]–|–[^ …]|[ ]-|-[ ]").search, 'Desc': "неправільны злучок"},
-  'Bracket': {'re': re.compile("[^ «(]\(|\)[^ …»)]").search, 'Desc': "неправільныя дужкі"},
-  'Special': {'re': re.compile("|".join(map(re.escape, ".:;!_*+#¤%&[]{}$@^\\'’—"))).search, 'Desc': "спецыяльныя знакі"},
-  'Abbreviations': {'re': re.compile("|".join([re.escape(s) for s in ["а/д", "г.п.", "г.", "аг.", "п.", "д.", "х.", "ж/д", "ст.", "с/т", "с/с", "хоз.", "Ж/д", "А/д", "С/т", "Ст.", "обл.", "Гр.", "р-на", "вул.", "ул.", ]])).search, 'Desc': "недапушчальны скарот"},
- }
-
-
- Replace = { 'SOS': "СОС", 'XXI': "21", 'III': "3", 'II': "2", 'I': "1", }
-
-
- def CheckWrong(self, Tag):
-  Result = []
-  for TagName in ['name:be', 'name:ru']:
-   if TagName in Tag:
-    S = self.JoinName(Tag, TagName)
-    for Key, Value in self.Replace.items():
-     S = S.replace(Key, Value)
-    for _, Value in self.Wrong.items():
-     R = Value['re'](S)
-     if R:
-      Result.append(f"у '{TagName}' {Value['Desc']} \"{R[0]}\"")
-      break
-  return Result
-
-
-
- Pair = {
-  'Split': re.compile("|".join(map(re.escape, "{}()[]\"«»„“")) + "|" + "|".join([r"\B'", r"'\B"])).findall,
-  'Replace': re.compile("|".join([re.escape(s) for s in ["{}", "()", "[]", "''", "\"\"", "«»", "„“"]])).sub,
- }
-
-
- def CheckPair(self, Tag):
-  Result = []
-  for TagName in ['name:be', 'name:ru']:
-   if TagName in Tag:
-    Split = self.Pair['Split']
-    Check = "".join(Split(self.JoinName(Tag, TagName)))
-    if Check:
-     S = ""
-     while Check != S:
-      Pair = self.Pair['Replace']
-      S, Check = Check, Pair("", Check)
-    if Check != "":
-     Result.append(f"у '{TagName}' непарныя дужкі ці двукоссі \"{Check}\"")
-     break
-  return Result
-
-
- def CheckLength(self, Tag):
-  Result = []
-  Be = self.JoinName(Tag, 'name:be')
-  Ru = self.JoinName(Tag, 'name:ru')
-  if abs(len(Be) - len(Ru)) > 18:
-   Result.append(f"розніца паміж даўжынёй 'name:be' і 'name:ru'")
-  return Result
-
-
- #https://vl2d.livejournal.com/21053.html
- #https://yadro-servis.ru/blog/nevosmosnoe-sochetanie-bukv/
- Impossible = {
-  'name:ru': re.compile("|".join(["  ", "ёя", "ёь", "ёэ", "ъж", "эё", "ъд", "цё", "уь", "щч", "чй", "шй", "шз", "ыф", "жщ", "жш", "ыъ", "ыэ", "ыю", "ыь", "жй", "ыы", "жъ", "жы", "ъш", "пй", "ъщ", "зщ", "ъч", "ъц", "ъу", "ъф", "ъх", "ъъ", "ъы", "ыо", "жя", "зй", "ъь", "ъэ", "ыа", "нй", "еь", "цй", "ьй", "ьл", "ьр", "пъ", "еы", "еъ", "ьа", "шъ", "ёы", "ёъ", "ът", "щс", "оь", "къ", "оы", "щх", "щщ", "щъ", "щц", "кй", "оъ", "цщ", "лъ", "мй", "шщ", "ць", "цъ", "щй", "йь", "ъг", "иъ", "ъб", "ъв", "ъи", "ъй", "ъп", "ър", "ъс", "ъо", "ън", "ък", "ъл", "ъм", "иы", "иь", "йу", "щэ", "йы", "йъ", "щы", "щю", "щя", "ъа", "мъ", "йй", "йж", "ьу", "гй", "эъ", "уъ", "аь", "чъ", "хй", "тй", "чщ", "ръ", "юъ", "фъ", "уы", "аъ", "юь", "аы", "юы", "эь", "эы", "бй", "яь", "ьы", "ьь", "ьъ", "яъ", "яы", "хщ", "дй", "фй", ])).search,
-  'name:be': re.compile("|".join(["  ", "и", "щ", "ъ", "ї", "жі", "же", "жё", "жя", "жю", "рі", "ре", "рё", "ря", "рю", "чі", "че", "чё", "чя", "чю", "ші", "ше", "шё", "шя", "шю", "ді", "де", "дё", "дя", "дю", "ті", "те", "тё", "тя", "тю", "еу", "ыу", "оу", "яу", "юу", "ёу", "уу", "еь", "ыь", "аь", "оь", "эь", "яь", "іь", "юь", "ёь", "уь", "ўь", "йь", "йў", "цў", "кў", "нў", "гў", "шў", "ўў", "зў", "хў", "фў", "вў", "пў", "рў", "лў", "дў", "жў", "чў", "сў", "мў", "тў", "ьў", "бў", "йй", "цй", "кй", "нй", "гй", "шй", "ўй", "зй", "хй", "фй", "вй", "пй", "рй", "лй", "дй", "жй", "чй", "сй", "мй", "тй", "ьй", "бй", "жш", "ыэ", "ыы", "ыо", "ьр", "ьа", "ёы", "оы", "йу", "йы", "йж", "ьу", "гй", "уы", "юь", "аы", "юы", "эы", "ьы", "ьь", "яы", ])).search,
-  #"ау", "іу", "эу", 
- }
-
-
- def CheckImpossible(self, Tag):
-  Result = []
-  for TagName in ['name:ru', 'name:be']:
-   if TagName in Tag:
-    Line = self.JoinName(Tag, TagName).lower()
-    Imp = self.Impossible[TagName](Line)
-    if Imp:
-     Result.append(f"у '{TagName}' немагчымае спалучэнне \"{Imp[0]}\"")
-     break
-  return Result
 
 
  Refs = { 'ok': re.compile("[МР]-[0-9]+/[ЕП] [0-9]+|[МРН]-[0-9]+"), 'bad': re.compile("[МРН][0-9]+"), }
@@ -217,15 +124,6 @@ class RouteValidator(Validator):
   return Result
 
 
- def CheckWays(self, Relation):
-  Result = []
-  for Member in Relation['members']:
-   if Member['type'] != "way":
-    Result.append(f"у relation прысутнічае ня толькі way")
-    break
-  return Result
-
-
  def CheckRefInRelation(self, Relation, Relations):
   Result = []
   Tag = Relation['tags']
@@ -244,7 +142,7 @@ class RouteValidator(Validator):
          Len = len(S2)
         if S2[:Len] != S[:Len] and not self.ExcludeRef(self.JoinName(Tag, TagName), I) and S[:2] not in ["от", "ад"]:
          Result.append(f"\"{Ref}\" не адпавядае найменню ў '{TagName}'")
-         break
+         #break
      else:
       Result.append(f"у '{TagName}' не вызначаны \"{Ref}\"")
   return Result
@@ -338,7 +236,7 @@ class RouteValidator(Validator):
   for Way in Ways:
    if Tag.get('ref', "") != Way['tags'].get('ref', None):
     Result.append(f"не супадае 'ref' у relation і 'ref' яе ways")
-    break
+    #break
   #
   Tags = {
    'official_name': 'name',
@@ -349,62 +247,7 @@ class RouteValidator(Validator):
    for Way in Ways:
     if Tag.get(TagRelation, None) != Way['tags'].get(TagWay, None) is not None:
      Result.append(f"не супадае '{TagRelation}' у relation і '{TagWay}' яе ways")
-     break
-  return Result
-
-
- def CheckFixme(self, Ways):
-  Result = []
-  for Way in Ways:
-   if "fixme" in Way['tags']:
-    Result.append(f"'fixme' у way")
-    break
-  return Result
-
-
- def CheckHighway(self, Ways):
-  Result = []
-  Highways = ["motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "track", ]
-  for Way in Ways:
-   Tag = Way['tags']
-   if 'highway' in Tag:
-    if Tag['highway'] not in Highways:
-     Result.append(f"памылковы 'highway'=\"{Tag['highway']}\" на way")
-     break
-  for Way in Ways:
-   Tag = Way['tags']
-   if not('highway' in Tag or 'ferry' in Tag):
-    Result.append(f"пусты 'highway' на way")
-    break
-  return Result
-
-
- def CheckDoubleWay(self, Ways):
-  Result = []
-  c = Counter([Way['id'] for Way in Ways])
-  if max(c.values()) > 1:
-   Result.append(f"падвоеныя way")
-  return Result
-
-
- WayNameBe = ["праспект", "вуліца", "завулак", "плошча", "бульвар", "шаша", "тракт", "алея", "тупік", "сквер", "парк", "праезд", "уезд", "раз'езд", "спуск", "набярэжная", "кальцо", "мікрараён", "квартал", "тэрыторыя", "МКАД", "МКАД-2", "мост", "пуцеправод", "дарога"]
- WayNameRu = ["проспект", "улица", "переулок", "площадь", "бульвар", "шоссе", "тракт", "аллея", "тупик", "сквер", "парк", "проезд", "въезд", "разъезд", "спуск", "набережная", "кольцо", "микрорайон", "квартал", "территория", "МКАД", "МКАД-2", "мост", "путепровод", "дорога"]
- WayName = {
-  'name': set(WayNameBe),
-  'name:be': set(WayNameBe),
-  'name:ru': set(WayNameRu),
- }
-
-
- def CheckName(self, Ways):
-  Result = []
-  for Way in Ways:
-   Tag = Way['tags']
-   for TagName in ['name', 'name:be', 'name:ru']:
-    Name = self.JoinName(Tag, TagName)
-    if Name and not set(Name.split()) & self.WayName[TagName]:
-     Result.append(f"way змяшчае недапушчальны '{TagName}'")
-     return Result
+     #break
   return Result
 
 
@@ -417,7 +260,7 @@ class RouteValidator(Validator):
      Count += 1
    if Count > 1:
     Result.append(f"way знаходзяцца ў некалькіх relation")
-    break
+    #break
    if Count == 0:
     Result.append(f"way не знаходзіцца нават у адным relation")
   return Result
@@ -443,49 +286,6 @@ class RouteValidator(Validator):
         break
     if not Ok:
      Result.append(f"не праходзіць побач з \"{Name}\"")
-  return Result
-
-
- def CheckCross(self, Ways):
-  Result = []
-  Limits = self.GetLimits(Ways)
-  Nodes = [Node for Row in Limits for Node in Row]
-  c = Counter(Nodes)
-  if max(c.values()) > 2:
-   Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
-  else:
-   Nodes = self.GetNodes(Ways)
-   Nodes1 = [Node for Row in Nodes for Node in Row]
-   Nodes2 = [Node for Row in Nodes for Node in Row[1:-1]]
-   c = Counter(Nodes1 + Nodes2)
-   if max(c.values()) > 2:
-    Result.append(f"замкнутая ў пятлю ці перакрыжаваная")
-  return Result
-
-
- def CheckIsland(self, Ways):
-  Result = []
-  if self.Island(Ways) != self.IslandLine(Ways):
-   Result.append(f"way не паслядоўныя")
-  return Result
-
-
- def CheckHaversine(self, Ways):
-  Result = []
-  Coords = self.GetCoord(Ways)
-  #
-  Lengths = []
-  for Coord1 in Coords:
-   SubLengths = []
-   for Coord2 in Coords:
-    if Coord1 != Coord2:
-     SubLengths += [ haversine(x, y) for x in Coord1 for y in Coord2 ]
-   if SubLengths:
-    Lengths.append(min(SubLengths))
-  #
-  if Lengths:
-   if max(Lengths) > 3:
-    Result.append(f"way занадта разарваны")
   return Result
 
 
@@ -838,19 +638,19 @@ class RouteValidator(Validator):
    #
    Result['Error'] += self.CheckRef(Key)
    Result['Error'] += self.CheckRelation(Type)
-   Result['Error'] += self.CheckTag(Tag, Class)
+   Result['Error'] += self.CheckTag(Tag, self.Classes[Class])
    Result['Error'] += self.CheckClass(Tag, Class)
    Result['Error'] += self.CheckBe(Tag)
    Result['Error'] += self.CheckRu(Tag, Value['Desc'])
    Result['Error'] += self.CheckOfficialName(Tag)
-   Result['Error'] += self.CheckWrong(Tag)
+   Result['Error'] += self.CheckWrong(Tag, self.Wrong)
    Result['Error'] += self.CheckPair(Tag)
    Result['Error'] += self.CheckLength(Tag)
    Result['Error'] += self.CheckImpossible(Tag)
    Result['Error'] += self.CheckEqRef(Tag)
    Result['Error'] += self.CheckBadRefInRelation(Relation)
    Result['Error'] += self.CheckDoubleRef(Relation)
-   Result['Error'] += self.CheckWays(Relation)
+   Result['Error'] += self.CheckTypes(Relation, "way")
    Result['Error'] += self.CheckRefInRelation(Relation, Relations)
    #
    Result['Error'] += self.CheckTouch(Relation, Relations, Highways)
@@ -861,7 +661,7 @@ class RouteValidator(Validator):
    if Ways:
     Result['Error'] += self.CheckTagsInWay(Tag, Ways)
     Result['Error'] += self.CheckFixme(Ways)
-    Result['Error'] += self.CheckHighway(Ways)
+    Result['Error'] += self.CheckHighway(Ways, self.AllowHighways)
     Result['Error'] += self.CheckDoubleWay(Ways)
     Result['Error'] += self.CheckName(Ways)
     Result['Error'] += self.CheckDoubleRelation(Ways, Relations)

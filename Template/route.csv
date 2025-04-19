@@ -1,0 +1,9 @@
+{%- for Item in Missing -%}
+r{{Item['ID']}};{{Item['Be']}};{{Item['Ru']}};{{- "|".join(Item['Error'])}}
+{% endfor %}
+{% for Master in Route -%}
+master;r{{Master['ID']}};{{Master['Type']}};{{Master['Be']}};{{Master['Ru']}};{{- "|".join(Master['Error'])}}
+{% for Item in Master['Route'] -%}
+route;r{{Item['ID']}};{{Master['Type']}};{{Item['Be']}};{{Item['Ru']}};{{- "|".join(Item['Error'])}}
+{% endfor %}
+{% endfor %}

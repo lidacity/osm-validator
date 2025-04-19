@@ -1,0 +1,85 @@
+{% block Block -%}
+
+{%- if Missing %}
+<hr />
+<h3>Прапушчаныя маршруты грамадскага транспарту</h3>
+<div id='Missing'>
+ <table>
+  <thead>
+   <tr valign='top'>
+    <th>сувязь</th>
+    <th>найменне</th>
+    <th>памылкі</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Item in Missing %}
+   <tr bgcolor='{{Item['Color']}}' valign='top'>
+    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='josm://relation/{{Item['ID']}}' onclick='return josm("r{{Item['ID']}}");'>josm</a></td>
+    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
+    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
+   </tr>
+{%- endfor %}
+  </tbody>
+ </table>
+</div>
+{%- else %}
+<!-- Route усё добра -->
+{%- endif %}
+
+{%- if Route %}
+<hr />
+<h2>Маршруты грамадскага транспарту</h2>
+<div id='Route'>
+ <table border=1>
+  <thead>
+   <tr valign='top'>
+    <th colspan='4'>майстар-маршрут</th>
+    <th colspan='4'>маршрут</th>
+   </tr>
+   <tr valign='top'>
+    <th>сувязь</th>
+    <th>транспарт</th>
+    <th>найменне</th>
+    <th>памылкі</th>
+    <th>сувязь</th>
+    <th>транспарт</th>
+    <th>найменне</th>
+    <th>памылкі</th>
+   </tr>
+  </thead>
+  <tbody>
+{%- for Master in Route %}
+{%- set Count = Master['Route']|length %}
+{%- set Count = [1, Count]|max %}
+   <tr bgcolor='{{Master['Color']}}' valign='top'>
+    <td rowspan='{{Count}}'><a target='_blank' href='https://openstreetmap.org/relation/{{Master['ID']}}'>osm</a><br /><a target='_josm' href='josm://relation/{{Master['ID']}}' onclick='return josm("r{{Master['ID']}}");'>josm</a></td>
+    <td rowspan='{{Count}}'>{{Master['Type']}}</td>
+    <td rowspan='{{Count}}'>{{Master['Be']}}<br /><font color='gray'>{{Master['Ru']}}</font></td>
+    <td rowspan='{{Count}}'><nobr>{{"<br />".join(Master['Error'])}}</nobr></td>
+{%- for Item in Master['Route'] %}
+    <td><a target='_blank' href='https://openstreetmap.org/relation/{{Item['ID']}}'>osm</a><br /><a target='_josm' href='josm://relation/{{Item['ID']}}' onclick='return josm("r{{Item['ID']}}");'>josm</a></td>
+    <td>{{Item['Type']}}</td>
+    <td>{{Item['Be']}}<br /><font color='gray'>{{Item['Ru']}}</font></td>
+    <td><nobr>{{"<br />".join(Item['Error'])}}</nobr></td>
+{%- if loop.index != Count %}
+   </tr>
+   <tr bgcolor='{{Master['Color']}}' valign='top'>
+{%- endif %}
+{%- endfor %}
+{%- if Count == 0 %}
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+{%- endif %}
+   </tr>
+{% endfor %}
+  </tbody>
+ </table>
+</div>
+{%- else %}
+<!-- Route усё добра -->
+{%- endif %}
+
+{%- endblock %}

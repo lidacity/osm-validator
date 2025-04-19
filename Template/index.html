@@ -1,8 +1,41 @@
-<html>
-<title>Closed</title>
-<body>
-<p>Проект по внесению местных автомобильных дорог Республики Беларусь закрыт.</p>
-<p>Так как <a href="https://www.openstreetmap.org">openstreetmap.org</a> открыт для изменения каждому, нет возможности корректно внести данные - укорачивают дороги или удаляют. Поэтому кроме внесения новых данных и корректировки автомобильных дорог - отключён и валидатор.</p>
-<p>Все претензии пишите <a href="https://www.openstreetmap.org/changeset/150500637">тут</a>.</p>
-</body>
-</html>
+{% extends 'index.htm' %}
+
+
+{% block Law -%}
+{%- if PravoError -%}
+  <details open>
+{%- else -%}
+  <details>
+{%- endif %}
+{%- for Item in Pravo %}
+   <summary>Законы</summary>
+   <p>
+    {% if Item['Error'] -%}
+<font color='red'><strike>
+{%- endif -%}
+<a href='{{Item['URL']}}'>{{Item['Desc']}}</a>
+{%- if Item['Error'] -%}
+</strike></font>
+{%- endif %}
+{%- if Item['Append'] %}
+    <br />
+    в том числе акты, изменяющие (дополняющие) документ:
+    <ul>
+{%- for Append in Item['Append'] %}
+     <li>
+{%- if Append['Error'] -%}
+<font color='red'><strike>
+{%- endif -%}
+{{Append['Desc']}}
+{%- if Append['Error'] -%}
+</strike></font>
+{%- endif -%}
+</li>
+{%- endfor %}
+    </ul>
+{%- endif %}
+   </p>
+   <hr width='50%' align='left'>
+{%- endfor %}
+  </details>
+{%- endblock %}
