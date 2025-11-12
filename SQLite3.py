@@ -38,7 +38,7 @@ class OsmPbf:
    #print(self.Cookie)
    StateFileName = os.path.join(".data", "state.txt")
    self.DateTime = self.ReadState(State, StateFileName)
-   if self.Download(URL, PBF) and self.CheckMD5(URL, PBF):
+   if self.Download(URL, PBF): # and self.CheckMD5(URL, PBF):
     if os.path.isfile(FileName):
      os.remove(FileName)
    if not os.path.isfile(FileName):
